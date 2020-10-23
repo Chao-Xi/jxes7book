@@ -2,4 +2,4 @@
 
 # Jacob Hand-In-Hand Elasticsearch7 Book
 
-https://github.com/Chao-Xi/jxes7book
+https://chao-xi.github.io/jxes7book
