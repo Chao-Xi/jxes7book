@@ -1,0 +1,29 @@
+site_name: Jacob ElasticSearch7 Books
+site_description: "Jacob's 手摸手ES7实用教程"
+site_author: "Jacob Xi"
+copyright: "Copyright &copy; 2020-9999 Jacob Xi"
+
+plugins:
+  - search # necessary for search to work
+  - awesome-pages
+
+nav:
+  - 'Welcome': "index.md"
+
+repo_url: https://github.com/Chao-Xi/jxes7book.git
+repo_name: "jxes7book"
+
+theme: 
+  language: zh
+  name: 'material'
+  include_sidebar: true
+  logo: 'images/logo.png'
+  favicon: 'images/logo.png'
+  feature:
+    tabs: false
+  palette:
+    primary: 'blue'
+    accent: 'blue'
+  i18n:
+    prev: 'Previous'
+    next: 'Next'
