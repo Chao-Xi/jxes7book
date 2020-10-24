@@ -16,6 +16,16 @@ nav:
     - '第二节 Kibana的安装与界面快速预览' : 'chap2/2KB_vm_install.md'
     - '第三节 在Docker容器中运行Elasticsearch Kibana和Cerebro' : 'chap2/3ES_KB_docker.md' 
     - '第四节 Logstash安装与导入数据' : 'chap2/4LogStash_vm_install.md'
+  - '二、Elasticsearch 入门查询与搜索':
+    - '第一节、ElasticSearch 基本概念' : 'chap3/1ES_intro.md'
+    - '第二节 文档的基本CRUD与批量操作 & 读取＆Bulk API' : 'chap3/2ES_CRUD.md'
+    - '第三节 倒排索引' : 'chap3/3ES_ReverseIndex.md' 
+    - '第四节 使用分析器进行分词' : 'chap3/4ES_Analyzer.md'
+    - '第五节 ElasticSearch Search语句' : 'chap3/5ES_Search.md'
+    - '第六节 ElasticSearch Mapping 介绍' : 'chap3/6ES_Mapping.md'
+    - '第七节 Index Template和Dynamic Template' : 'chap3/7ES_Index.md' 
+    - '第八节 Elasticsearch Aggregations聚合分析简介' : 'chap3/8ES_Aggr.md'
+    - '第九节 Elasticsearch 入门总结 & 测试' : 'chap3/9ES_SUM.md'
 repo_url: https://github.com/Chao-Xi/jxes7book.git
 repo_name: "jxes7book"
 
