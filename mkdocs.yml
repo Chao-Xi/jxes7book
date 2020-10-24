@@ -1,5 +1,5 @@
-site_name: Jacob ElasticSearch7 Books
-site_description: "Jacob's 手摸手ES7实用教程"
+site_name: Jacob ElasticSearch7 Book
+site_description: "Jacob's Elasticsearch7 技术与实战教程"
 site_author: "Jacob Xi"
 copyright: "Copyright &copy; 2020-9999 Jacob Xi"
 
@@ -9,7 +9,13 @@ plugins:
 
 nav:
   - 'Welcome': "index.md"
-
+  - '一、Elasticsearch 概述':
+    - '第一节 ElasticSearch 概述' : 'chap1/1Es_intro.md'
+  - '二、Elasticsearch 安装手册':
+    - '第一节 Elasticsearch的安装与简单配置' : 'chap2/1ES_vm_install.md'
+    - '第二节 Kibana的安装与界面快速预览' : 'chap2/2KB_vm_install.md'
+    - '第三节 在Docker容器中运行Elasticsearch Kibana和Cerebro' : 'chap2/3ES_KB_docker.md' 
+    - '第四节 Logstash安装与导入数据' : 'chap2/4LogStash_vm_install.md'
 repo_url: https://github.com/Chao-Xi/jxes7book.git
 repo_name: "jxes7book"
 
