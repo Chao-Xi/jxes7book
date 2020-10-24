@@ -1,6 +1,6 @@
 # **第一节 ElasticSearch 概述**
 
-## 1、**􏰋􏰌􏲊􏰿􏱻􏰍􏰎􏰋􏰌􏲊􏰿􏱻􏰍􏰎􏰋􏰌􏲊􏰿􏱻􏰍􏰎􏰋􏰌􏲊􏰿􏱻􏰍􏰎本书内容与结构**
+## 1、**本书内容与结构**
 
 ### 1-1 Elasticsearch入门与深入 
 
@@ -141,26 +141,26 @@
 
 ## 3、**ELK Stack家族成员及其应用场景** 
 
-### 􏰆􏲌􏴤3-1 本节知识点
+### 3-1 本节知识点
  
 * Elastic Stack的产品生态圈 
 * 核心产品ELKB的简介 
 * Elastic Stack的使用场景与用例 
 * Elastic公司的开源策略与商业模式 
 * Elastic Stack数据接入的方法及通用的系统架构 
- 􏲆􏰊􏰈􏰌􏱝 􏱄􏶢􏰸􏰹􏱩􏶣􏴸􏰾􏴶􏱯
 
-### 􏰆􏲌􏴤3-2 Elastic Stack 生态圈
+
+### 3-2 Elastic Stack 生态圈
 
 ![Alt Image Text](../images/chap1_1_5.png "body image")
 
-### 􏰆􏲌􏴤3-3 Log stash:数据处理管道 
+### 3-3 Log stash:数据处理管道 
 
 * 开源的服务器端数据处理管道，支持从不同来源采集数据， 转换数据并将数据发送到不同的存储库中 
 * Loqstash诞生于2009年，最初用来做日志的采集与处理 
 * 2013年被Elasticsearch收购 
 
-### 􏰆􏲌􏴤3-4 Logstash特性 
+### 3-4 Logstash特性 
 
 * 实时解析和转换数据 
 	* 从IP地址破译出地理坐标 
@@ -172,7 +172,7 @@
 	* 数据传输加密 
 * 监控 
 
-### 􏰆􏲌􏴤3-5 Kibana:可视化分析利器 
+### 3-5 Kibana:可视化分析利器 
 
 * Kibana名字的含义＝Kiwifruit+Banana 
 * 数据可视化工具，帮助用户解开对数据的任何疑问 
@@ -182,7 +182,7 @@
 
 ![Alt Image Text](../images/chap1_1_6.png "body image")
 
-### 􏰆􏲌􏴤3-6 Elastic的发展 
+### 3-6 Elastic的发展 
 
 * 2015年3月收购Elastic Cloud提供Cloud服务 
 * 2015年3月收购PacketBeat
@@ -191,7 +191,7 @@
 * 2017年11月收购SaaS厂商Swifttype提供网站和App搜索 
 * 2013年X-Pack开源 
 
-### 􏰆􏲌􏴤3-7  BEATS - 轻量的数据采集器
+### 3-7  BEATS - 轻量的数据采集器
 
 https://www.elastic.co/cn/beats/
 
@@ -203,7 +203,7 @@ beats是轻量级的数据shipper，使用go语言开发，主要用来做数据
 * beats可以和es连接也可以和logstash连接。
 * logstash比较重，更加多的用来创建数据管道，具有很强的数据二次加工的能力。
 
-### 􏰆􏲌􏴤3-8 X-Pack：商业化套件
+### 3-8 X-Pack：商业化套件
 
 * 6.3 之前的版本X-Pack以插件方式安装 
 * X-Pack开源之后Elasticsearch&Kibana支持oss版和Basic两种版本 
@@ -213,13 +213,13 @@ beats是轻量级的数据shipper，使用go语言开发，主要用来做数据
 ![Alt Image Text](../images/chap1_1_8.png "body image")
 
 
-### 􏰆􏲌􏴤3-9 ELK客户及应用场景 
+### 3-9 ELK客户及应用场景 
 
 * 应用场景 
 	* 网站搜索／垂直搜索／代码搜索 
 * 日志管理与分析／安全指标监控 ／应用性能监控／WEB抓取舆情分析
 
-􏰫􏰊􏰊􏱗􏰉􏱘􏰓􏰓􏱙􏱙􏱙􏰰􏰩􏰇􏰈􏰉􏰊􏰋􏰌􏰰􏰌􏱋􏰓􏱜􏰉􏰩􏰐􏰌􏰈􏰉􏰩􏰉􏰓> https://www.elastic.co/customers/
+> https://www.elastic.co/customers/
 
 **日志的重要性**
 
@@ -235,7 +235,7 @@ beats是轻量级的数据shipper，使用go语言开发，主要用来做数据
 
 ![Alt Image Text](../images/chap1_1_9.png "body image")
 
-### 􏰆􏲌􏴤3-10 Elastichsearch与数据库的集成 
+### 3-10 Elastichsearch与数据库的集成 
 
 * 单独使用Elasticsearch存储 
 * 以下情况可考虑与数据库集成 
@@ -245,16 +245,16 @@ beats是轻量级的数据shipper，使用go语言开发，主要用来做数据
 
 ![Alt Image Text](../images/chap1_1_10.png "body image")
 
-### 􏰆􏲌􏴤3-11 指标分析/日志分析
+### 3-11 指标分析/日志分析
 
 ![Alt Image Text](../images/chap1_1_11.png "body image")
 
 
-### 􏰆􏲌􏴤3-12 安全分析：集成ArcSight 
+### 3-12 安全分析：集成ArcSight 
 
 ![Alt Image Text](../images/chap1_1_12.png "body image")
 
-### 􏰆􏲌􏴤3-13 本节回顾 
+### 3-13 本节回顾 
 
 * Elastic Stack围绕着 ELKB构建出一套生态系统适合大量的应用场景 
 	* Elastic公司通过并购向用户提供ML,APM网站搜索等服务 
