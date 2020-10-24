@@ -1,6 +1,6 @@
 # **第五节 多语言及中文分词与检索**
 
-## *1、自然语言与查询Recall** 
+## **1、自然语言与查询Recall** 
 
 * 当处理人类白然语言时，有些情况，尽管搜索和原文不完全匹配，但是希望搜到一些内容 
 	* `Quick browrn fox`和`fast brown fox` / `Jumping fox`和`Jumped foxes` 

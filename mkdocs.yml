@@ -16,7 +16,7 @@ nav:
     - '第二节 Kibana的安装与界面快速预览' : 'chap2/2KB_vm_install.md'
     - '第三节 在Docker容器中运行Elasticsearch Kibana和Cerebro' : 'chap2/3ES_KB_docker.md' 
     - '第四节 Logstash安装与导入数据' : 'chap2/4LogStash_vm_install.md'
-  - '三、Elasticsearch 入门查询与搜索':
+  - '三、Elasticsearch 入门查询':
     - '第一节、ElasticSearch 基本概念' : 'chap3/1ES_intro.md'
     - '第二节 文档的基本CRUD与批量操作 & 读取＆Bulk API' : 'chap3/2ES_CRUD.md'
     - '第三节 倒排索引' : 'chap3/3ES_ReverseIndex.md' 

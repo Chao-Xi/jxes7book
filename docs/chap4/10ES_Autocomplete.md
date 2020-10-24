@@ -1,6 +1,6 @@
 # **第十节 ⾃动补全与基于上下文的提示**
 
-## 1、**The Completion Suggester**
+## **1、The Completion Suggester**
 
 * `Completion Suggester` 提供了了“⾃动完成” (Auto Complete) 的功能。⽤户每输⼊入⼀个字符，就需要即时发送⼀个查询请求到后段查找匹配项
 * 对性能要求比较苛刻。Elasticsearch 采⽤了不同的**数据结构**，**并⾮通过倒排索引来完成**。 **而是将 Analyze 的数据编码成 FST 和索引⼀起存放。FST 会被 ES 整个加载进内存**， 速度很快
