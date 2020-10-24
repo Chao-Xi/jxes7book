@@ -1,6 +1,6 @@
-# 第一节 **基于词项和基于全文的搜索**
+# **第一节 基于词项和基于全文的搜索**
 
-## 1、基于Term的查询 
+## **1、基于Term的查询** 
 
 * Term的重要性
 	* **Term是表达语意的最小单位。**搜索和利用统计语言模型进行自然语言处理都需要处理Term 
@@ -349,7 +349,7 @@ POST /products/_search
 ![Alt Image Text](../images/chap4_1_5.png "body image")
 
 
-## 2、基于全文的查询 
+## **2、基于全文的查询** 
 
 * 基于全文的查询
 	* `Match Query/Match Phrase Query/Query String Query `
@@ -450,7 +450,7 @@ POST movies/_search
 
 ![Alt Image Text](../images/chap4_1_1.png "body image")
 	
-## 3、本节知识点回顾 
+## **3、本节知识点回顾** 
 
 * 基于词项的查找vs基于全文的查找 
 * 通过字段Mapping控制字段的分词 

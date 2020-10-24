@@ -26,6 +26,18 @@ nav:
     - '第七节 Index Template和Dynamic Template' : 'chap3/7ES_Index.md' 
     - '第八节 Elasticsearch Aggregations聚合分析简介' : 'chap3/8ES_Aggr.md'
     - '第九节 Elasticsearch 入门总结 & 测试' : 'chap3/9ES_SUM.md'
+  - '四、Elasticsearch 深入搜索':
+    - '第一节 基于词项和基于全文的搜索' : 'chap4/1ES_search.md'
+    - '第二节 结构化搜索以及搜索的相关性算分' : 'chap4/2ES_search_str_score.md'
+    - '第三节 Query & Filtering与多字符串多字段查询' : 'chap4/3ES_query_filter.md' 
+    - '第四节 单字符串多字段查询' : 'chap4/4ES_sin_mul_search.md'
+    - '第五节 多语言及中文分词与检索' : 'chap4/5ES_multi_lag_ana.md'
+    - '第六节 Space Jam，一次全文搜索的实例' : 'chap4/6ES_pra_tmdb.md'
+    - '第七节 使⽤用 Search Template 和 Index Alias' : 'chap4/7ES_ST_IA.md' 
+    - '第八节 综合排序:Function Score Query 优化算分' : 'chap4/8ES_FUNC_SCORE.md'
+    - '第九节 Term & Phrase Suggester' : 'chap4/9ES_suggester.md'
+    - '第十节 ⾃动补全与基于上下文的提示' : 'chap4/10ES_Autocomplete.md'
+    - '第十一节 跨集群搜索' : 'chap4/11ES_CrossSearch.md'
 repo_url: https://github.com/Chao-Xi/jxes7book.git
 repo_name: "jxes7book"
 
