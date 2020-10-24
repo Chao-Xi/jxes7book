@@ -1,6 +1,6 @@
 # **第六节 Space Jam，一次全文搜索的实例**
 
-## 1-1 **目的**
+## **1-1 目的**
 
 * 目标:⽤用过⼀一个具体案例例，帮助你了了解并巩固所学的知识点 
 	* 写⼊数据 / 设置 `Mapping`，设置 `Analysis`
@@ -8,14 +8,14 @@
 	* 分析查询结果，通过修改配置和查询，优化搜索的相关性
 * 分析问题，结合原理理，分析思考并加以实践
 
-## 1-2 **TMDB 数据库**
+## **1-2 TMDB 数据库**
 
 * 创建于 2008 年年，电影的 Meta Data 库
 	* 46 万本电影 / 12万本电视剧 / 230万张图片 / 每周 20万次编辑
 * 提供 API。总共有超过20万开发⼈人员和公司在使⽤
 
 
-## 1-3 **数据导入**
+## **1-3 数据导入**
 
 * 数据特征 – 标题信息较短 / 概述相对较⻓
 * 通过 `TDMB Search API`
@@ -67,12 +67,14 @@ Start ingesting data......
 Done for ingesting TMDB data into Elasticsearch
 ```
 
-## 1-4 **Use Case – 查找 Space Jam**
+## **1-4 Use Case – 查找 Space Jam**
 
 * 空中⼤大灌篮 (Space JAM)
 	* 华纳公司动画明星 / 篮球巨星乔丹丹 / 外星⼩小怪物
 * 案例:⽤用户不不记得电影名，⽽而希望通过⼀一些关键字，搜索到电影 的详细信息
 * 搜索关键字:“Basketball with Cartoon Aliens”
+
+[测试数据及代码](https://github.com/geektime-geekbang/geektime-ELK/tree/master/tmdb-search)
 
 **`query_space_jam.json`**
 
@@ -154,7 +156,7 @@ POST tmdb/_search
 
 ![Alt Image Text](../images/chap4_6_4.png "Body image") 
 
-## 1-5 **思考与分析**
+## **1-5 思考与分析**
 
 * “精确值” 还是 “全⽂”?
 * 搜索是怎么样的?不同的字段需要配置怎么样的分词器
@@ -163,7 +165,7 @@ POST tmdb/_search
 	* 测试不同的选项，测试不同的搜索条件
 
 
-## 1-6 **测试相关性 – 理理解原理理 + 多分析 + 多调整测试**
+## **1-6 测试相关性 – 理理解原理理 + 多分析 + 多调整测试**
 
 * 技术分为**道和术**两种
 	* 道 – 原理和原则
