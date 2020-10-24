@@ -1,6 +1,6 @@
 # **第八节 Elasticsearch Aggregations聚合分析简介**
 
-## 1、什么是聚合（Aggregation) 
+## **1、什么是聚合（Aggregation)** 
 
 
 ![Alt Image Text](../images/chap3_8_1.png "body image")
