@@ -38,6 +38,16 @@ nav:
     - '第九节 Term & Phrase Suggester' : 'chap4/9ES_suggester.md'
     - '第十节 ⾃动补全与基于上下文的提示' : 'chap4/10ES_Autocomplete.md'
     - '第十一节 跨集群搜索' : 'chap4/11ES_CrossSearch.md'
+  - '五、分布式特性及分布式搜索的机制':
+    - '第一节 集群分布式模型及选主与脑裂问题' : 'chap5/1ES_cluster.md'
+    - '第二节 分⽚与集群的故障转移' : 'chap5/2ES_shard.md'
+    - '第三节 ⽂档分布式存储' : 'chap5/3ES_doc_shard.md'
+    - '第四节 分⽚及其生命周期' : 'chap5/4ES_shared_lifecycle.md'
+    - '第五节 剖析分布式查询及相关性算分' : 'chap5/5ES_SE_Score.md'
+    - '第六节 排序及Doc Values&Fielddata' : 'chap5/6ES_Sort_query.md'
+    - '第七节 分页与遍历 – From，Size，Search After & Scroll API' : 'chap5/7ES_Pages_Traverse.md'
+    - '第八节 处理并发读写操作' : 'chap5/8ES_Concurrent_process.md'
+
 repo_url: https://github.com/Chao-Xi/jxes7book.git
 repo_name: "jxes7book"
 
