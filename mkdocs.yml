@@ -54,7 +54,7 @@ nav:
     - '第四节 聚合的精准度问题' : 'chap6/4chap6_accurate_aggragate.md'
   - '七、数据建模':
     - '第一节 对象及 Nested 对象' : 'chap7/1chap7_nested_obj.md'
-    - '第二节 文档的父子关系' : 'chap6/2chap7_parent_child.md'
+    - '第二节 文档的父子关系' : 'chap7/2chap7_parent_child.md'
     - '第三节 Update By Query & Reindex API' : 'chap7/3chap7_updateindex_reindex.md'
     - '第四节 Ingest Pipeline 与 Painless Script' : 'chap7/4chap7_ingest_painless.md'
     - '第五节 Elasticsearch 数据建模实例' : 'chap7/5chap7_es_model.md'
