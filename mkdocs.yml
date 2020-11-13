@@ -52,6 +52,15 @@ nav:
     - '第二节 Pipeline 聚合分析' : 'chap6/2chap6_pipeline_metrics.md'
     - '第三节 聚合的作⽤范围及排序' : 'chap6/3chap6_aggragate_scope_order.md'
     - '第四节 聚合的精准度问题' : 'chap6/4chap6_accurate_aggragate.md'
+  - '七、数据建模':
+    - '第一节 对象及 Nested 对象' : 'chap7/1chap7_nested_obj.md'
+    - '第二节 文档的父子关系' : 'chap6/2chap7_parent_child.md'
+    - '第三节 Update By Query & Reindex API' : 'chap7/3chap7_updateindex_reindex.md'
+    - '第四节 Ingest Pipeline 与 Painless Script' : 'chap7/4chap7_ingest_painless.md'
+    - '第五节 Elasticsearch 数据建模实例' : 'chap7/5chap7_es_model.md'
+    - '第六节 Elasticsearch 数据建模最佳实践' : 'chap7/6chap7_es_model_pra.md'
+    - '第七节 第二部分总结回顾' : 'chap7/7chap7_es_sum2.md'
+
 
 repo_url: https://github.com/Chao-Xi/jxes7book.git
 repo_name: "jxes7book"
