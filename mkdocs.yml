@@ -60,6 +60,10 @@ nav:
     - '第五节 Elasticsearch 数据建模实例' : 'chap7/5chap7_es_model.md'
     - '第六节 Elasticsearch 数据建模最佳实践' : 'chap7/6chap7_es_model_pra.md'
     - '第七节 第二部分总结回顾' : 'chap7/7chap7_es_sum2.md'
+  - '八、数据保护':
+    - '第一节 集群身份认证与用户鉴权' : 'chap8/1ES_cluster_IAM.md'
+    - '第二节 集群内部间的安全通信' : 'chap8/2ES_cluster_enc_transit.md'
+    - '第三节 集群与外部间的安全通信' : 'chap8/3ES_cluster_out_sec.md'
 
 
 repo_url: https://github.com/Chao-Xi/jxes7book.git
