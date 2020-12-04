@@ -77,7 +77,12 @@ nav:
     - '第四节 EFK kibana 日志分析' : 'chap10/17EFK_log_Ana.md'
     - '第五节 基于EKF日志的报警' : 'chap10/18EFK_log_alert.md'
     - '第六节 使用Operator快速部署Elasticsearch集群' : 'chap10/3ECK_operator.md'
-
+  - '十一、使用 Elastic Stack 构建 Kubernetes 全栈监控':
+    - '第一节 ElasticSearch 的集群安装' : 'chap11/20Elastic_Stack_Monitoring1.md'
+    - '第二节 使用 Elastic Stack — Metricbeat 监控安装' : 'chap11/21Elastic_Stack_Monitoring2.md'
+    - '第三节 使用 Elastic Stack - Filebeat 日志数据收集安装' : 'chap11/22Elastic_Stack_Monitoring3.md'
+    - '第四节 使用 Elastic Stack — Elastic APM 应用性能监控的工具安装' : 'chap11/23Elastic_Stack_Monitoring4.md'
+  
 
 repo_url: https://github.com/Chao-Xi/jxes7book.git
 repo_name: "jxes7book"
