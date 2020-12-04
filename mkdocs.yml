@@ -64,6 +64,12 @@ nav:
     - '第一节 集群身份认证与用户鉴权' : 'chap8/1ES_cluster_IAM.md'
     - '第二节 集群内部间的安全通信' : 'chap8/2ES_cluster_enc_transit.md'
     - '第三节 集群与外部间的安全通信' : 'chap8/3ES_cluster_out_sec.md'
+  - '九、水平扩展Elasticsearch集群':
+    - '第一节 常见的集群部署方式' : 'chap9/1ES_cluster_deploy.md'
+    - '第二节 Hot & Warm 架构与 Shard Filtering' : 'chap9/2ES_hot_warm.md'
+    - '第三节 分片设定及管理' : 'chap9/3ES_shard_settings.md'
+    - '第四节 如何对集群进行容量规划' : 'chap9/4ES_cluster_plan.md'
+    - '第五节 云上管理 Elasticsearch 的一些方法' : 'chap9/5ES_Cloud.md'
 
 
 repo_url: https://github.com/Chao-Xi/jxes7book.git
