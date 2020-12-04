@@ -70,6 +70,13 @@ nav:
     - '第三节 分片设定及管理' : 'chap9/3ES_shard_settings.md'
     - '第四节 如何对集群进行容量规划' : 'chap9/4ES_cluster_plan.md'
     - '第五节 云上管理 Elasticsearch 的一些方法' : 'chap9/5ES_Cloud.md'
+  - '十、使用 Kubernets 安装 EFK 集群':
+    - '第一节 kubernetes 日志架构' : 'chap10/1log_architecture.md'
+    - '第二节 在 K8S 上搭建 EFK 日志收集系统' : 'chap10/2EFK_log.md'
+    - '第三节 在 Kubernetes 安装 EFK 日志收集系统[更新]' : 'chap10/16EFK_log_adv.md'
+    - '第四节 EFK kibana 日志分析' : 'chap10/17EFK_log_Ana.md'
+    - '第五节 基于EKF日志的报警' : 'chap10/18EFK_log_alert.md'
+    - '第六节 使用Operator快速部署Elasticsearch集群' : 'chap10/3ECK_operator.md'
 
 
 repo_url: https://github.com/Chao-Xi/jxes7book.git
