@@ -82,7 +82,16 @@ nav:
     - '第二节 使用 Elastic Stack — Metricbeat 监控安装' : 'chap11/21Elastic_Stack_Monitoring2.md'
     - '第三节 使用 Elastic Stack - Filebeat 日志数据收集安装' : 'chap11/22Elastic_Stack_Monitoring3.md'
     - '第四节 使用 Elastic Stack — Elastic APM 应用性能监控的工具安装' : 'chap11/23Elastic_Stack_Monitoring4.md'
-  
+  - '十二、生产环境中的集群运维':
+    - '第一节 生产环境常用配置和上线清单' : 'chap12/1chap12_ES_prod.md'
+    - '第二节 监控Elasticsearch集群' : 'chap12/2chap12_mon_es.md'
+    - '第三节 诊断集群的潜在问题' : 'chap12/3chap12_es_diag.md'
+    - '第四节 解决集群 Yellow 与 Red 的问题' : 'chap12/4chap12_es_red_yellow.md'
+    - '第五节 集群写性能优化' : 'chap12/5chap12_es_cluster_perf.md'
+    - '第六节 集群压力测试' : 'chap12/6chap12_es_pre_test.md'
+    - '第七节 段合并优化及注意事项' : 'chap12/7chap12_es_segment_merge.md'
+    - '第八节 缓存及使用 Circuit Breaker 限制内存使用' : 'chap12/8chap12_Circuit_Breaker.md'
+    - '第九节 一些运维相关的建议' : 'chap12/9chap12_es_ops.md'
 
 repo_url: https://github.com/Chao-Xi/jxes7book.git
 repo_name: "jxes7book"
