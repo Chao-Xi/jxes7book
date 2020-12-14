@@ -120,7 +120,7 @@ curl -X PUT "http://ip:9200/_cluster/settings" -H 'Content-Type: application/jso
 
  **等集群变黄后打开 Shard Allocation**
  
- ```
+```
  curl -X PUT "http://ip:9200/_cluster/settings" -H 'Content-Type: application/json' -d'
 
 {
@@ -134,7 +134,7 @@ curl -X PUT "http://ip:9200/_cluster/settings" -H 'Content-Type: application/jso
 }
 
 '
- ```
+```
  
 ##  **6、运维 Cheat Sheet**
 
