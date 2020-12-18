@@ -95,6 +95,10 @@ nav:
   - '十三、生产环境中的集群运维':
     - '第一节 使用 Shrink 与 Rollover API 管理索引' : 'chap13/1chap13_es_shrink_rolloverapi.md'
     - '第二节 索引全生命周期管理及工具介绍' : 'chap13/2chap13_index_lms.md'
+  - '十四、用Logstash和Beats构建数据管道':
+    - '第一节 Logstash 入门及架构介绍' : 'chap14/1logstash_introduce.md'
+    - '第二节 利用 JDBC 插件导入数据到 Elasticsearch' : 'chap14/2JDBC_logstash_ES.md'
+    - '第三节 Beats 介绍' : 'chap14/3Beats.md'
 
 repo_url: https://github.com/Chao-Xi/jxes7book.git
 repo_name: "jxes7book"
