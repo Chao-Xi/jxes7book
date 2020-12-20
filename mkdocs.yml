@@ -99,6 +99,9 @@ nav:
     - '第一节 Logstash 入门及架构介绍' : 'chap14/1logstash_introduce.md'
     - '第二节 利用 JDBC 插件导入数据到 Elasticsearch' : 'chap14/2JDBC_logstash_ES.md'
     - '第三节 Beats 介绍' : 'chap14/3Beats.md'
+  - '十五、用Kibana进行数据可视化分析':
+    - '第一节 使用 Index Pattern 配置数据' : 'chap15/1chap15_index_pattern.md'
+    - '第二节 Kibana 使用的技巧' : 'chap15/2chap15_kibana.md'
 
 repo_url: https://github.com/Chao-Xi/jxes7book.git
 repo_name: "jxes7book"
