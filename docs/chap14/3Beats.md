@@ -108,45 +108,7 @@ envoyproxy
 etcd
 golang
 googlecloud
-graphite
-haproxy
-http
-ibmmq
-iis
-istio
-jolokia
-kafka
-kibana
-kibana-xpack
-kubernetes
-kvm
-linux
-logstash
-logstash-xpack
-memcached
-mongodb
-mssql
-munin
-mysql
-nats
-nginx
-openmetrics
-oracle
-php_fpm
-postgresql
-prometheus
-rabbitmq
-redis
-redisenterprise
-sql
-stan
-statsd
-tomcat
-traefik
-uwsgi
-vsphere
-windows
-zookeeper
+...
 ```
 
 ```
@@ -186,6 +148,74 @@ vim module/mysql/module.yml
 ![Alt Image Text](../images/chap14_3_5.png "Body image")
 
 
+### **2-6 My Metricbeat Experiments**
+
+**Install**
+
+[https://www.elastic.co/guide/en/beats/metricbeat/current/setup-repositories.html](https://www.elastic.co/guide/en/beats/metricbeat/current/setup-repositories.html)
+
+```
+sudo vim /etc/yum.repos.d/elastic.repo
+
+[elastic-7.x]
+name=Elastic repository for 7.x packages
+baseurl=https://artifacts.elastic.co/packages/7.x/yum
+gpgcheck=1
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+autorefresh=1
+type=rpm-md
+```
+```
+sudo yum install metricbeat
+sudo systemctl enable metricbeat
+
+sudo systemctl start metricbeat
+sudo journalctl -u metricbeat.service -r
+
+config file ("/etc/metricbeat/metricbeat.yml") must be owned by the user identifier (uid=0) or root
+
+
+sudo chown root:root /etc/metricbeat/metricbeat.yml
+sudo systemctl restart metricbeat.service
+sudo systemctl status metricbeat.service
+
+$ sudo systemctl status metricbeat.service
+● metricbeat.service - Metricbeat is a lightweight shipper for metrics.
+   Loaded: loaded (/usr/lib/systemd/system/metricbeat.service; enabled; vendor preset: disabled)
+   Active: active (running) since Mon 2020-12-14 04:01:35 UTC; 2h 44min ago
+     Docs: https://www.elastic.co/products/beats/metricbeat
+ Main PID: 34765 (metricbeat)
+   CGroup: /system.slice/metricbeat.service
+           └─34765 /usr/share/metricbeat/bin/metricbeat --environment systemd -c /etc/metricbeat/metricbeat.yml --path.home /usr/share/metricbeat --p...
+
+Dec 14 06:41:51 elasticsearch7 metricbeat[34765]: 2020-12-14T06:41:51.066Z        INFO        [add_docker_metadata.docker]        docker/watc...tch call
+Dec 14 06:42:05 elasticsearch7 metricbeat[34765]: 2020-12-14T06:42:05.354Z        INFO        [monitoring]        log/log.go:145        Non-zero metr...
+Dec 14 06:42:35 elasticsearch7 metricbeat[34765]: 2020-12-14T06:42:35.357Z        INFO        [monitoring]        log/log.go:145        Non-zero metr...
+Dec 14 06:43:05 elasticsearch7 metricbeat[34765]: 2020-12-14T06:43:05.353Z        INFO        [monitoring]        log/log.go:145        Non-zero metr...
+Dec 14 06:43:35 elasticsearch7 metricbeat[34765]: 2020-12-14T06:43:35.353Z        INFO        [monitoring]        log/log.go:145        Non-zero metr...
+Dec 14 06:44:05 elasticsearch7 metricbeat[34765]: 2020-12-14T06:44:05.353Z        INFO        [monitoring]        log/log.go:145        Non-zero metr...
+Dec 14 06:44:35 elasticsearch7 metricbeat[34765]: 2020-12-14T06:44:35.354Z        INFO        [monitoring]        log/log.go:145        Non-zero metr...
+Dec 14 06:45:05 elasticsearch7 metricbeat[34765]: 2020-12-14T06:45:05.353Z        INFO        [monitoring]        log/log.go:145        Non-zero metr...
+Dec 14 06:45:35 elasticsearch7 metricbeat[34765]: 2020-12-14T06:45:35.353Z        INFO        [monitoring]        log/log.go:145        Non-zero metr...
+Dec 14 06:46:05 elasticsearch7 metricbeat[34765]: 2020-12-14T06:46:05.354Z        INFO        [monitoring]        log/log.go:145        Non-zero metr...
+Hint: Some lines were ellipsized, use -l to show in full.
+```
+
+![Alt Image Text](../images/chap14_3_7.png "Body image")
+
+**Overview**
+
+![Alt Image Text](../images/chap14_3_8.png "Body image")
+
+**Nodes**
+
+![Alt Image Text](../images/chap14_3_9.png "Body image")
+
+**Docker Metric Dashboard**
+
+![Alt Image Text](../images/chap14_3_10.png "Body image")
+
 ## **3、Packetbeat**
 
 ### **3-1 Packetbeat 简介**
@@ -204,7 +234,7 @@ vim module/mysql/module.yml
 * [https://www.elastic.co/guide/en/beats/packetbeat/7.1/packetbeat-getting- started.html](https://www.elastic.co/guide/en/beats/packetbeat/7.1/packetbeat-getting- started.html)
 * 安装配置
 * 配置 Kibana Dashboard
-	* `Packetbeat setup --dashboards`
+	* `packetbeat setup --dashboards`
 * 运行 Packetbeat
 * 查看 Dashboard
 
@@ -221,3 +251,18 @@ Loaded dashboards
 ```
 
 ![Alt Image Text](../images/chap14_3_6.png "Body image")
+
+### **3-3 My Packetbeat Experiment**
+
+```
+sudo yum install packetbeat
+sudo systemctl enable packetbeat
+
+sudo packetbeat setup --dashboards
+```
+
+
+**[Packetbeat] Flows ECS**
+
+
+![Alt Image Text](../images/chap14_3_11.png "Body image")
