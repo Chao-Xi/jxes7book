@@ -102,6 +102,13 @@ nav:
   - '十五、用Kibana进行数据可视化分析':
     - '第一节 使用 Index Pattern 配置数据' : 'chap15/1chap15_index_pattern.md'
     - '第二节 Kibana 使用的技巧' : 'chap15/2chap15_kibana.md'
+  - '十六、探索X-Pack套件':
+    - '第一节 用Monitoring和Alerting监控Elasticsearch集群' : 'chap16/1ES_monitor_alert_xpack.md' 
+    - '第二节 用 APM 进行程序性能监控' : 'chap16/2Xpack_APM.md' 
+    - '第三节 用机器学习实现异常检测' : 'chap16/3Xpack_ML.md' 
+    - '第四节 用 Elastic Stack 进行日志管理' : 'chap16/4ELK_Filebeat.md' 
+    - '第五节 用 Canvas 进行数据的实时展示' : 'chap16/5xpack_canvas.md' 
+
 
 repo_url: https://github.com/Chao-Xi/jxes7book.git
 repo_name: "jxes7book"
