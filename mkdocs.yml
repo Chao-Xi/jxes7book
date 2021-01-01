@@ -107,9 +107,11 @@ nav:
     - '第二节 用 APM 进行程序性能监控' : 'chap16/2Xpack_APM.md' 
     - '第三节 用机器学习实现异常检测' : 'chap16/3Xpack_ML.md' 
     - '第四节 用 Elastic Stack 进行日志管理' : 'chap16/4ELK_Filebeat.md' 
-    - '第五节 用 Canvas 进行数据的实时展示' : 'chap16/5xpack_canvas.md' 
-
-
+    - '第五节 用 Canvas 进行数据的实时展示' : 'chap16/5xpack_canvas.md'
+  - '十七、ELK 实战 Workshop':
+    - '第一节 电影搜索服务' : 'chap17/1ES_WS_movie.md' 
+    - '第二节 Stackoverflow用户调查问卷分析' : 'chap17/2ES_WS_stackoverflow.md' 
+   
 repo_url: https://github.com/Chao-Xi/jxes7book.git
 repo_name: "jxes7book"
 
