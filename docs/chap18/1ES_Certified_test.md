@@ -42,7 +42,6 @@
 ### **1-4 预约网上考试时间**
 
 * 注册 email
-	* [www.examslocal.com](www.examslocal.com)
 * 选择时区
 * 预约考试时间
 * 提前 48 小时，取消考试
