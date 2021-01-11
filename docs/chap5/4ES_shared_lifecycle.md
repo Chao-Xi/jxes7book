@@ -65,7 +65,7 @@
 * Segment 很多，需要被定期被合并
 	* 减少 Segments / 删除已经删除的文档
 * ES 和 Lucene 会⾃动进⾏ Merge 操作
-	* POST `my_index/_forcemerge`
+	* `POST my_index/_forcemerge`
 
 ## **8、本节知识点回顾**
 
@@ -88,17 +88,17 @@
 	* **索引创建好后并不是马上生成segment，这个时候索引数据还在缓存中，这里的缓存是lucene的缓存，并非Elasticsearch缓存，lucene缓存中的数据是不可被查询的**。
 3. 执行refresh操作：从内存`buffer`中将数据写入`os cache`(操作系统的内存)，产生一个`segment file`文件，buffer清空。写入os cache的同时，建立倒排索引，这时数据就可以供客户端进行访问了。
 	* 默认是每隔1秒refresh一次的，所以`es`是准实时的，因为写入的数据1秒之后才能被看到。
-	* `buffer`内存占满的时候也会执行`refres`h操作，`buffer`默认值是`JVM`内存的10%。
+	* `buffer`内存占满的时候也会执行`refresh`操作，`buffer`默认值是`JVM`内存的10%。
 	* 通过`es`的`restful api`或者`java api`，手动执行一次`refresh`操作，就是手动将`buffer`中的数据刷入`os cache`中，让数据立马就可以被搜索到。
 	* **若要优化索引速度, 而不注重实时性, 可以降低刷新频率。**
-4. translog会每隔5秒或者在一个变更请求完成之后，将translog从缓存刷入磁盘。
+4. `translog`会每隔5秒或者在一个变更请求完成之后，将`translog`从缓存刷入磁盘。
 	* translog是存储在os cache中，每个分片有一个，如果节点宕机会有5秒数据丢失，但是性能比较好，最多丢5秒的数据。
 	* 可以将translog设置成每次写操作必须是直接fsync到磁盘，但是性能会差很多。
 	* 可以通过配置增加transLog刷磁盘的频率来增加数据可靠性，最小可配置100ms，但不建议这么做，因为这会对性能有非常大的影响。
 5. 每30分钟或者当tanslog的大小达到512M时候，就会执行`commit`操作（`flush`操作），**将os cache中所有的数据全以segment file的形式，持久到磁盘上去**。
-	* 第一步，就是将buffer中现有数据refresh到os cache中去。
-	* 清空buffer 然后强行将os cache中所有的数据全都一个一个的通过segmentfile的形式，持久到磁盘上去。
-	* 将commit point这个文件更新到磁盘中，每个Shard都有一个提交点(commit point), 其中保存了当前Shard成功写入磁盘的所有segment。
+	* 第一步，就是将`buffer`中现有数据`refresh`到`os cache`中去。
+	* 清空`buffer` 然后强行将`os cache`中所有的数据全都一个一个的通过`segmentfile`的形式，持久到磁盘上去。
+	* 将`commit point`这个文件更新到磁盘中，每个`Shard`都有一个提交点(`commit point`), 其中保存了当前Shard成功写入磁盘的所有segment。
 	* 把translog文件删掉清空，再开一个空的translog文件。
 	* flush参数设置：
 		* `index.translog.flush_threshold_period`:

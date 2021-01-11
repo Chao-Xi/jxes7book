@@ -1,4 +1,4 @@
-# **第七节 使⽤用 Search Template 和 Index Alias**
+# **第七节 使用 Search Template 和 Index Alias**
 
 ## **1、Search Template – 解耦程序 & 搜索 DSL**
 
@@ -56,7 +56,7 @@ GET _scripts/tmdb
 
 ![Alt Image Text](../images/chap4_7_1.png "Body image") 
 
-### 2-1 使⽤用 Alias 创建不不同查询的视图
+### 2-1 使⽤ Alias 创建不不同查询的视图
 
 ```
 PUT movies-2019/_doc/1
@@ -123,7 +123,7 @@ POST movies-latest/_search
     ]
 ```
 
-### 2-2 使⽤用 Alias 创建不同查询的视图
+### 2-2 使⽤ Alias 创建不同查询的视图
 
 ```
 POST _aliases

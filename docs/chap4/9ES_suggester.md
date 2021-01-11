@@ -351,7 +351,7 @@ POST /articles/_search
 
 ## **4、Phrase Suggester**
 
-* `Phrase Suggester` 在 `Term Suggester` 上增加了了一些额外的逻辑
+* `Phrase Suggester` 在 `Term Suggester` 上增加了一些额外的逻辑
 
 * 一些参数
 	* Suggest Mode :missing, popular, always

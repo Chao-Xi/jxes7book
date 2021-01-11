@@ -274,7 +274,4 @@ POST /_search/scroll
 	* 	From / Size 的⽤法，深度分页所存在的问题
 	*  Search After 解决深度分页的问题
 	*  Scroll API，通过快照，遍历数据
-
-	
-*
 	
