@@ -290,40 +290,6 @@ POST employees/_search
 ```
 
 
-```
-#global
-POST employees/_search
-{
-  "size": 0,
-  "query": {
-    "range": {
-      "age": {
-        "gte": 40
-      }
-    }
-  },
-  "aggs": {
-    "jobs": {
-      "terms": {
-        "field":"job.keyword"
-        
-      }
-    },
-    
-    "all":{
-      "global":{},
-      "aggs":{
-        "salary_avg":{
-          "avg":{
-            "field":"salary"
-          }
-        }
-      }
-    }
-  }
-}
-```
-
 ### **1-3 `global`**
 
 **`global`的作用是覆盖掉`query`的查询作用**
