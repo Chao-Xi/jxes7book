@@ -362,7 +362,7 @@ POST books/_search
 **搜索，通过store 字段显示数据，同时高亮显示 conent的内容**
 
 
-**查询图书:解决字段过⼤大引发的性能问题**
+**查询图书:解决字段过⼤引发的性能问题**
 
 * 返回结果不包含 `_source` 字段
 * 对于需要显示的信息，可以在在查询中指定`“stored_fields"`
@@ -425,7 +425,7 @@ POST books/_search
 	* Index – 是否构倒排索引。设置成 false，⽆法被搜索，但还是⽀持 aggregation，并出现在 `_source`中
 	* `Norms` – 如果字段⽤来过滤和聚合分析，可以关闭，节约存储
 	* `Doc_values` – 是否启⽤ `doc_values`，⽤用于排序和聚合分析
-	* `Field_data` – 如果要对 text 类型启⽤用排序和聚合分析， fielddata 需要设置成true
+	* `Field_data` – 如果要对 text 类型启⽤排序和聚合分析， fielddata 需要设置成true
 	* Store – 默认不存储，数据默认存储在 `_source`。
 	* Coerce – 默认开启，是否开启数据类型的⾃动转换(例如，字符串转数字)
 	* Multifields 多字段特性

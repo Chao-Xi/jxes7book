@@ -573,7 +573,7 @@ PUT ratings/_doc/2
       "value" : 3.0
     }
   }
- ```
+```
 
 *  `"value" : 3.0` 得到正确的输出
 
