@@ -240,7 +240,7 @@ my_index1                      0     r      STARTED     0    208b 172.16.72.169 
 ![Alt Image Text](../images/chap9_2_12.png "Body image")
 
 ```
-# Fore awareness
+# Force awareness
 # 标记一个 rack 1
 elasticsearch  -E node.name=node1 -E cluster.name=jx -E path.data=node1_data -E node.attr.my_rack_id=rack1
 

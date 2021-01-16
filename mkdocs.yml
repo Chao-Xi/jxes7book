@@ -115,7 +115,14 @@ nav:
     - '第一节 Elastic 认证考试' : 'chap18/1ES_Certified_test.md' 
     - '第二节 集群 Backup & Restore' : 'chap18/2ES_backup_restore.md' 
     - '第三节 基于 Java 和 Elasticsearch 开发应用' : 'chap18/3ES_Java.md' 
-   
+  - '十九、Elastic 操作总结篇':
+    - 'ElasticSearch URI 常用语句总结篇' : 'chap19/sum1_search_api.md'
+    - 'Elasticsearch 深入搜索总结' : 'chap19/sum2_search_dep.md'
+    - 'ElasticSearch 分布式搜索' : 'chap19/sum3_cross_search.md'
+    - 'ElasticSearch 深入聚合分析' : 'chap19/sum4_agg_search.md'
+    - 'ElasticSearch 数据建模' : 'chap19/sum5_datamodel.md'
+    - 'ElasticSearch Operation and Management' : 'chap19/sum6_Opt_Mgt.md'
+
 repo_url: https://github.com/Chao-Xi/jxes7book.git
 repo_name: "jxes7book"
 
