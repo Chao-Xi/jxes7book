@@ -1,4 +1,4 @@
-# **第五节、云上管理 Elasticsearch 的一些方法**
+# **第五节 云上管理 Elasticsearch 的一些方法**
 
 ## **1、在私有云上管理 Elasticsearch 的一些方法**
 

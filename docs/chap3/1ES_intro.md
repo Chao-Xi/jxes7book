@@ -1,4 +1,4 @@
-# **第一节、ElasticSearch 基本概念**
+# **第一节 ElasticSearch 基本概念**
 
 ## 1、**索引、文档和REST API**
 

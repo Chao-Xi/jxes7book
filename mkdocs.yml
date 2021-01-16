@@ -17,7 +17,7 @@ nav:
     - '第三节 在Docker容器中运行Elasticsearch Kibana和Cerebro' : 'chap2/3ES_KB_docker.md' 
     - '第四节 Logstash安装与导入数据' : 'chap2/4LogStash_vm_install.md'
   - '三、Elasticsearch 入门查询':
-    - '第一节、ElasticSearch 基本概念' : 'chap3/1ES_intro.md'
+    - '第一节 ElasticSearch 基本概念' : 'chap3/1ES_intro.md'
     - '第二节 文档的基本CRUD与批量操作 & 读取＆Bulk API' : 'chap3/2ES_CRUD.md'
     - '第三节 倒排索引' : 'chap3/3ES_ReverseIndex.md' 
     - '第四节 使用分析器进行分词' : 'chap3/4ES_Analyzer.md'
@@ -33,7 +33,7 @@ nav:
     - '第四节 单字符串多字段查询' : 'chap4/4ES_sin_mul_search.md'
     - '第五节 多语言及中文分词与检索' : 'chap4/5ES_multi_lag_ana.md'
     - '第六节 Space Jam，一次全文搜索的实例' : 'chap4/6ES_pra_tmdb.md'
-    - '第七节 使⽤用 Search Template 和 Index Alias' : 'chap4/7ES_ST_IA.md' 
+    - '第七节 使⽤ Search Template 和 Index Alias' : 'chap4/7ES_ST_IA.md' 
     - '第八节 综合排序:Function Score Query 优化算分' : 'chap4/8ES_FUNC_SCORE.md'
     - '第九节 Term & Phrase Suggester' : 'chap4/9ES_suggester.md'
     - '第十节 ⾃动补全与基于上下文的提示' : 'chap4/10ES_Autocomplete.md'

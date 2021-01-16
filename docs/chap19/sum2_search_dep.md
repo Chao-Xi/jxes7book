@@ -1,4 +1,4 @@
-# Elasticsearch 深入搜索总结
+# **Elasticsearch 深入搜索总结**
 
 ### **1、基于词项和基于全文的搜索**
 
