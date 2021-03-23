@@ -123,6 +123,7 @@ nav:
     - 'ElasticSearch 数据建模' : 'chap19/sum5_datamodel.md'
     - 'ElasticSearch Operation and Management' : 'chap19/sum6_Opt_Mgt.md'
     - '期末考试': 'chap19/sum7_test.md'
+    - 'ElasticSearch 面试': 'chap19/sum8_int.md'
 
 repo_url: https://github.com/Chao-Xi/jxes7book.git
 repo_name: "jxes7book"

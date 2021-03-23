@@ -157,7 +157,8 @@ Je travaillais en tant qu'ingénieur backend à New York et j'ai obtenu mon mast
 * [ElasticSearch 深入聚合分析](https://chao-xi.github.io/jxes7book/chap19/sum4_agg_search/)
 * [ElasticSearch  数据建模](https://chao-xi.github.io/jxes7book/chap19/sum5_datamodel/)
 * [ElasticSearch Operation and Management](https://chao-xi.github.io/jxes7book/chap19/sum6_Opt_Mgt/)
-
+* [ElasticSearch 面试](https://chao-xi.github.io/jxes7book/chap19/sum8_int/)
+* [期末考试](https://chao-xi.github.io/jxes7book/chap19/sum7_test/)
 
 ## To be continue
 
