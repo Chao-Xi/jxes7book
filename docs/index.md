@@ -112,6 +112,7 @@ Je travaillais en tant qu'ingénieur backend à New York et j'ai obtenu mon mast
 	* [第四节 kibana 日志分析](https://chao-xi.github.io/jxes7book/chap10/17EFK_log_Ana/)
 	* [第五节 基于EKF日志的报警](https://chao-xi.github.io/jxes7book/chap10/18EFK_log_alert/)
 	* [第六节 使用Operator快速部署Elasticsearch集群](https://chao-xi.github.io/jxes7book/chap10/3ECK_operator/)
+	* [第七节 使用 EFKLK 搭建 Kubernetes 日志收集工具栈 (Kafka/Logstash)](https://chao-xi.github.io/jxes7book/chap10/7EFKLK_log_aggregator/)
 * **第十一章 使用 Elastic Stack 构建 Kubernetes 全栈监控**
 	* [第一节 ElasticSearch 的集群安装](https://chao-xi.github.io/jxes7book/chap11/20Elastic_Stack_Monitoring1/) 
 	* [第二节 使用 Elastic Stack — Metricbeat 监控安装](https://chao-xi.github.io/jxes7book/chap11/21Elastic_Stack_Monitoring2/)
