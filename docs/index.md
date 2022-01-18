@@ -151,6 +151,7 @@ Je travaillais en tant qu'ingénieur backend à New York et j'ai obtenu mon mast
 	* [第一节 Elastic 认证考试](https://chao-xi.github.io/jxes7book/chap18/1ES_Certified_test/)
 	* [第二节 集群 Backup & Restore](https://chao-xi.github.io/jxes7book/chap18/2ES_backup_restore/) 
 	* [第三节 基于 Java 和 Elasticsearch 开发应用](https://chao-xi.github.io/jxes7book/chap18/3ES_Java/)
+	* [第四节 3种 Elasticsearch 数据离线迁移方案](https://chao-xi.github.io/jxes7book/chap18/4ES_migration/)
 
 * [ElasticSearch URI 常用语句总结篇](https://chao-xi.github.io/jxes7book/chap19/sum1_search_api/)
 * [Elasticsearch 深入搜索总结](https://chao-xi.github.io/jxes7book/chap19/sum2_search_dep/)
