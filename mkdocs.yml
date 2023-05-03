@@ -127,6 +127,15 @@ nav:
     - 'ElasticSearch Operation and Management' : 'chap19/sum6_Opt_Mgt.md'
     - '期末考试': 'chap19/sum7_test.md'
     - 'ElasticSearch 面试': 'chap19/sum8_int.md'
+  - 'Splunk8 Admin Mgt':
+    - '1 Splunk Managing Users and Authentication': 'spl1/1spl_role_ad.md'
+    - '2 Working with Configuration Files and Indexes': 'spl1/2config_indexes.md'
+    - '3 Managing Data and Forwarders': 'spl1/3datamgt_forwarder.md'
+    - '4 Splunk Configuring Distributed Search': 'spl1/4config_ds.md'
+    - '5 Splunk Monitoring and Creating Inputs': 'spl1/5Mon_create_inputs.md'
+    - '6 Splunk Parsing and Manipulating Data': 'spl1/6par_man.md'
+    - '7 Performing Basic Splunk Searches': 'spl1/7splunk_search.md'
+    - '8 Splunk ADMIN Exam': 'spl1/8spl_exam.md'
 
 repo_url: https://github.com/Chao-Xi/jxes7book.git
 repo_name: "jxes7book"
