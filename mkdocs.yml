@@ -113,6 +113,7 @@ nav:
   - '十七、ELK 实战 Workshop':
     - '第一节 电影搜索服务' : 'chap17/1ES_WS_movie.md' 
     - '第二节 Stackoverflow用户调查问卷分析' : 'chap17/2ES_WS_stackoverflow.md'
+    - '第三节 通过EFK对Artifactory进行日志分析': 'chap17/3EFK_jfrog.md'
   - '十八、Elastic认证, 开发与备份':
     - '第一节 Elastic 认证考试' : 'chap18/1ES_Certified_test.md' 
     - '第二节 集群 Backup & Restore' : 'chap18/2ES_backup_restore.md' 
