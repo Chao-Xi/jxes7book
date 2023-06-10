@@ -1,0 +1,3102 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Jacob's Elasticsearch7 技术与实战教程">
+      
+      
+        <meta name="author" content="Jacob Xi">
+      
+      
+      
+        <link rel="prev" href="../4ES_sin_mul_search/">
+      
+      
+        <link rel="next" href="../6ES_pra_tmdb/">
+      
+      <link rel="icon" href="../../images/logo.png">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.15">
+    
+    
+      
+        <title>第五节 多语言及中文分词与检索 - Jacob ElasticSearch7 Book</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.26e3688c.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ecc896b0.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Jacob ElasticSearch7 Book" class="md-header__button md-logo" aria-label="Jacob ElasticSearch7 Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Jacob ElasticSearch7 Book
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              第五节 多语言及中文分词与检索
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Chao-Xi/jxes7book.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxes7book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Jacob ElasticSearch7 Book" class="md-nav__button md-logo" aria-label="Jacob ElasticSearch7 Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    Jacob ElasticSearch7 Book
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Chao-Xi/jxes7book.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxes7book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Welcome
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          一、Elasticsearch 概述
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          一、Elasticsearch 概述
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/1Es_intro/" class="md-nav__link">
+        第一节 ElasticSearch 概述
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          二、Elasticsearch 安装手册
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          二、Elasticsearch 安装手册
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/1ES_vm_install/" class="md-nav__link">
+        第一节 Elasticsearch的安装与简单配置
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/2KB_vm_install/" class="md-nav__link">
+        第二节 Kibana的安装与界面快速预览
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/3ES_KB_docker/" class="md-nav__link">
+        第三节 在Docker容器中运行Elasticsearch Kibana和Cerebro
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/4LogStash_vm_install/" class="md-nav__link">
+        第四节 Logstash安装与导入数据
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          三、Elasticsearch 入门查询
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          三、Elasticsearch 入门查询
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/1ES_intro/" class="md-nav__link">
+        第一节 ElasticSearch 基本概念
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/2ES_CRUD/" class="md-nav__link">
+        第二节 文档的基本CRUD与批量操作 & 读取＆Bulk API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/3ES_ReverseIndex/" class="md-nav__link">
+        第三节 倒排索引
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/4ES_Analyzer/" class="md-nav__link">
+        第四节 使用分析器进行分词
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/5ES_Search/" class="md-nav__link">
+        第五节 ElasticSearch Search语句
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/6ES_Mapping/" class="md-nav__link">
+        第六节 ElasticSearch Mapping 介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/7ES_Index/" class="md-nav__link">
+        第七节 Index Template和Dynamic Template
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/8ES_Aggr/" class="md-nav__link">
+        第八节 Elasticsearch Aggregations聚合分析简介
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/9ES_SUM/" class="md-nav__link">
+        第九节 Elasticsearch 入门总结 & 测试
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          四、Elasticsearch 深入搜索
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          四、Elasticsearch 深入搜索
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1ES_search/" class="md-nav__link">
+        第一节 基于词项和基于全文的搜索
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2ES_search_str_score/" class="md-nav__link">
+        第二节 结构化搜索以及搜索的相关性算分
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3ES_query_filter/" class="md-nav__link">
+        第三节 Query & Filtering与多字符串多字段查询
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4ES_sin_mul_search/" class="md-nav__link">
+        第四节 单字符串多字段查询
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          第五节 多语言及中文分词与检索
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        第五节 多语言及中文分词与检索
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1recall" class="md-nav__link">
+    1、自然语言与查询Recall
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    2、混合多语言的挑战
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    3、分词的挑战
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    4、中文分词方法的演变——字典法
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    5、中文分词方法的演变——基于统计法的机器学习算法备
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    6、中文分词器现状
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
+    7、一些中文分词器
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8hanlp-analysis" class="md-nav__link">
+    8、HanLP  Analysis
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9ik-analysis" class="md-nav__link">
+    9、IK Analysis
+  </a>
+  
+    <nav class="md-nav" aria-label="9、IK Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pinyin" class="md-nav__link">
+    Pinyin
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-demo" class="md-nav__link">
+    10、中⽂文分词 Demo
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    11、相关资源
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6ES_pra_tmdb/" class="md-nav__link">
+        第六节 Space Jam，一次全文搜索的实例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7ES_ST_IA/" class="md-nav__link">
+        第七节 使⽤ Search Template 和 Index Alias
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../8ES_FUNC_SCORE/" class="md-nav__link">
+        第八节 综合排序:Function Score Query 优化算分
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../9ES_suggester/" class="md-nav__link">
+        第九节 Term & Phrase Suggester
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10ES_Autocomplete/" class="md-nav__link">
+        第十节 ⾃动补全与基于上下文的提示
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11ES_CrossSearch/" class="md-nav__link">
+        第十一节 跨集群搜索
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          五、分布式特性及分布式搜索的机制
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          五、分布式特性及分布式搜索的机制
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/1ES_cluster/" class="md-nav__link">
+        第一节 集群分布式模型及选主与脑裂问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/2ES_shard/" class="md-nav__link">
+        第二节 分⽚与集群的故障转移
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/3ES_doc_shard/" class="md-nav__link">
+        第三节 ⽂档分布式存储
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/4ES_shared_lifecycle/" class="md-nav__link">
+        第四节 分⽚及其生命周期
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/5ES_SE_Score/" class="md-nav__link">
+        第五节 剖析分布式查询及相关性算分
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/6ES_Sort_query/" class="md-nav__link">
+        第六节 排序及Doc Values&Fielddata
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/7ES_Pages_Traverse/" class="md-nav__link">
+        第七节 分页与遍历 – From，Size，Search After & Scroll API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/8ES_Concurrent_process/" class="md-nav__link">
+        第八节 处理并发读写操作
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          六、深入聚合分析
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          六、深入聚合分析
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/1chap6_bucket_metrics/" class="md-nav__link">
+        第一节 Bucket & Metric 聚合分析及嵌套聚合
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/2chap6_pipeline_metrics/" class="md-nav__link">
+        第二节 Pipeline 聚合分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/3chap6_aggragate_scope_order/" class="md-nav__link">
+        第三节 聚合的作⽤范围及排序
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/4chap6_accurate_aggragate/" class="md-nav__link">
+        第四节 聚合的精准度问题
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+          七、数据建模
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          七、数据建模
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/1chap7_nested_obj/" class="md-nav__link">
+        第一节 对象及 Nested 对象
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/2chap7_parent_child/" class="md-nav__link">
+        第二节 文档的父子关系
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/3chap7_updateindex_reindex/" class="md-nav__link">
+        第三节 Update By Query & Reindex API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/4chap7_ingest_painless/" class="md-nav__link">
+        第四节 Ingest Pipeline 与 Painless Script
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/5chap7_es_model/" class="md-nav__link">
+        第五节 Elasticsearch 数据建模实例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/6chap7_es_model_pra/" class="md-nav__link">
+        第六节 Elasticsearch 数据建模最佳实践
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/7chap7_es_sum2/" class="md-nav__link">
+        第七节 第二部分总结回顾
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+          八、数据保护
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          八、数据保护
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/1ES_cluster_IAM/" class="md-nav__link">
+        第一节 集群身份认证与用户鉴权
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/2ES_cluster_enc_transit/" class="md-nav__link">
+        第二节 集群内部间的安全通信
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/3ES_cluster_out_sec/" class="md-nav__link">
+        第三节 集群与外部间的安全通信
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          九、水平扩展Elasticsearch集群
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          九、水平扩展Elasticsearch集群
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/1ES_cluster_deploy/" class="md-nav__link">
+        第一节 常见的集群部署方式
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/2ES_hot_warm/" class="md-nav__link">
+        第二节 Hot & Warm 架构与 Shard Filtering
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/3ES_shard_settings/" class="md-nav__link">
+        第三节 分片设定及管理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/4ES_cluster_plan/" class="md-nav__link">
+        第四节 如何对集群进行容量规划
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/5ES_Cloud/" class="md-nav__link">
+        第五节 云上管理 Elasticsearch 的一些方法
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          十、使用 Kubernets 安装 EFK 集群
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_11">
+          <span class="md-nav__icon md-icon"></span>
+          十、使用 Kubernets 安装 EFK 集群
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/1log_architecture/" class="md-nav__link">
+        第一节 kubernetes 日志架构
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/2EFK_log/" class="md-nav__link">
+        第二节 在 K8S 上搭建 EFK 日志收集系统
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/16EFK_log_adv/" class="md-nav__link">
+        第三节 在 Kubernetes 安装 EFK 日志收集系统[更新]
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/17EFK_log_Ana/" class="md-nav__link">
+        第四节 EFK kibana 日志分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/18EFK_log_alert/" class="md-nav__link">
+        第五节 基于EKF日志的报警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/3ECK_operator/" class="md-nav__link">
+        第六节 使用Operator快速部署Elasticsearch集群
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/7EFKLK_log_aggregator/" class="md-nav__link">
+        第七节 使用 EFKLK 搭建 Kubernetes 日志收集工具栈 (Kafka/Logstash)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/19Fluentd/" class="md-nav__link">
+        第八节 日志收集工具 Fluentd 使用教程
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
+          十一、使用 Elastic Stack 构建 Kubernetes 全栈监控
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_12">
+          <span class="md-nav__icon md-icon"></span>
+          十一、使用 Elastic Stack 构建 Kubernetes 全栈监控
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/20Elastic_Stack_Monitoring1/" class="md-nav__link">
+        第一节 ElasticSearch 的集群安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/21Elastic_Stack_Monitoring2/" class="md-nav__link">
+        第二节 使用 Elastic Stack — Metricbeat 监控安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/22Elastic_Stack_Monitoring3/" class="md-nav__link">
+        第三节 使用 Elastic Stack - Filebeat 日志数据收集安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/23Elastic_Stack_Monitoring4/" class="md-nav__link">
+        第四节 使用 Elastic Stack — Elastic APM 应用性能监控的工具安装
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="0">
+          十二、生产环境中的集群运维
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_13">
+          <span class="md-nav__icon md-icon"></span>
+          十二、生产环境中的集群运维
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/1chap12_ES_prod/" class="md-nav__link">
+        第一节 生产环境常用配置和上线清单
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/2chap12_mon_es/" class="md-nav__link">
+        第二节 监控Elasticsearch集群
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/3chap12_es_diag/" class="md-nav__link">
+        第三节 诊断集群的潜在问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/4chap12_es_red_yellow/" class="md-nav__link">
+        第四节 解决集群 Yellow 与 Red 的问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/5chap12_es_cluster_perf/" class="md-nav__link">
+        第五节 集群写性能优化
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/6chap12_es_pre_test/" class="md-nav__link">
+        第六节 集群压力测试
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/7chap12_es_segment_merge/" class="md-nav__link">
+        第七节 段合并优化及注意事项
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/8chap12_Circuit_Breaker/" class="md-nav__link">
+        第八节 缓存及使用 Circuit Breaker 限制内存使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/9chap12_es_ops/" class="md-nav__link">
+        第九节 一些运维相关的建议
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_14" id="__nav_14_label" tabindex="0">
+          十三、索引生命周期管理
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_14">
+          <span class="md-nav__icon md-icon"></span>
+          十三、索引生命周期管理
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/1chap13_es_shrink_rolloverapi/" class="md-nav__link">
+        第一节 使用 Shrink 与 Rollover API 管理索引
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/2chap13_index_lms/" class="md-nav__link">
+        第二节 索引全生命周期管理及工具介绍
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_15" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_15" id="__nav_15_label" tabindex="0">
+          十四、用Logstash和Beats构建数据管道
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_15_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_15">
+          <span class="md-nav__icon md-icon"></span>
+          十四、用Logstash和Beats构建数据管道
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap14/1logstash_introduce/" class="md-nav__link">
+        第一节 Logstash 入门及架构介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap14/2JDBC_logstash_ES/" class="md-nav__link">
+        第二节 利用 JDBC 插件导入数据到 Elasticsearch
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap14/3Beats/" class="md-nav__link">
+        第三节 Beats 介绍
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_16" id="__nav_16_label" tabindex="0">
+          十五、用Kibana进行数据可视化分析
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_16">
+          <span class="md-nav__icon md-icon"></span>
+          十五、用Kibana进行数据可视化分析
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap15/1chap15_index_pattern/" class="md-nav__link">
+        第一节 使用 Index Pattern 配置数据
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap15/2chap15_kibana/" class="md-nav__link">
+        第二节 Kibana 使用的技巧
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_17" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_17" id="__nav_17_label" tabindex="0">
+          十六、探索X-Pack套件
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_17_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_17">
+          <span class="md-nav__icon md-icon"></span>
+          十六、探索X-Pack套件
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/1ES_monitor_alert_xpack/" class="md-nav__link">
+        第一节 用Monitoring和Alerting监控Elasticsearch集群
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/2Xpack_APM/" class="md-nav__link">
+        第二节 用 APM 进行程序性能监控
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/3Xpack_ML/" class="md-nav__link">
+        第三节 用机器学习实现异常检测
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/4ELK_Filebeat/" class="md-nav__link">
+        第四节 用 Elastic Stack 进行日志管理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/5xpack_canvas/" class="md-nav__link">
+        第五节 用 Canvas 进行数据的实时展示
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_18" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_18" id="__nav_18_label" tabindex="0">
+          十七、ELK 实战 Workshop
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_18_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_18">
+          <span class="md-nav__icon md-icon"></span>
+          十七、ELK 实战 Workshop
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap17/1ES_WS_movie/" class="md-nav__link">
+        第一节 电影搜索服务
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap17/2ES_WS_stackoverflow/" class="md-nav__link">
+        第二节 Stackoverflow用户调查问卷分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap17/3EFK_jfrog/" class="md-nav__link">
+        第三节 通过EFK对Artifactory进行日志分析
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_19" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_19" id="__nav_19_label" tabindex="0">
+          十八、Elastic认证, 开发与备份
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_19_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_19">
+          <span class="md-nav__icon md-icon"></span>
+          十八、Elastic认证, 开发与备份
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/1ES_Certified_test/" class="md-nav__link">
+        第一节 Elastic 认证考试
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/2ES_backup_restore/" class="md-nav__link">
+        第二节 集群 Backup & Restore
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/3ES_Java/" class="md-nav__link">
+        第三节 基于 Java 和 Elasticsearch 开发应用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/4ES_migration/" class="md-nav__link">
+        第四节 3种 Elasticsearch 数据离线迁移方案
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_20" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_20" id="__nav_20_label" tabindex="0">
+          十九、Elastic 操作总结篇
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_20_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_20">
+          <span class="md-nav__icon md-icon"></span>
+          十九、Elastic 操作总结篇
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum1_search_api/" class="md-nav__link">
+        ElasticSearch URI 常用语句总结篇
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum2_search_dep/" class="md-nav__link">
+        Elasticsearch 深入搜索总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum3_cross_search/" class="md-nav__link">
+        ElasticSearch 分布式搜索
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum4_agg_search/" class="md-nav__link">
+        ElasticSearch 深入聚合分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum5_datamodel/" class="md-nav__link">
+        ElasticSearch 数据建模
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum6_Opt_Mgt/" class="md-nav__link">
+        ElasticSearch Operation and Management
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum7_test/" class="md-nav__link">
+        期末考试
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum8_int/" class="md-nav__link">
+        ElasticSearch 面试
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_21" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_21" id="__nav_21_label" tabindex="0">
+          Splunk8 Admin Mgt
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_21_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_21">
+          <span class="md-nav__icon md-icon"></span>
+          Splunk8 Admin Mgt
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spl1/1spl_role_ad/" class="md-nav__link">
+        1 Splunk Managing Users and Authentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spl1/2config_indexes/" class="md-nav__link">
+        2 Working with Configuration Files and Indexes
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spl1/3datamgt_forwarder/" class="md-nav__link">
+        3 Managing Data and Forwarders
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spl1/4config_ds/" class="md-nav__link">
+        4 Splunk Configuring Distributed Search
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spl1/5Mon_create_inputs/" class="md-nav__link">
+        5 Splunk Monitoring and Creating Inputs
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spl1/6par_man/" class="md-nav__link">
+        6 Splunk Parsing and Manipulating Data
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spl1/7splunk_search/" class="md-nav__link">
+        7 Performing Basic Splunk Searches
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spl1/8spl_exam/" class="md-nav__link">
+        8 Splunk ADMIN Exam
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1recall" class="md-nav__link">
+    1、自然语言与查询Recall
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    2、混合多语言的挑战
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    3、分词的挑战
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    4、中文分词方法的演变——字典法
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    5、中文分词方法的演变——基于统计法的机器学习算法备
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    6、中文分词器现状
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
+    7、一些中文分词器
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8hanlp-analysis" class="md-nav__link">
+    8、HanLP  Analysis
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9ik-analysis" class="md-nav__link">
+    9、IK Analysis
+  </a>
+  
+    <nav class="md-nav" aria-label="9、IK Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pinyin" class="md-nav__link">
+    Pinyin
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-demo" class="md-nav__link">
+    10、中⽂文分词 Demo
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    11、相关资源
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="_1"><strong>第五节 多语言及中文分词与检索</strong></h1>
+<h2 id="1recall"><strong>1、自然语言与查询Recall</strong></h2>
+<ul>
+<li>当处理人类白然语言时，有些情况，尽管搜索和原文不完全匹配，但是希望搜到一些内容 <ul>
+<li><code>Quick browrn fox</code>和<code>fast brown fox</code> / <code>Jumping fox</code>和<code>Jumped foxes</code> </li>
+</ul>
+</li>
+<li>一些可采取的优化 <ul>
+<li>归一化调元清除变音符号如<code>rôle</code>的时候也会匹配<code>role</code> </li>
+<li>抽取词根：<strong>清除单复数和时态的差异</strong> </li>
+<li>包含同义词 </li>
+<li>拼写错误：拼写错误或者同音异形调 </li>
+</ul>
+</li>
+</ul>
+<h2 id="2"><strong>2、混合多语言的挑战</strong></h2>
+<ul>
+<li>一些具体的多语言场景 <ul>
+<li><strong>不同的索引使用不同的语</strong></li>
+<li><strong>同一个索引中，不同的字段使用不同的语言</strong></li>
+<li><strong>一个文档的一个字段内混合不同的语言</strong> </li>
+</ul>
+</li>
+<li>混合语言存在的一些挑战 <ul>
+<li>词干提取：以色列文档，包含了希伯来语，阿拉伯语，俄语和英文 </li>
+<li>不正确的文档频率——<strong>英文为主的文章中，德文算分高（稀有</strong>） </li>
+<li>需要判断用户搜索时使用的语言语言识别（Compact Language Detector) <ul>
+<li>例如根据语言查询不同的索引 </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="3"><strong>3、分词的挑战</strong></h2>
+<ul>
+<li>英文分词：·You’re·分成一个还是多个？<code>Half-baked</code> </li>
+<li>中文分词 <ul>
+<li>分词标准：哈工大标准中姓和名分开。<code>HanLP</code>是在一起的。具体情况需制定不同的标准 </li>
+<li><strong>歧义（组合型歧义，交集型歧义，真歧义</strong>） <ul>
+<li>中华人民共和国／美国会通过对台售武法案／上海仁和服装厂 </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="4"><strong>4、中文分词方法的演变——字典法</strong></h2>
+<ul>
+<li>查字典最容易想到的分词方法（北京航空大学的梁南元教授提出） <ul>
+<li>一个句子从左到右扫描一遍。遇到有的调就标示出来。找到复合词，就找最长的 </li>
+<li>不认识的字串就分割成单字词 </li>
+</ul>
+</li>
+<li>最小词数的分词理论——哈工大王晓龙博士把查字典的方法理论化 <ul>
+<li>一句话应该分成数量最少的词串 </li>
+<li>遇到二异性，无能为力（例如：“发展中国家厂”/ “上海大学城书店”）</li>
+<li>用各种文化规则来解决二义性都并不成功 </li>
+</ul>
+</li>
+</ul>
+<h2 id="5"><strong>5、中文分词方法的演变——基于统计法的机器学习算法备</strong></h2>
+<ul>
+<li>统计语言模型一1990年前后清华大学电子工程系郭进博士 <ul>
+<li>解决了二义性问题将中文分词的错误率降低了一个数量级。概率问题动态规划+利用维特比算 法决速找到最佳分调 </li>
+</ul>
+</li>
+<li><strong>基于统计的机器学习算法</strong><ul>
+<li>这类目前常用的是算法是<code>HMM, CRF, SVM</code>,深度学习等算法。比如<code>Hanlp</code>分词工具是基于<code>CRF</code>算法以<code>CRF</code>为例，基本思路是对汉宇进行标注训练，不仅考虑了调语出现的频率，还考虑上下文，具各转好的学习能力，因此真对歧义调和未登录词的识别都具有良好的效果． </li>
+<li>随着深度学习的兴起，也出现了基于神经网络的分调器有人尝试使用双向<code>LSTM+CRF</code>实现分调器，其本质上是序列标注，据报道其分词器字符准确率可高达97.5% </li>
+</ul>
+</li>
+</ul>
+<h2 id="6"><strong>6、中文分词器现状</strong></h2>
+<ul>
+<li>中文分词器以统计语言模型为基础，经过几十年的发展，今天基本已经可以看作是一个已经解决的问题 </li>
+<li>不同分词器的好坏主要的差别在于数据的使用和工程使用的精度 </li>
+<li>常见的分词器都是使用机器学习算法和词典相结合，一方面能够提高分词准确率，另一方面能够改善领域适应性</li>
+</ul>
+<h2 id="7"><strong>7、一些中文分词器</strong></h2>
+<ul>
+<li>HanLP一面向生产环境的自然语言处理工具包 <ul>
+<li>http://hanlp.com/</li>
+<li>https://github.com/KennFalcon/elasticsearch-analysis-hanlp</li>
+</ul>
+</li>
+<li>IK分词器<ul>
+<li>https://github.com/medcl/elasticsearch-analysis-ik</li>
+</ul>
+</li>
+</ul>
+<h2 id="8hanlp-analysis"><strong>8、HanLP  Analysis</strong></h2>
+<ul>
+<li>HanLP </li>
+</ul>
+<pre><code>./elasticsearch-plugin install https://github.com/KennFalcon/elasticsearch-analysis-hanlp/releases/download/v7.9.1/elasticsearch-analysis-hanlp-7.9.1.zip
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/chap4_5_1.png" title="Body image" /> </p>
+<h2 id="9ik-analysis"><strong>9、IK Analysis</strong></h2>
+<h3 id="pinyin">Pinyin</h3>
+<pre><code>./elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-pinyin/releases/download/v7.9.1/elasticsearch-analysis-pinyin-7.9.1.zip
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/chap4_5_2.png" title="Body image" /> </p>
+<h2 id="10-demo"><strong>10、中⽂文分词 Demo</strong></h2>
+<ul>
+<li>使⽤用不不同的分词器器测试效果</li>
+<li>索引时，尽量量切分的短，查询的时候，尽量量⽤用⻓长的词 </li>
+<li>拼⾳音分词器器</li>
+</ul>
+<pre><code>#stop word
+
+DELETE my_index
+PUT /my_index/_doc/1
+{ &quot;title&quot;: &quot;I'm happy for this fox&quot; }
+
+PUT /my_index/_doc/2
+{ &quot;title&quot;: &quot;I'm not happy about my fox problem&quot;}
+</code></pre>
+<pre><code>POST my_index/_search
+{
+  &quot;query&quot;: {
+    &quot;match&quot;: {
+      &quot;title&quot;: &quot;not happy fox&quot;
+    }
+  }
+}
+</code></pre>
+<p><strong><em>Output</em></strong></p>
+<pre><code> &quot;max_score&quot; : 0.9902718,
+    &quot;hits&quot; : [
+      {
+        &quot;_index&quot; : &quot;my_index&quot;,
+        &quot;_type&quot; : &quot;_doc&quot;,
+        &quot;_id&quot; : &quot;2&quot;,
+        &quot;_score&quot; : 0.9902718,
+        &quot;_source&quot; : {
+          &quot;title&quot; : &quot;I'm not happy about my fox problem&quot;
+        }
+      },
+      {
+        &quot;_index&quot; : &quot;my_index&quot;,
+        &quot;_type&quot; : &quot;_doc&quot;,
+        &quot;_id&quot; : &quot;1&quot;,
+        &quot;_score&quot; : 0.39132434,
+        &quot;_source&quot; : {
+          &quot;title&quot; : &quot;I'm happy for this fox&quot;
+        }
+      }
+    ]
+</code></pre>
+<p>虽然通过使用 english （英语）分析器，使得匹配规则更加宽松，我们也因此提高了召回率，但却降低了精准匹配文档的能力。为了获得两方面的优势，我们可以使用multifields（多字段）对 title 字段建立两次索引： 一次使用 <code>english</code>（英语）分析器，另一次使用 <code>standard</code>（标准）分析器:</p>
+<pre><code>PUT /my_index
+{
+  &quot;mappings&quot;: {
+    &quot;blog&quot;: {
+      &quot;properties&quot;: {
+        &quot;title&quot;: {
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;analyzer&quot;: &quot;english&quot;
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<p><strong><em>Error :</em></strong></p>
+<pre><code>&quot;caused_by&quot; : {
+      &quot;type&quot; : &quot;mapper_parsing_exception&quot;,
+      &quot;reason&quot; : &quot;Root mapping definition has unsupported parameters:  [blog : {properties={title={analyzer=english, type=string}}}]&quot;
+    }
+   },
+ &quot;status&quot; : 400
+</code></pre>
+<ol>
+<li>去掉<code>mappings</code>下面的<code>blog</code>，在<code>put</code>时已指定<code>my_index</code></li>
+<li><code>"type": "string",</code>没有这个类型</li>
+</ol>
+<pre><code>PUT /my_index
+{
+  &quot;mappings&quot;: {
+      &quot;properties&quot;: {
+        &quot;title&quot;: {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;fields&quot;: {
+            &quot;english&quot;: {
+              &quot;type&quot;:     &quot;text&quot;,
+              &quot;analyzer&quot;: &quot;english&quot;
+          }
+        }
+      }
+    }
+  }
+}
+
+PUT /my_index/_doc/1
+{ &quot;title&quot;: &quot;I'm happy for this fox&quot; }
+
+PUT /my_index/_doc/2
+{ &quot;title&quot;: &quot;I'm not happy about my fox problem&quot; }
+
+
+GET /my_index/_search
+{
+  &quot;query&quot;: {
+    &quot;multi_match&quot;: {
+      &quot;type&quot;:     &quot;most_fields&quot;,
+      &quot;query&quot;:    &quot;not happy foxes&quot;,
+      &quot;fields&quot;: [ &quot;title&quot;, &quot;title.english&quot; ]
+    }
+  }
+}
+</code></pre>
+<p><strong>Output</strong></p>
+<pre><code>&quot;max_score&quot; : 1.1404738,
+&quot;hits&quot; : [
+      {
+        &quot;_index&quot; : &quot;my_index&quot;,
+        &quot;_type&quot; : &quot;_doc&quot;,
+        &quot;_id&quot; : &quot;2&quot;,
+        &quot;_score&quot; : 1.1404738,
+        &quot;_source&quot; : {
+          &quot;title&quot; : &quot;I'm not happy about my fox problem&quot;
+        }
+      },
+      {
+        &quot;_index&quot; : &quot;my_index&quot;,
+        &quot;_type&quot; : &quot;_doc&quot;,
+        &quot;_id&quot; : &quot;1&quot;,
+        &quot;_score&quot; : 0.6178806,
+        &quot;_source&quot; : {
+          &quot;title&quot; : &quot;I'm happy for this fox&quot;
+        }
+      }
+    ]
+</code></pre>
+<p><strong>安装插件</strong></p>
+<pre><code>docker exec -it es7_01 bash
+docker exec -it es7_02 bash
+
+
+bin/elasticsearch-plugin install https://github.com/KennFalcon/elasticsearch-analysis-hanlp/releases/download/v7.9.1/elasticsearch-analysis-hanlp-7.9.1.zip
+bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-pinyin/releases/download/v7.9.1/elasticsearch-analysis-pinyin-7.9.1.zip
+
+
+bin/elasticsearch-plugin list
+analysis-pinyin
+</code></pre>
+<pre><code>docker restart es7_01
+docker restart es7_02
+
+http://192.168.33.12:9200/_cat/plugins
+es79   analysis-icu    7.9.1
+es79   analysis-pinyin 7.9.1
+es7_02 analysis-icu    7.9.1
+es7_02 analysis-ik     7.9.1
+es7_02 analysis-pinyin 7.9.1
+</code></pre>
+<pre><code>#ik_max_word
+#ik_smart
+#hanlp: hanlp默认分词
+#hanlp_standard: 标准分词
+#hanlp_index: 索引分词
+#hanlp_nlp: NLP分词
+#hanlp_n_short: N-最短路分词
+#hanlp_dijkstra: 最短路分词
+#hanlp_crf: CRF分词（在hanlp 1.6.6已开始废弃）
+#hanlp_speed: 极速词典分词
+
+POST _analyze
+{
+  &quot;analyzer&quot;: &quot;hanlp_standard&quot;,
+  &quot;text&quot;: [&quot;剑桥分析公司多位高管对卧底记者说，他们确保了唐纳德·特朗普在总统大选中获胜&quot;]
+
+} 
+</code></pre>
+<pre><code>#Pinyin
+PUT /artists/
+{
+    &quot;settings&quot; : {
+        &quot;analysis&quot; : {
+            &quot;analyzer&quot; : {
+                &quot;user_name_analyzer&quot; : {
+                    &quot;tokenizer&quot; : &quot;whitespace&quot;,
+                    &quot;filter&quot; : &quot;pinyin_first_letter_and_full_pinyin_filter&quot;
+                }
+            },
+            &quot;filter&quot; : {
+                &quot;pinyin_first_letter_and_full_pinyin_filter&quot; : {
+                    &quot;type&quot; : &quot;pinyin&quot;,
+                    &quot;keep_first_letter&quot; : true,
+                    &quot;keep_full_pinyin&quot; : false,
+                    &quot;keep_none_chinese&quot; : true,
+                    &quot;keep_original&quot; : false,
+                    &quot;limit_first_letter_length&quot; : 16,
+                    &quot;lowercase&quot; : true,
+                    &quot;trim_whitespace&quot; : true,
+                    &quot;keep_none_chinese_in_first_letter&quot; : true
+                }
+            }
+        }
+    }
+}
+
+
+GET /artists/_analyze
+{
+  &quot;text&quot;: [&quot;刘德华 张学友 郭富城 黎明 四大天王&quot;],
+  &quot;analyzer&quot;: &quot;user_name_analyzer&quot;
+}
+
+</code></pre>
+<p><strong><em>Output :</em></strong></p>
+<pre><code>{
+  &quot;tokens&quot; : [
+    {
+      &quot;token&quot; : &quot;ldh&quot;,
+      &quot;start_offset&quot; : 0,
+      &quot;end_offset&quot; : 3,
+      &quot;type&quot; : &quot;word&quot;,
+      &quot;position&quot; : 0
+    },
+    {
+      &quot;token&quot; : &quot;zxy&quot;,
+      &quot;start_offset&quot; : 4,
+      &quot;end_offset&quot; : 7,
+      &quot;type&quot; : &quot;word&quot;,
+      &quot;position&quot; : 1
+    },
+    {
+      &quot;token&quot; : &quot;gfc&quot;,
+      &quot;start_offset&quot; : 8,
+      &quot;end_offset&quot; : 11,
+      &quot;type&quot; : &quot;word&quot;,
+      &quot;position&quot; : 2
+    },
+    {
+      &quot;token&quot; : &quot;lm&quot;,
+      &quot;start_offset&quot; : 12,
+      &quot;end_offset&quot; : 14,
+      &quot;type&quot; : &quot;word&quot;,
+      &quot;position&quot; : 3
+    },
+    {
+      &quot;token&quot; : &quot;sdtw&quot;,
+      &quot;start_offset&quot; : 15,
+      &quot;end_offset&quot; : 19,
+      &quot;type&quot; : &quot;word&quot;,
+      &quot;position&quot; : 4
+    }
+  ]
+}
+</code></pre>
+<h2 id="11"><strong>11、相关资源</strong></h2>
+<ul>
+<li>Elasticsearch IK分词插件 https://github.com/medcl/elasticsearch-analysis-ik/releases</li>
+<li>Elasticsearch hanlp 分词插件 https://github.com/KennFalcon/elasticsearch-analysis-hanlp</li>
+<li>分词算法综述 https://zhuanlan.zhihu.com/p/50444885</li>
+</ul>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2020-9999 Jacob Xi
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.b4d07000.min.js"></script>
+      
+    
+  </body>
+</html>

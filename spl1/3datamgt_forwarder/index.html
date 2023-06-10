@@ -1,0 +1,4138 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Jacob's Elasticsearch7 技术与实战教程">
+      
+      
+        <meta name="author" content="Jacob Xi">
+      
+      
+      
+        <link rel="prev" href="../2config_indexes/">
+      
+      
+        <link rel="next" href="../4config_ds/">
+      
+      <link rel="icon" href="../../images/logo.png">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.15">
+    
+    
+      
+        <title>3 Managing Data and Forwarders - Jacob ElasticSearch7 Book</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.26e3688c.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ecc896b0.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#3-managing-data-and-forwarders" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Jacob ElasticSearch7 Book" class="md-header__button md-logo" aria-label="Jacob ElasticSearch7 Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Jacob ElasticSearch7 Book
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              3 Managing Data and Forwarders
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Chao-Xi/jxes7book.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxes7book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Jacob ElasticSearch7 Book" class="md-nav__button md-logo" aria-label="Jacob ElasticSearch7 Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    Jacob ElasticSearch7 Book
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Chao-Xi/jxes7book.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxes7book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Welcome
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          一、Elasticsearch 概述
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          一、Elasticsearch 概述
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/1Es_intro/" class="md-nav__link">
+        第一节 ElasticSearch 概述
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          二、Elasticsearch 安装手册
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          二、Elasticsearch 安装手册
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/1ES_vm_install/" class="md-nav__link">
+        第一节 Elasticsearch的安装与简单配置
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/2KB_vm_install/" class="md-nav__link">
+        第二节 Kibana的安装与界面快速预览
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/3ES_KB_docker/" class="md-nav__link">
+        第三节 在Docker容器中运行Elasticsearch Kibana和Cerebro
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/4LogStash_vm_install/" class="md-nav__link">
+        第四节 Logstash安装与导入数据
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          三、Elasticsearch 入门查询
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          三、Elasticsearch 入门查询
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/1ES_intro/" class="md-nav__link">
+        第一节 ElasticSearch 基本概念
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/2ES_CRUD/" class="md-nav__link">
+        第二节 文档的基本CRUD与批量操作 & 读取＆Bulk API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/3ES_ReverseIndex/" class="md-nav__link">
+        第三节 倒排索引
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/4ES_Analyzer/" class="md-nav__link">
+        第四节 使用分析器进行分词
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/5ES_Search/" class="md-nav__link">
+        第五节 ElasticSearch Search语句
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/6ES_Mapping/" class="md-nav__link">
+        第六节 ElasticSearch Mapping 介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/7ES_Index/" class="md-nav__link">
+        第七节 Index Template和Dynamic Template
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/8ES_Aggr/" class="md-nav__link">
+        第八节 Elasticsearch Aggregations聚合分析简介
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/9ES_SUM/" class="md-nav__link">
+        第九节 Elasticsearch 入门总结 & 测试
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          四、Elasticsearch 深入搜索
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          四、Elasticsearch 深入搜索
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/1ES_search/" class="md-nav__link">
+        第一节 基于词项和基于全文的搜索
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/2ES_search_str_score/" class="md-nav__link">
+        第二节 结构化搜索以及搜索的相关性算分
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/3ES_query_filter/" class="md-nav__link">
+        第三节 Query & Filtering与多字符串多字段查询
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/4ES_sin_mul_search/" class="md-nav__link">
+        第四节 单字符串多字段查询
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/5ES_multi_lag_ana/" class="md-nav__link">
+        第五节 多语言及中文分词与检索
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/6ES_pra_tmdb/" class="md-nav__link">
+        第六节 Space Jam，一次全文搜索的实例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/7ES_ST_IA/" class="md-nav__link">
+        第七节 使⽤ Search Template 和 Index Alias
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/8ES_FUNC_SCORE/" class="md-nav__link">
+        第八节 综合排序:Function Score Query 优化算分
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/9ES_suggester/" class="md-nav__link">
+        第九节 Term & Phrase Suggester
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/10ES_Autocomplete/" class="md-nav__link">
+        第十节 ⾃动补全与基于上下文的提示
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/11ES_CrossSearch/" class="md-nav__link">
+        第十一节 跨集群搜索
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          五、分布式特性及分布式搜索的机制
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          五、分布式特性及分布式搜索的机制
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/1ES_cluster/" class="md-nav__link">
+        第一节 集群分布式模型及选主与脑裂问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/2ES_shard/" class="md-nav__link">
+        第二节 分⽚与集群的故障转移
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/3ES_doc_shard/" class="md-nav__link">
+        第三节 ⽂档分布式存储
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/4ES_shared_lifecycle/" class="md-nav__link">
+        第四节 分⽚及其生命周期
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/5ES_SE_Score/" class="md-nav__link">
+        第五节 剖析分布式查询及相关性算分
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/6ES_Sort_query/" class="md-nav__link">
+        第六节 排序及Doc Values&Fielddata
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/7ES_Pages_Traverse/" class="md-nav__link">
+        第七节 分页与遍历 – From，Size，Search After & Scroll API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/8ES_Concurrent_process/" class="md-nav__link">
+        第八节 处理并发读写操作
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          六、深入聚合分析
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          六、深入聚合分析
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/1chap6_bucket_metrics/" class="md-nav__link">
+        第一节 Bucket & Metric 聚合分析及嵌套聚合
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/2chap6_pipeline_metrics/" class="md-nav__link">
+        第二节 Pipeline 聚合分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/3chap6_aggragate_scope_order/" class="md-nav__link">
+        第三节 聚合的作⽤范围及排序
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/4chap6_accurate_aggragate/" class="md-nav__link">
+        第四节 聚合的精准度问题
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+          七、数据建模
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          七、数据建模
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/1chap7_nested_obj/" class="md-nav__link">
+        第一节 对象及 Nested 对象
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/2chap7_parent_child/" class="md-nav__link">
+        第二节 文档的父子关系
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/3chap7_updateindex_reindex/" class="md-nav__link">
+        第三节 Update By Query & Reindex API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/4chap7_ingest_painless/" class="md-nav__link">
+        第四节 Ingest Pipeline 与 Painless Script
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/5chap7_es_model/" class="md-nav__link">
+        第五节 Elasticsearch 数据建模实例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/6chap7_es_model_pra/" class="md-nav__link">
+        第六节 Elasticsearch 数据建模最佳实践
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/7chap7_es_sum2/" class="md-nav__link">
+        第七节 第二部分总结回顾
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+          八、数据保护
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          八、数据保护
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/1ES_cluster_IAM/" class="md-nav__link">
+        第一节 集群身份认证与用户鉴权
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/2ES_cluster_enc_transit/" class="md-nav__link">
+        第二节 集群内部间的安全通信
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/3ES_cluster_out_sec/" class="md-nav__link">
+        第三节 集群与外部间的安全通信
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          九、水平扩展Elasticsearch集群
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          九、水平扩展Elasticsearch集群
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/1ES_cluster_deploy/" class="md-nav__link">
+        第一节 常见的集群部署方式
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/2ES_hot_warm/" class="md-nav__link">
+        第二节 Hot & Warm 架构与 Shard Filtering
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/3ES_shard_settings/" class="md-nav__link">
+        第三节 分片设定及管理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/4ES_cluster_plan/" class="md-nav__link">
+        第四节 如何对集群进行容量规划
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/5ES_Cloud/" class="md-nav__link">
+        第五节 云上管理 Elasticsearch 的一些方法
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          十、使用 Kubernets 安装 EFK 集群
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_11">
+          <span class="md-nav__icon md-icon"></span>
+          十、使用 Kubernets 安装 EFK 集群
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/1log_architecture/" class="md-nav__link">
+        第一节 kubernetes 日志架构
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/2EFK_log/" class="md-nav__link">
+        第二节 在 K8S 上搭建 EFK 日志收集系统
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/16EFK_log_adv/" class="md-nav__link">
+        第三节 在 Kubernetes 安装 EFK 日志收集系统[更新]
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/17EFK_log_Ana/" class="md-nav__link">
+        第四节 EFK kibana 日志分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/18EFK_log_alert/" class="md-nav__link">
+        第五节 基于EKF日志的报警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/3ECK_operator/" class="md-nav__link">
+        第六节 使用Operator快速部署Elasticsearch集群
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/7EFKLK_log_aggregator/" class="md-nav__link">
+        第七节 使用 EFKLK 搭建 Kubernetes 日志收集工具栈 (Kafka/Logstash)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/19Fluentd/" class="md-nav__link">
+        第八节 日志收集工具 Fluentd 使用教程
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
+          十一、使用 Elastic Stack 构建 Kubernetes 全栈监控
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_12">
+          <span class="md-nav__icon md-icon"></span>
+          十一、使用 Elastic Stack 构建 Kubernetes 全栈监控
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/20Elastic_Stack_Monitoring1/" class="md-nav__link">
+        第一节 ElasticSearch 的集群安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/21Elastic_Stack_Monitoring2/" class="md-nav__link">
+        第二节 使用 Elastic Stack — Metricbeat 监控安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/22Elastic_Stack_Monitoring3/" class="md-nav__link">
+        第三节 使用 Elastic Stack - Filebeat 日志数据收集安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/23Elastic_Stack_Monitoring4/" class="md-nav__link">
+        第四节 使用 Elastic Stack — Elastic APM 应用性能监控的工具安装
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="0">
+          十二、生产环境中的集群运维
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_13">
+          <span class="md-nav__icon md-icon"></span>
+          十二、生产环境中的集群运维
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/1chap12_ES_prod/" class="md-nav__link">
+        第一节 生产环境常用配置和上线清单
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/2chap12_mon_es/" class="md-nav__link">
+        第二节 监控Elasticsearch集群
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/3chap12_es_diag/" class="md-nav__link">
+        第三节 诊断集群的潜在问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/4chap12_es_red_yellow/" class="md-nav__link">
+        第四节 解决集群 Yellow 与 Red 的问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/5chap12_es_cluster_perf/" class="md-nav__link">
+        第五节 集群写性能优化
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/6chap12_es_pre_test/" class="md-nav__link">
+        第六节 集群压力测试
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/7chap12_es_segment_merge/" class="md-nav__link">
+        第七节 段合并优化及注意事项
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/8chap12_Circuit_Breaker/" class="md-nav__link">
+        第八节 缓存及使用 Circuit Breaker 限制内存使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/9chap12_es_ops/" class="md-nav__link">
+        第九节 一些运维相关的建议
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_14" id="__nav_14_label" tabindex="0">
+          十三、索引生命周期管理
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_14">
+          <span class="md-nav__icon md-icon"></span>
+          十三、索引生命周期管理
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/1chap13_es_shrink_rolloverapi/" class="md-nav__link">
+        第一节 使用 Shrink 与 Rollover API 管理索引
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/2chap13_index_lms/" class="md-nav__link">
+        第二节 索引全生命周期管理及工具介绍
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_15" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_15" id="__nav_15_label" tabindex="0">
+          十四、用Logstash和Beats构建数据管道
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_15_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_15">
+          <span class="md-nav__icon md-icon"></span>
+          十四、用Logstash和Beats构建数据管道
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap14/1logstash_introduce/" class="md-nav__link">
+        第一节 Logstash 入门及架构介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap14/2JDBC_logstash_ES/" class="md-nav__link">
+        第二节 利用 JDBC 插件导入数据到 Elasticsearch
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap14/3Beats/" class="md-nav__link">
+        第三节 Beats 介绍
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_16" id="__nav_16_label" tabindex="0">
+          十五、用Kibana进行数据可视化分析
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_16">
+          <span class="md-nav__icon md-icon"></span>
+          十五、用Kibana进行数据可视化分析
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap15/1chap15_index_pattern/" class="md-nav__link">
+        第一节 使用 Index Pattern 配置数据
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap15/2chap15_kibana/" class="md-nav__link">
+        第二节 Kibana 使用的技巧
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_17" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_17" id="__nav_17_label" tabindex="0">
+          十六、探索X-Pack套件
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_17_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_17">
+          <span class="md-nav__icon md-icon"></span>
+          十六、探索X-Pack套件
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/1ES_monitor_alert_xpack/" class="md-nav__link">
+        第一节 用Monitoring和Alerting监控Elasticsearch集群
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/2Xpack_APM/" class="md-nav__link">
+        第二节 用 APM 进行程序性能监控
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/3Xpack_ML/" class="md-nav__link">
+        第三节 用机器学习实现异常检测
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/4ELK_Filebeat/" class="md-nav__link">
+        第四节 用 Elastic Stack 进行日志管理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/5xpack_canvas/" class="md-nav__link">
+        第五节 用 Canvas 进行数据的实时展示
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_18" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_18" id="__nav_18_label" tabindex="0">
+          十七、ELK 实战 Workshop
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_18_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_18">
+          <span class="md-nav__icon md-icon"></span>
+          十七、ELK 实战 Workshop
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap17/1ES_WS_movie/" class="md-nav__link">
+        第一节 电影搜索服务
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap17/2ES_WS_stackoverflow/" class="md-nav__link">
+        第二节 Stackoverflow用户调查问卷分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap17/3EFK_jfrog/" class="md-nav__link">
+        第三节 通过EFK对Artifactory进行日志分析
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_19" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_19" id="__nav_19_label" tabindex="0">
+          十八、Elastic认证, 开发与备份
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_19_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_19">
+          <span class="md-nav__icon md-icon"></span>
+          十八、Elastic认证, 开发与备份
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/1ES_Certified_test/" class="md-nav__link">
+        第一节 Elastic 认证考试
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/2ES_backup_restore/" class="md-nav__link">
+        第二节 集群 Backup & Restore
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/3ES_Java/" class="md-nav__link">
+        第三节 基于 Java 和 Elasticsearch 开发应用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/4ES_migration/" class="md-nav__link">
+        第四节 3种 Elasticsearch 数据离线迁移方案
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_20" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_20" id="__nav_20_label" tabindex="0">
+          十九、Elastic 操作总结篇
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_20_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_20">
+          <span class="md-nav__icon md-icon"></span>
+          十九、Elastic 操作总结篇
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum1_search_api/" class="md-nav__link">
+        ElasticSearch URI 常用语句总结篇
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum2_search_dep/" class="md-nav__link">
+        Elasticsearch 深入搜索总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum3_cross_search/" class="md-nav__link">
+        ElasticSearch 分布式搜索
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum4_agg_search/" class="md-nav__link">
+        ElasticSearch 深入聚合分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum5_datamodel/" class="md-nav__link">
+        ElasticSearch 数据建模
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum6_Opt_Mgt/" class="md-nav__link">
+        ElasticSearch Operation and Management
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum7_test/" class="md-nav__link">
+        期末考试
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum8_int/" class="md-nav__link">
+        ElasticSearch 面试
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_21" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_21" id="__nav_21_label" tabindex="0">
+          Splunk8 Admin Mgt
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_21_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_21">
+          <span class="md-nav__icon md-icon"></span>
+          Splunk8 Admin Mgt
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1spl_role_ad/" class="md-nav__link">
+        1 Splunk Managing Users and Authentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2config_indexes/" class="md-nav__link">
+        2 Working with Configuration Files and Indexes
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          3 Managing Data and Forwarders
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        3 Managing Data and Forwarders
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-getting-data-into-splunk" class="md-nav__link">
+    1 Getting Data into Splunk
+  </a>
+  
+    <nav class="md-nav" aria-label="1 Getting Data into Splunk">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-1-understanding-splunk-inputs" class="md-nav__link">
+    1-1 Understanding Splunk Inputs
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-2-working-with-sourcetypes" class="md-nav__link">
+    1-2 Working with Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-3-working-with-sourcetypes" class="md-nav__link">
+    1-3 Working with Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-4-understanding-the-phases-of-indexing" class="md-nav__link">
+    1-4 Understanding the Phases of Indexing
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-5-index-time-vs-search-time-precedence" class="md-nav__link">
+    1-5 Index-time vs. Search-time Precedence
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-6-demo" class="md-nav__link">
+    1-6 Demo
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-data" class="md-nav__link">
+    Add data
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-index" class="md-nav__link">
+    Create index
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    Summary
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-configure-splunk-forwarders" class="md-nav__link">
+    2 Configure Splunk Forwarders
+  </a>
+  
+    <nav class="md-nav" aria-label="2 Configure Splunk Forwarders">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2-1-splunk-forwarders" class="md-nav__link">
+    2-1 Splunk Forwarders
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-2-installing-and-running-universal-forwarders-installing-and-running-universal-forwarders" class="md-nav__link">
+    2-2 Installing and Running Universal Forwarders Installing and Running Universal Forwarders
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-3-setting-up-forwarding" class="md-nav__link">
+    2-3 Setting up Forwarding
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-4-adding-inputs-to-the-universal-forwarder" class="md-nav__link">
+    2-4 Adding Inputs to the Universal Forwarder
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-5-additional-forwarder-configuration-options" class="md-nav__link">
+    2-5 Additional Forwarder Configuration Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-6-demo" class="md-nav__link">
+    2-6 Demo
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-manage-splunk-forwarders" class="md-nav__link">
+    3 Manage Splunk Forwarders
+  </a>
+  
+    <nav class="md-nav" aria-label="3 Manage Splunk Forwarders">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3-1-use-of-forwarder-management" class="md-nav__link">
+    3-1 Use of Forwarder Management
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-2-splunk-deployment-server" class="md-nav__link">
+    3-2 Splunk Deployment Server
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-3-deployment-app" class="md-nav__link">
+    3-3 Deployment App
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-4-deployment-clients" class="md-nav__link">
+    3-4 Deployment Clients
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-5-setting-up-serverclasses" class="md-nav__link">
+    3-5 Setting up Serverclasses
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-6-monitoring-forwarders" class="md-nav__link">
+    3-6 Monitoring Forwarders
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo" class="md-nav__link">
+    Demo
+  </a>
+  
+    <nav class="md-nav" aria-label="Demo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#indexer" class="md-nav__link">
+    Indexer
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-deployment-client" class="md-nav__link">
+    Configure deployment client
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-a-serverclass" class="md-nav__link">
+    Create a serverclass
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary_1" class="md-nav__link">
+    Summary
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4config_ds/" class="md-nav__link">
+        4 Splunk Configuring Distributed Search
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5Mon_create_inputs/" class="md-nav__link">
+        5 Splunk Monitoring and Creating Inputs
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6par_man/" class="md-nav__link">
+        6 Splunk Parsing and Manipulating Data
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7splunk_search/" class="md-nav__link">
+        7 Performing Basic Splunk Searches
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../8spl_exam/" class="md-nav__link">
+        8 Splunk ADMIN Exam
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-getting-data-into-splunk" class="md-nav__link">
+    1 Getting Data into Splunk
+  </a>
+  
+    <nav class="md-nav" aria-label="1 Getting Data into Splunk">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-1-understanding-splunk-inputs" class="md-nav__link">
+    1-1 Understanding Splunk Inputs
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-2-working-with-sourcetypes" class="md-nav__link">
+    1-2 Working with Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-3-working-with-sourcetypes" class="md-nav__link">
+    1-3 Working with Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-4-understanding-the-phases-of-indexing" class="md-nav__link">
+    1-4 Understanding the Phases of Indexing
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-5-index-time-vs-search-time-precedence" class="md-nav__link">
+    1-5 Index-time vs. Search-time Precedence
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-6-demo" class="md-nav__link">
+    1-6 Demo
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-data" class="md-nav__link">
+    Add data
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-index" class="md-nav__link">
+    Create index
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    Summary
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-configure-splunk-forwarders" class="md-nav__link">
+    2 Configure Splunk Forwarders
+  </a>
+  
+    <nav class="md-nav" aria-label="2 Configure Splunk Forwarders">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2-1-splunk-forwarders" class="md-nav__link">
+    2-1 Splunk Forwarders
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-2-installing-and-running-universal-forwarders-installing-and-running-universal-forwarders" class="md-nav__link">
+    2-2 Installing and Running Universal Forwarders Installing and Running Universal Forwarders
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-3-setting-up-forwarding" class="md-nav__link">
+    2-3 Setting up Forwarding
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-4-adding-inputs-to-the-universal-forwarder" class="md-nav__link">
+    2-4 Adding Inputs to the Universal Forwarder
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-5-additional-forwarder-configuration-options" class="md-nav__link">
+    2-5 Additional Forwarder Configuration Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-6-demo" class="md-nav__link">
+    2-6 Demo
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-manage-splunk-forwarders" class="md-nav__link">
+    3 Manage Splunk Forwarders
+  </a>
+  
+    <nav class="md-nav" aria-label="3 Manage Splunk Forwarders">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3-1-use-of-forwarder-management" class="md-nav__link">
+    3-1 Use of Forwarder Management
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-2-splunk-deployment-server" class="md-nav__link">
+    3-2 Splunk Deployment Server
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-3-deployment-app" class="md-nav__link">
+    3-3 Deployment App
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-4-deployment-clients" class="md-nav__link">
+    3-4 Deployment Clients
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-5-setting-up-serverclasses" class="md-nav__link">
+    3-5 Setting up Serverclasses
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-6-monitoring-forwarders" class="md-nav__link">
+    3-6 Monitoring Forwarders
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo" class="md-nav__link">
+    Demo
+  </a>
+  
+    <nav class="md-nav" aria-label="Demo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#indexer" class="md-nav__link">
+    Indexer
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-deployment-client" class="md-nav__link">
+    Configure deployment client
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-a-serverclass" class="md-nav__link">
+    Create a serverclass
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary_1" class="md-nav__link">
+    Summary
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="3-managing-data-and-forwarders"><strong>3 Managing Data and Forwarders</strong></h1>
+<h2 id="1-getting-data-into-splunk"><strong>1 Getting Data into Splunk</strong></h2>
+<ul>
+<li>Understanding Splunk inputs</li>
+<li>Uploading data into Splunk</li>
+<li>Working with sourcetypes</li>
+<li>Understanding the phases of indexing</li>
+<li><strong>Index-time vs. search-time precedence</strong></li>
+</ul>
+<h3 id="1-1-understanding-splunk-inputs"><strong>1-1 Understanding Splunk Inputs</strong></h3>
+<p><strong>Splunk Enterprise Data Administrator Tasks</strong></p>
+<ul>
+<li>Create and manage inputs for <strong>universal/heavy forwarders</strong></li>
+<li>Manage parsing of data including line-breaking and timestamp extraction</li>
+<li>Design and establish new ingestion pipelines</li>
+<li>Manage Splunk configuration files deployment</li>
+<li>Collaborate with users on data on-boarding</li>
+</ul>
+<p><strong>Splunk Enterprise Systems Administrator Tasks</strong></p>
+<ul>
+<li>Install Splunk Software</li>
+<li><strong>Create and Manage Indexes</strong></li>
+<li>Manage Splunk Licenses</li>
+<li>Configure Security</li>
+<li>Monitor Splunk and respond to Monitoring Console Alerts</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_1.png" title="Body image" /></p>
+<blockquote>
+<p>On the left side, we have the client systems. </p>
+</blockquote>
+<ul>
+<li>This could be applications, network devices or operating systems. They generate logs and other metrics.</li>
+<li>The <strong>Splunk universal forwarder</strong>, being the most common way of collecting data in Splunk, reads data from the log files and then sends them to the indexers using TCP. </li>
+<li><strong>The data can be encrypted optionally</strong>. </li>
+</ul>
+<blockquote>
+<p><strong>The indexer receives data, parses them, and stores them in index files</strong>. </p>
+<p>The search head is the entry point for the user. He uses a search head to log onto Splunk via a web interface and <strong>then uses a specialized query language, Search Processing Language, to query the data</strong>. </p>
+</blockquote>
+<p><strong>Ingest Any Text Data from Anywhere</strong></p>
+<ul>
+<li>Authentication</li>
+<li>Audit</li>
+<li>Middleware</li>
+<li>OS </li>
+<li>OS Performance</li>
+<li>Network device</li>
+<li>Network packets</li>
+<li>Web Server</li>
+</ul>
+<hr />
+<ul>
+<li>Sensors</li>
+<li>IoT Devices</li>
+<li>Database</li>
+<li>Messaging Systems</li>
+<li>CI/CD</li>
+<li>Automation </li>
+<li>programs</li>
+<li>Mail Server</li>
+<li>LDAP Server</li>
+</ul>
+<hr />
+<ul>
+<li>Active Directory</li>
+<li>Containers</li>
+<li>Kubernetes/Contain</li>
+<li>er Orchestration</li>
+<li>Applications</li>
+<li>API</li>
+<li>Event viewer</li>
+<li>Mobile devices</li>
+<li>Call Detail record</li>
+</ul>
+<p><strong>Data Inputs</strong></p>
+<ul>
+<li>A data source configured to send data to Splunk</li>
+<li>Data inputs send data to Splunk Indexers where the data is parsed and indexed</li>
+<li><strong>During indexing, stream of data from the input is transformed to searchable events</strong></li>
+</ul>
+<p><strong>Indexing Flow</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_2.png" title="Body image" /></p>
+<ul>
+<li>
+<p>The universal forwarder is the data input. </p>
+<ul>
+<li>It uses <code>inputs.conf</code> as the primary configuration file to determine the behavior of the inputs. </li>
+<li>Data is collected from the source. </li>
+<li><strong>In most cases, these are the log files on the client systems.</strong> </li>
+</ul>
+</li>
+<li>
+<p><strong>The data is then sent to the indexer</strong>. </p>
+<ul>
+<li>That's where the parsing happens. </li>
+<li>During parsing and indexing, <strong>props.conf and transforms.conf</strong>, two important configuration files, are utilized by Splunk. </li>
+</ul>
+</li>
+<li>
+<p>Finally, the data is written to the disk. </p>
+<ul>
+<li>The data streams that originate at the input are simply transformed into searchable events and written to disk on the indexers. </li>
+</ul>
+</li>
+</ul>
+<p><strong>Types of Data Inputs</strong></p>
+<ul>
+<li><strong>Files and folders</strong>： Monitor text files</li>
+<li><strong>TCP/UDP</strong>： Receive data on a TCP/UDP port Files and folders</li>
+<li><strong>HTTP</strong>： Receive data on a HTTP listener</li>
+<li><strong>Scripted input</strong>： Ingest output of a script</li>
+<li><strong>Windows input</strong>： Windows event logs and perfmon data</li>
+<li><strong>Add-ons</strong>： Custom apps from Splunkbase</li>
+<li><strong>Splunk Web</strong>： Upload data directly from browser</li>
+<li><strong>CLI</strong>： Command line interface</li>
+<li><strong>Modular inputs</strong>： Custom input by extending Splunk</li>
+<li><strong>FIFO</strong>： First in First out Queues</li>
+</ul>
+<p><strong>Input Phase</strong></p>
+<p><strong>Data is read from the source</strong></p>
+<ul>
+<li>Data is handled as streams</li>
+<li>Configuration settings are applied to entire stream</li>
+<li>Similar to unix tail</li>
+</ul>
+<p><strong>Universal Forwarder is the most common input process</strong></p>
+<ul>
+<li>Universal Forwarder keeps track of the read process</li>
+<li>Metadata such as source, host and sourcetypes are added</li>
+<li>Additional configuration such as compression and encryption are applied</li>
+</ul>
+<p><strong>Let's say if the universal forwarder restarts for some reason, either because a server is rebooted or because a server crashed, you don't want the universal forwarder to reread all the data that it had already ingested.</strong></p>
+<p><strong>So universal forwarder has a very neat mechanism called fishbucket, using which it's going to keep track of the data that it ingests.</strong> </p>
+<h3 id="1-2-working-with-sourcetypes"><strong>1-2 Working with Sourcetypes</strong></h3>
+<p><strong>Why Upload Data into Splunk?</strong></p>
+<ul>
+<li>Test the data for any parsing errors before onboarding</li>
+<li>Ability to try various regular expressions for <strong>line-breaking and timestamp extractions</strong></li>
+</ul>
+<blockquote>
+<p>Splunk provides a great data upload wizard, using which you can catch parsing issues before you actually ingest them into the platform.</p>
+</blockquote>
+<ul>
+<li>Explore various input options such as <strong>sourcetype</strong> and <strong>host</strong></li>
+</ul>
+<p><strong>Uploading Data: Workflow</strong></p>
+<blockquote>
+<p>Here is the workflow of how you will get data into Splunk. </p>
+</blockquote>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_3.png" title="Body image" /></p>
+<p><strong>Types of Data You Can Upload</strong></p>
+<ul>
+<li>Any kind of <strong>text files</strong> (Example: Logs, CSV files)</li>
+<li>Splunk automatically recognizes many standard log files such as <strong>apache web access logs and mysqld log</strong></li>
+<li>You can even <strong>upload zip files</strong>. Splunk will unzip and upload</li>
+<li>Make sure the data in the files have <strong>valid timestamps</strong></li>
+</ul>
+<p><strong>Parsing Options</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_4.png" title="Body image" /></p>
+<p><strong>Input Options</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_5.png" title="Body image" /></p>
+<h3 id="1-3-working-with-sourcetypes"><strong>1-3 Working with Sourcetypes</strong></h3>
+<p><strong>Sourcetypes</strong></p>
+<ul>
+<li>Splunk uses <strong>sourcetypes</strong> to categorize data</li>
+<li>Splunk comes with may <strong>pretrained sourcetypes</strong></li>
+<li>Can be used while searching to <strong>filter data</strong></li>
+<li>Defined in <strong><code>props.conf</code></strong> on the <strong>indexer or heavy-forwarder</strong></li>
+<li>Automatically assigned by <strong>Splunk, or explicitly assigned by data administrator</strong></li>
+</ul>
+<p><strong>Using Sourcetype in Search</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_6.png" title="Body image" /></p>
+<p><strong><code>index=main sourcetvoe=vendor_sales</code></strong></p>
+<p><strong><code>LINE_BREAKER</code> and <code>TIME_FORMAT</code> are the two most important parameters in <code>props.conf</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_7.png" title="Body image" /></p>
+<p><strong>Assigning Sourcetype in SplunkWeb</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_8.png" title="Body image" /></p>
+<p><strong>Pretrained Sourcetypes</strong></p>
+<ul>
+<li>Splunk automatically <strong>recognizes many log files</strong></li>
+<li>Splunkbase apps can add new <strong>sourcetypes</strong></li>
+<li>Examples<ul>
+<li><code>linux_messages_syslog</code></li>
+<li><code>access_combined</code></li>
+</ul>
+</li>
+<li>List of pretrained <strong>sourcetypes</strong> at https://docs.splunk.com</li>
+</ul>
+<blockquote>
+<p>https://docs.splunk.com/Documentation/Splunk/8.0.3/Data/Listofpretrainedsourcetypes</p>
+</blockquote>
+<p><strong>Do not configure excessive number of sourcetypes</strong></p>
+<blockquote>
+<p>Splunk environments, do not exceed 200 sourcetypes, but for larger Splunk environments, when I say larger I mean at least 50 plus indexers</p>
+</blockquote>
+<h3 id="1-4-understanding-the-phases-of-indexing"><strong>1-4 Understanding the Phases of Indexing</strong></h3>
+<p><strong>Three Phases of Indexing</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_12.png" title="Body image" /></p>
+<p><strong>Input phase: forwarders</strong></p>
+<ul>
+<li>Data is read from data sources such as files and network</li>
+<li>Metadata such as host,source and sourcetype are app</li>
+<li>Most configuration in <strong>inputs.conf</strong> (some in <strong>props.conf</strong>)</li>
+<li>Operates on the entire data stream</li>
+</ul>
+<p><strong>Parsing phase</strong></p>
+<ul>
+<li>Data is broken into <strong>events</strong></li>
+<li><strong>Timestamp</strong> extracted</li>
+<li>Most configuration in <strong>props.conf</strong> (some in <strong>transforms.conf</strong>)</li>
+<li>Operates on individual events</li>
+<li>Event level transformations</li>
+</ul>
+<p><strong>Indexing phase</strong></p>
+<ul>
+<li>Segment events that then can be searched</li>
+<li>Build index</li>
+<li>License meter runs before the data is written to disk</li>
+<li>Raw data and index files are written to disk (data buckets)</li>
+</ul>
+<p><strong>Data Pipelines</strong></p>
+<p>Screenshot from Splunk monitoring console</p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_14.png" title="Body image" /></p>
+<p><strong>Roles of Data Pipelines</strong></p>
+<ul>
+<li>Parsing pipeline  / <strong>Character encoding / Line breaking</strong></li>
+<li>Merging pipeline / <strong>Timestamp extraction / Merge multi-line events</strong></li>
+<li>Indexing pipeline / Indexing</li>
+</ul>
+<h3 id="1-5-index-time-vs-search-time-precedence"><strong>1-5 Index-time vs. Search-time Precedence</strong></h3>
+<p><strong>Index-time and Search-time</strong></p>
+<ul>
+<li><strong>Index-time</strong>： Global context, such as input/parsing configuration</li>
+<li><strong>Search-time</strong>： App/User scoped, such as a user’s knowledge objects</li>
+</ul>
+<p><strong>Why Learn About Precedence?</strong></p>
+<ul>
+<li>Splunk's behavior is primarily determined by configuration files</li>
+<li>
+<p><strong>Multiple copies of the same configuration file can be in different directories</strong></p>
+</li>
+<li>
+<p>Configuration files are managed using a location-based priority scheme</p>
+</li>
+<li><strong>During runtime Splunk merges the contents of all copies of a configuration file</strong></li>
+<li><strong>Conflicts are resolved by the precedence of the configuration file</strong></li>
+</ul>
+<blockquote>
+<p>Btool is an excellent tool to retrieve the configuration file contents.</p>
+</blockquote>
+<p><strong>Index-time Precedence</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_9.png" title="Body image" /></p>
+<ul>
+<li><code>etc/system/local</code>is given the highest priority. </li>
+<li><code>etc/apps/search/local</code> followed by <code>etc/apps/app1/local</code>. (This can be any app)</li>
+<li><code>etc/apps/search/default</code> and then <code>etc/apps/app1/default</code>. </li>
+</ul>
+<p><strong>If two are more apps have conflicting settings, app  directory name with highest 
+ASCII order wins</strong></p>
+<p><strong>What about search time?</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_10.png" title="Body image" /></p>
+<p><strong>Search-time Precedence</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_11.png" title="Body image" /></p>
+<h3 id="1-6-demo"><strong>1-6 Demo</strong></h3>
+<ul>
+<li>Examine existing data inputs</li>
+<li>Upload data into Splunk</li>
+<li>Configure input options</li>
+<li>Create a new sourcetype while uploading data</li>
+<li>Review phases of indexing in monitoring console</li>
+</ul>
+<p>Available data inputs in Splunk. <strong>You go to Settings, Data inputs</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_15.png" title="Body image" /></p>
+<p><strong><code>var/log/splunk</code> directory contains the platform‑level logs</strong></p>
+<p><code>$SPLUNK_HOME/var/log/splunk</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_16.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_17.png" title="Body image" /></p>
+<h3 id="add-data">Add data</h3>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_18.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_19.png" title="Body image" /></p>
+<p><strong>Select Source</strong></p>
+<p><a href="https://docs.splunk.com/Documentation/Splunk/8.0.3/SearchTutorial/Systemrequirements#Download_the_tutorial_data_files">https://docs.splunk.com/Documentation/Splunk/8.0.3/SearchTutorial/Systemrequirements#Download_the_tutorial_data_files</a></p>
+<h3 id="create-index">Create index</h3>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_20.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_21.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_22.png" title="Body image" /></p>
+<p><code>index=main sourcetype=vendor_sales</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_23.png" title="Body image" /></p>
+<p><strong>Source</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_24.png" title="Body image" /></p>
+<p><strong>Create source type</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_25.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_26.png" title="Body image" /></p>
+<p><strong>how the data ingestion pipeline works.</strong></p>
+<p><strong>Click <code>Indexing</code>, <code>Performance</code>, <code>Indexing Performance: Instance</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_27.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_28.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_29.png" title="Body image" /></p>
+<h3 id="summary"><strong>Summary</strong></h3>
+<ul>
+<li>Inputs read data from the source and stream them to Indexers</li>
+<li>Data flows through input, parsing and indexing phases</li>
+<li><strong>Inputs.conf, props.conf and transforms.conf govern the ingestion behavior</strong></li>
+<li>Event level transformations can be done during indexing</li>
+<li><strong>Create custom sourcetypes if Splunk’s pre-trained sourcetypes don’t meet your needs</strong></li>
+</ul>
+<h2 id="2-configure-splunk-forwarders"><strong>2 Configure Splunk Forwarders</strong></h2>
+<ul>
+<li>Determining appropriate forwarder type to use</li>
+<li>Installing and running universal forwarder</li>
+<li>Setting up forwarding</li>
+<li>Adding input to universal forwarder</li>
+<li>Implementing forwarder options</li>
+<li>Troubleshooting universal forwarders</li>
+</ul>
+<pre><code>Creating a Splunk universal forwarder using docker
+--------------------------------------------------
+
+$ docker pull splunk/universalforwarder
+
+$ docker run -d --name uf1 -h uf1 -e &quot;SPLUNK_START_ARGS=--accept-license&quot; -e &quot;SPLUNK_PASSWORD=splunkRocks&quot; splunk/universalforwarder
+
+9ec532c2ab1e0e3082bd0f84bc12a5fef9dc26b8c8e416ceeb4cb6ee713f2db7
+
+[splunk@a1f4e45f7102 bin]$ ./splunk status
+splunkd is running (PID: 730).
+splunk helpers are running (PIDs: 731).
+</code></pre>
+<h3 id="2-1-splunk-forwarders"><strong>2-1 Splunk Forwarders</strong></h3>
+<p><strong>Splunk forwarder is an instance of Splunk that collects and forwards data to another Splunk instance, most commonly to an indexer</strong></p>
+<p><strong>Data Flow</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_30.png" title="Body image" /></p>
+<ul>
+<li>Data is read from the source</li>
+<li>Data streams are transformed into <strong>searchable events and written to disk</strong></li>
+</ul>
+<p><strong>Two Types of Forwarders</strong></p>
+<ul>
+<li>
+<p>Universal Forwarder</p>
+<ul>
+<li>Installed on the source hosts to collect and <strong>send data to Splunk indexers or heavy forwarders</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>Heavy Forwarder</strong></p>
+<ul>
+<li>Sits between universal forwarders and indexers. <strong>Parses data before sending to indexers</strong></li>
+</ul>
+</li>
+</ul>
+<p><strong>Universal Forwarder</strong></p>
+<ul>
+<li>Stripped down version of Splunk enterprise binary</li>
+<li>High performance, low footprint and production-ready</li>
+<li>Does not parse data (Exception: Structured files such as CSV files)</li>
+</ul>
+<blockquote>
+<p>When parsing is done by the forwarder side, props.conf resides on the forwarder</p>
+</blockquote>
+<ul>
+<li><strong>By default 256 KBps output bandwidth</strong> (can be increased in <code>limits.conf</code>)</li>
+</ul>
+<blockquote>
+<p>On the indexer side, <strong>maxKBps is set to 0 by default</strong>, which is unlimited</p>
+</blockquote>
+<ul>
+<li>Built in, no-limit license</li>
+</ul>
+<p><strong>Heavy Forwarder</strong></p>
+<ul>
+<li>Splunk enterprise binary with indexing turned off</li>
+<li>Indexing can be optionally turned on</li>
+<li>Parses data before forwarding to indexer or other third-party 
+receivers</li>
+</ul>
+<blockquote>
+<p><strong>Indexer will ignore props.conf entries for a sourcetype/source/host when data flows through heavy forwarder</strong></p>
+</blockquote>
+<ul>
+<li><strong>Requires forwarder license</strong></li>
+<li><strong>Generally used as intermediary between universal forwarder and indexers</strong></li>
+</ul>
+<p><strong>Universal Forwarder vs. Heavy Forwarder</strong></p>
+<ul>
+<li>
+<p>Universal Forwarder</p>
+<ul>
+<li>Reads data from source and <strong>forwards to indexers or heavy forwarders</strong></li>
+<li>Splunk universal forwarder binary</li>
+<li><strong>Does not parse data except for structured data such as CSV</strong></li>
+<li>Does not index data</li>
+<li>Built-in license</li>
+</ul>
+</li>
+<li>
+<p><strong>Heavy Forwarder</strong></p>
+<ul>
+<li>Receives data from universal forwarders and forwards to indexers</li>
+<li>Splunk enterprise binary</li>
+<li>Parses data before sending to indexers</li>
+<li>Can optionally index data</li>
+<li>Splunk forwarder license required</li>
+</ul>
+</li>
+</ul>
+<p><strong>Three Use Cases of Heavy Forwarders</strong></p>
+<ul>
+<li><strong>Parse and Route</strong></li>
+</ul>
+<p>Parse data before sending to indexers</p>
+<ul>
+<li><strong>Firewall rule simplification</strong></li>
+</ul>
+<p>When indexers are behind firewall, a rule is required to allow just the heavy forwarder</p>
+<ul>
+<li><strong>Hosting Splunk Add-ons Add-ons like</strong></li>
+</ul>
+<p>DBConnect and HTTP Event collectors can be hosted in heavy forwarders</p>
+<p><strong>A Note About Light Forwarder</strong></p>
+<ul>
+<li>Light forwarders have been deprecated since Splunk version 6.0</li>
+<li>Light forwarders were configured on Splunk Enterprise instances</li>
+<li>Universal forwarders are the recommended replacements for light forwarders</li>
+</ul>
+<h3 id="2-2-installing-and-running-universal-forwarders-installing-and-running-universal-forwarders"><strong>2-2 Installing and Running Universal Forwarders Installing and Running Universal Forwarders</strong></h3>
+<p>Supported Platforms</p>
+<p>Linux / Windows / Mac OS / Solaris / AIX / Free BSD</p>
+<blockquote>
+<p>You can add universal forwarder install steps in Dockerfile using <strong>entrypoint.sh</strong></p>
+</blockquote>
+<p><strong>Installing Universal Forwarder in Unix</strong></p>
+<ul>
+<li>Download the tar ball and unzip at the desired location</li>
+<li>Install universal forwarder in a separate file system (example: /opt/splunkforwarder)</li>
+<li>The command splunk is located in <strong><code>SPLUNK_HOME/bin</code></strong> that can be </li>
+<li>used to start/stop universal forwarder</li>
+<li>The default admin password is <strong>changeme</strong>,and should be changed</li>
+<li><strong>Employ configuration management tools such as ansible or puppet</strong></li>
+</ul>
+<p><strong>Installing Universal Forwarder in Windows</strong></p>
+<ul>
+<li>You can use MSI install wizard or msiexec.exe command line</li>
+<li>Can be installed as a domain user (administrator privilege not required)</li>
+<li>Use <strong>msiexec.exe</strong> with <code>/quite</code> and <code>AGREETOLICENSE=yes</code> for complete silent install </li>
+<li>Can enable windows event logs and perfmon ingestion </li>
+<li>(recommended)</li>
+<li>Runs as a Windows service</li>
+</ul>
+<p><strong>Avoid installing more than one instance of forwarder in a host.</strong></p>
+<h3 id="2-3-setting-up-forwarding"><strong>2-3 Setting up Forwarding</strong></h3>
+<ul>
+<li>Step 1</li>
+</ul>
+<p>Setup receiving on the indexer(s). <strong>Primary configuration 
+file is inputs.conf</strong></p>
+<ul>
+<li>Step 2</li>
+</ul>
+<p><strong>Setup forwarding on the universal forwarders</strong>. Primary 
+configuration file is outputs.conf</p>
+<p><strong>Setting up Receiving</strong></p>
+<ul>
+<li>Setup on the indexer(s) using Splunk Web gui, command line or <code>inputs.conf</code></li>
+<li>Must be done before forwarders can send data</li>
+<li>Using GUI: <code>Settings -&gt; Forwarding</code> and <code>Receiving -&gt; Configure receiving</code></li>
+<li>Command line: <code>splunk enable listen &lt;port&gt;</code><ul>
+<li>Default port is <strong>9997</strong>. You can pick any available port</li>
+</ul>
+</li>
+</ul>
+<p><strong>Using Splunk Web to Setup Receiving</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_31.png" title="Body image" /></p>
+<p><strong>Using Command Line to Setup Receiving On the Indexer</strong></p>
+<p><strong>Commands</strong></p>
+<pre><code>$ cd $SPLUNK_HOME/bin
+$ ./splunk enable listen 9997
+Listening for Splunk data on TCP 
+port 9997.
+
+$ netstat –an | grep 9997
+tcp4 0 0 *.9997 
+*.* LISTEN
+</code></pre>
+<p>Resulting <code>inputs.conf</code></p>
+<pre><code>[splunktcp://9997]
+connection_host = dns
+# The connection_host parameter is used if the forwarder does not 
+set the hostname. The default is dns where receiver will do a reverse dns lookup to find the host name of the forwarder.
+</code></pre>
+<p><strong>Setting up Forwarding</strong></p>
+<ul>
+<li>On the forwarders, use command line or <code>outputs.conf</code> to set up forwarding</li>
+<li>Command line: <code>./splunk add forward-server &lt;Receiver ip host:port&gt;</code> <ul>
+<li><code>./splunk add forward-server 192.168.0.11:9997</code></li>
+</ul>
+</li>
+<li><strong>You can edit <code>outputs.conf</code> directly to add forwarding</strong></li>
+</ul>
+<p><strong>Using Command Line to Setup Forwarding (On the Forwarder)</strong></p>
+<ul>
+<li>Commands</li>
+</ul>
+<pre><code>$ cd $SPLUNK_HOME/bin
+
+$ ./splunk add forward-server 192.168.0.11:9997
+
+Added forwarding to: 192.168.0.11:9997.
+
+$ ./splunk list forward-server
+
+Active forwards: 192.168.0.11:9997
+
+Configured but inactive forwards:None
+</code></pre>
+<ul>
+<li>Resulting <strong>outputs.conf</strong></li>
+</ul>
+<pre><code>[tcpout]
+defaultGroup = default-autolbgroup
+
+[tcpout:default-autolb-group]
+server = 192.168.0.11:9997
+
+[tcpoutserver://192.168.0.11:9997]
+</code></pre>
+<h3 id="2-4-adding-inputs-to-the-universal-forwarder"><strong>2-4 Adding Inputs to the Universal Forwarder</strong></h3>
+<p><strong>Four Ways to Add Inputs</strong></p>
+<ul>
+<li>Using deployment server to distribute inputs.conf</li>
+<li>Using Splunk command line</li>
+<li>Editing inputs.conf manually</li>
+<li>Using Splunk add-ons</li>
+</ul>
+<p><strong>Using Command Line to Add Input （On the Forwarder）</strong></p>
+<p>Commands</p>
+<pre><code>$ SPLUNK_HOME/bin/splunk add monitor /.../Logs/fsck_hfs.log
+
+Added monitor of '/Users/karun/Library/Logs/fsck_hfs.log’
+
+# inputs.conf
+[monitor:///Users/karun/Library/Logs/fsck_hfs.log]
+
+disabled = false
+</code></pre>
+<p><code>inputs.conf</code> has been created in 'search' app at<code>$PLUNK_HOME/etc/apps/search/local/inputs.conf</code>.</p>
+<p><strong>Verifying with btool</strong></p>
+<pre><code>./splunk btool inputs list monitor:///Users/karun/Library/Logs/fsck_hfs.log
+
+[monitor:///Users/karun/Library/Logs/fsck_hfs.log] 
+
+_rcvbuf = 1572864
+disabled = false
+host = Mac.local
+index = default
+</code></pre>
+<pre><code>[monitor:///Users/karun/Library/Logs/fsck_hfs.log] 
+
+host = Mac.local
+index = default
+sourcetype = mac:system:fsck_log
+_TCP_ROUTING = default-autolbgroup
+blacklist = *trace.log
+</code></pre>
+<ul>
+<li>File or directory to be monitored. For directory inputs, all files in all subdirectories included (recursive)<ul>
+<li>Use <code>recursive = false</code> in <code>inputs.conf</code> to disable recursion.</li>
+</ul>
+</li>
+<li>Host name to use for events from this input</li>
+<li>Index name. The index must exist</li>
+<li>Sourcetype to use for events from this input</li>
+<li>Tcpout group to send data to, as specified in <code>outputs.conf</code></li>
+<li>Files to exclude from monitoring</li>
+</ul>
+<p><strong>Location of inputs.conf</strong></p>
+<ul>
+<li>Splunk uses a framework of layered configuration files.</li>
+<li>Precedence of configuration is determined by the directory location.</li>
+<li>In practice, <strong><code>inputs.conf</code> is bundled in an app and distributed using deployment server</strong>.</li>
+</ul>
+<p><strong>Configuration file precedence under <code>$SPLUNK_HOME</code></strong></p>
+<ul>
+<li><code>etc/system/local</code> </li>
+<li><code>etc/apps/search/local</code></li>
+<li><code>etc/apps/&lt;appname&gt;/local</code></li>
+<li><code>etc/apps/search/default</code></li>
+<li><code>etc/apps/&lt;appname&gt;/default</code></li>
+<li><code>etc/system/default</code></li>
+</ul>
+<pre><code>./splunk btool inputs list monitor: ///Users/karun/Library/Logs/fsck_hfs.log --debug
+</code></pre>
+<h3 id="2-5-additional-forwarder-configuration-options"><strong>2-5 Additional Forwarder Configuration Options</strong></h3>
+<p><strong>Fine Tuning Forwarders</strong></p>
+<ul>
+<li>Forward data selectively to multiple indexers</li>
+<li>Load balance forwarding across indexers</li>
+<li>Configure compression</li>
+<li>Configure SSL</li>
+<li>Buffering (Queueing)</li>
+<li>Indexer acknowledgement</li>
+</ul>
+<p><strong>Forward Data Selectively to Multiple Indexers</strong></p>
+<ul>
+<li><strong>Define two tcpout destinations in outputs.conf</strong></li>
+<li>Use <code>_TCP_ROUTING</code> in inputs.conf to selectively send data</li>
+</ul>
+<p><strong>outputs.conf</strong></p>
+<pre><code>[tcpout:security]
+server = sec_indexer:9997
+
+[tcpout:sre]
+server = sre_indexer:9997
+</code></pre>
+<p><strong>inputs.conf</strong></p>
+<pre><code>[monitor:///logs/audit.log]
+_TCP_ROUTING = security
+
+[monitor:///logs/error.log]
+_TCP_ROUTING = sre
+</code></pre>
+<p><strong>Automatic Load Balancing</strong></p>
+<ul>
+<li>Specify a list of indexers in the server list in <code>outputs.conf</code></li>
+<li>Every 30 seconds, forwarder will randomly select an available indexer from the list</li>
+<li>Frequency can be updated using autoLBFrequency setting (not recommended)</li>
+</ul>
+<p>outputs.conf</p>
+<pre><code>[tcpout:indexers]
+server = idx1:9997,idx2:9997,idx3:9997
+</code></pre>
+<blockquote>
+<p>Automatic Load balancing is required for distributed search to be effective</p>
+<p><strong>autoLBFrequency is set in outputs.conf</strong></p>
+</blockquote>
+<p><strong>Enabling Compression</strong></p>
+<ul>
+<li>Enable compression on both indexer and forwarder</li>
+<li>Reduces network traffic, but slightly increases CPU usage</li>
+</ul>
+<p><strong><code>outputs.conf</code> on the forwarder</strong></p>
+<pre><code>[tcpout:indexer]
+server = my_indexer:9997
+compressed = true
+</code></pre>
+<p><strong><code>nputs.conf</code> on the my_indexer</strong></p>
+<pre><code>[splunktcp:9997]
+compressed = true
+</code></pre>
+<p><strong>Configuring SSL</strong></p>
+<ul>
+<li>Enabling SSL automatically enables compression</li>
+<li>Can increase CPU usage</li>
+</ul>
+<p>outputs.conf on the forwarder</p>
+<pre><code>[tcpout:indexer]
+
+server = my_indexer:9997
+clientCert = clientcert.pem
+sslRootCAPath = cacert.pem
+sslPassword = &lt;password&gt;
+</code></pre>
+<p>inputs.conf on the <code>my_indexer</code></p>
+<blockquote>
+<p>Solunk's default SSL certificates password "password'</p>
+</blockquote>
+<pre><code>[splunktcp-ssl:9997]
+
+serverCert = mycert.pem
+sslPassword = &lt;password&gt;
+rootCA = cacert.pem
+</code></pre>
+<blockquote>
+<p>Splunk's default SSL certificates password is "Password"</p>
+</blockquote>
+<p><strong>Configuring Queueing</strong></p>
+<ul>
+<li>Configure maxQueueSize in <code>outputs.conf</code> to enable queueing</li>
+<li>Default is 500kb when useACK is false. 7MB when useACK is true</li>
+<li>When load balancing is enabled, queueing occurs only when all 
+indexers are not available</li>
+</ul>
+<p><strong>Configuring Indexer Acknowledgement</strong></p>
+<ul>
+<li>Ensures data is received by indexers</li>
+<li>Protects against data loss</li>
+<li>Forwarder resends data not acknowledged by indexer</li>
+<li>A wait queue is created with <strong>3X size of maxQueueSize</strong></li>
+<li><strong>Enabaled by using <code>useACK = true</code> in <code>outputs.conf</code></strong></li>
+</ul>
+<h3 id="2-6-demo"><strong>2-6 Demo</strong></h3>
+<p><strong>Download Splunk Universal Forwarder 9.0.4</strong></p>
+<p>https://www.splunk.com/en_us/download/universal-</p>
+<pre><code>ls splunkforwarder-8.0.4-767223ac207f-darwin-64.tgz
+splunkforwarder-8.0.4-767223ac207f-darwin-64.tgz
+
+cd /opt
+/opt $ tar xvzf ~/Downloads/splunkforwarder-8.0.4-767223ac207f-darwin-64.tgz
+
+/opt/splunkforwarder $ cd bin
+/opt/splunkforwarder/bin $ ./splunk start --accept-license
+
+Please enter an administrator username: admin
+Password must contain at least:
+* 8 total printable ASCII character(s).
+Please enter a new password:
+
+/opt/splunkforwarder/bin $ ./splunk status
+
+splunkd is running (PID: 16282).
+splunk helpers are running (PIDs: 16285)
+</code></pre>
+<ul>
+<li><strong>Configuire Indexer</strong></li>
+</ul>
+<pre><code>~/platform/splunk/bin 
+
+./splunk display listen
+Receiving is disabled
+</code></pre>
+<p><strong>Add Forward and Receiving Data via commmand line</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_32.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_33.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_34.png" title="Body image" /></p>
+<pre><code>~/platform/splunk/bin $ ./splunk enable listen 9997
+Listening for Splunk data on TCP port 9997.
+
+~/platform/splunk/bin $ netstat -an | grep 9997
+tcp4 0. 0.  *.9997.  *. * LISTEN
+
+~/platform/splunk/bin $ ./splunk btool inputs list
+...
+[splunktcp://99977
+revbuf = 1572864
+connection_host = ip
+host = Mac.local
+index = default
+...
+
+./splunk btool inputs list splunktcp://9997 --debug
+
+/Users/karun/platform/splunk/etc/apps/search/local/inputs.conf [splunktcp://9997]
+/Users/karun/platform/splunk/etc/system/default/inputs.conf revbuf = 1572864
+/Users/karun/platform/splunk/etc/apps/search/local/inputs.conf connection_host = ip
+/Users/karun/platform/splunk/etc/system/local/inputs.conf host = Mac.local
+/Users/karun/platform/splunk/etc/system/default/inputs.conf index= default
+</code></pre>
+<ul>
+<li><strong>Universal Forwarder</strong></li>
+</ul>
+<pre><code>docker pull splunk/universalforwarder
+
+docker exec -u splunk -it uf1 /bin/bash
+
+[splunk@uf1 splunkforwarder]$ cd bin
+[splunk@uf1 bin]$ ./splunk list forward-server
+
+[splunk@uf1 bin]$ ./splunk list forward-server
+Active forwards:
+None
+Configured but inactive forwards:
+None
+
+[splunk@uf1 bin]$ ./splunk add forward-server 192.168.0.11:9997
+Added forwarding to: 192.168.0.11:9997.
+
+[splunk@uf1 bin]$ ./splunk btool outputs list
+...
+[tcpout-server://192.168.0.11:9997]
+[tpout: default-autolb-group]
+server = 192.168.0.11:9997
+...
+
+</code></pre>
+<p><code>index=_internal host=uf1</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_35.png" title="Body image" /></p>
+<p>Source type</p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_36.png" title="Body image" /></p>
+<pre><code>$ docker exec -u splunk -it uf1 /bin/bash
+[splunk@uf1 splunkforwarder]$ cd bin
+[splunk@uf1 bin]$ ./splunk add monitor /opt/container_artifact/ansible.log
+
+Your session is invalid.
+Splunk username: admin
+Added monitor of '*/opt/container_artifact/ansible.log'
+</code></pre>
+<p>Do not use <code>index=*</code> in your production environment as it might consume excessive resources</p>
+<p><code>index=* host=uf1 source=*ansible*</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_37.png" title="Body image" /></p>
+<pre><code>[splunk@uf1 splunkforwarder]$ cd bin
+[splunk@uf1 bin]$ ./splunk btool inputs
+
+...
+[monitor:///opt/container_artifact/ansible.log]
+f_revbuf = 1572864
+disabled = false
+host = $decideOnStartup
+index = default
+...
+
+
+[splunk@uf1 bin]$ ./splunk btool inputs list monitor: ///opt/container_artifact/ansible.log --debug
+
+/opt/splunkforwarder/etc/apps/search/local/inputs.conf [monitor:///opt/container_artifact/ansible.log]
+/opt/splunkforwarder/etc/system/default/inputs.conf _rcvbuf = 1572864
+/opt/splunkforwarder/etc/apps/search/local/inputs.conf disabled = false
+/opt/splunkforwarder/etc/system/default/inputs.conf host = $decideOnStartup
+/opt/splunkforwarder/etc/system/default/inputs.conf i
+ndex = default
+
+
+[splunk@uf1 bin]$ vi /opt/splunkforwarder/etc/apps/search/local/inputs.conf
+
+[monitor:///opt/container_artifact/ansible.log]
+disabled = false
+
+# Adding inputs for watchdog.log
+[monitor:///opt/container_artifact/ansible.log]
+disabled = false
+index = main
+sourcetype = splunk:watchdog_log
+
+[splunk@uf1 bin]$ ./splunk restart
+</code></pre>
+<p><code>index=* source=*watchdog.log*</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_38.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_39.png" title="Body image" /></p>
+<p><code>Update $PLUNK HOME/etc/system/local/outputs.conf</code></p>
+<pre><code>[splunk@uf1 splunkforwarder]$ cd etc/system/local
+
+[indexAndForward]
+index = false
+[tcpout]
+defaultGroup = default-autolb-group
+
+[tcpout:default-autolb-group]
+server = 192.168.0.11:9997
+useACK = true
+
+[tcpout server: //192.168.0.11:9997]
+</code></pre>
+<p><code>index=_internal host=uf1 ack</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_40.png" title="Body image" /></p>
+<pre><code>[splunk@uf1 splunkforwarder]$ cd bin
+[splunk@uf1 bin]$ ./splunk status
+splunkd is running (PID: 54057).
+splunk helpers are running (PIDs: 54058)
+
+[splunk@uf1 bin]$ ps -ef | grep splunk
+
+splunk 54057 0 0 13:44 ? 00:00:01 splunkd -p 8089 restart
+
+/splunk btool outputs list
+</code></pre>
+<p><strong>Summary</strong></p>
+<ul>
+<li>
+<p>Most common way to send data to Splunk is using universal forwarders</p>
+</li>
+<li>
+<p>Use heavy forwarders as intermediary between forwarders and indexers</p>
+</li>
+<li>
+<p><strong>Heavy forwarders parse and optionally index data</strong></p>
+</li>
+<li>
+<p><strong>Major configuration files are inputs.conf and outputs.conf</strong></p>
+</li>
+<li>
+<p><strong>Forwarder configuration options include  SSL, queueing, load balancing and compression</strong></p>
+</li>
+</ul>
+<h2 id="3-manage-splunk-forwarders"><strong>3 Manage Splunk Forwarders</strong></h2>
+<ul>
+<li>Use of forwarder management</li>
+<li>Describe Splunk deployment server</li>
+<li>Use deployment apps</li>
+<li>Configure deployment clients</li>
+<li>Configure client groups using </li>
+<li>serverclasses</li>
+<li>Monitor forwarders</li>
+</ul>
+<h3 id="3-1-use-of-forwarder-management"><strong>3-1 Use of Forwarder Management</strong></h3>
+<p>Why Forwarder Management?</p>
+<ul>
+<li><strong>Centralized</strong><ul>
+<li>Handle thousands of forwarders from one system</li>
+</ul>
+</li>
+<li><strong>Distribute configuration files</strong><ul>
+<li>Configuration files can be packaged as apps and distributed from a central place</li>
+</ul>
+</li>
+<li><strong>Monitor forwarders</strong><ul>
+<li><strong>Monitor the availability of forwarders and restart them remotely</strong></li>
+</ul>
+</li>
+</ul>
+<p><strong>Forwarder Management in Practice</strong></p>
+<ul>
+<li>For indexer infrastructure changes, forwarder's <code>outputs.conf</code> needs to be updated</li>
+<li><strong>For changes in data sources</strong>, <code>inputs.conf</code> needs to be updated</li>
+<li>If a forwarder is down, we need to be alerted in a reasonable time</li>
+<li>We can take advantage of Splunk's configuration files layering to create custom apps and distribute</li>
+<li>Installing forwarders is generally done by configuration management tools such as ansible or puppet</li>
+</ul>
+<p><strong>Forwarder management is implemented using Splunk deployment server, a tool to manage Splunk configuration files</strong></p>
+<h3 id="3-2-splunk-deployment-server"><strong>3-2 Splunk Deployment Server</strong></h3>
+<p>Splunk Deployment Server</p>
+<ul>
+<li>A tool to manage Splunk configuration files</li>
+<li>Splunk Enterprise License is required</li>
+<li>Can be accessed via Splunk Web</li>
+<li>Keep a dedicated server for deployment server</li>
+<li>Cannot be used for installing/upgrading forwarders</li>
+</ul>
+<p><strong>Deployment Server Architecture</strong></p>
+<p><strong>Deployment Server   (1 - many)  Hosts with universal forwarders</strong> </p>
+<p><strong>Deployment Server Architecture</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_41.png" title="Body image" /></p>
+<h3 id="3-3-deployment-app"><strong>3-3 Deployment App</strong></h3>
+<ul>
+<li>Mechanism to distribute configuration files to forwarders</li>
+<li>App must adhere to the standard Splunk app directory structure</li>
+<li><strong>It can contain configuration files, scripts, views and other resources</strong></li>
+<li>On the deployment server, apps are stored in <code>$SPLUNK_HOME/etc/deployment-apps</code></li>
+<li>On the forwarders, apps will be deployed in <code>$SPLUNK_HOME/etc/apps</code></li>
+</ul>
+<p><strong>Sample App</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_42.png" title="Body image" /></p>
+<p><strong>Setting up Deployment Server</strong></p>
+<ul>
+<li>Create at least one app in <code>$SPLUNK_HOME/deploymentapps/</code></li>
+<li>Forwarder management UI is not activated until a 
+deployment app is found</li>
+</ul>
+<p><strong>Forwarder Management</strong></p>
+<p>The forwarder management UI distributes deployment apps to Splunk clients. </p>
+<p>No clients or apps are currently available on this deployment server.</p>
+<p><strong>Setting up Deployment Server</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_43.png" title="Body image" /></p>
+<h3 id="3-4-deployment-clients"><strong>3-4 Deployment Clients</strong></h3>
+<p><strong>Setting up Deployment Clients</strong></p>
+<ul>
+<li>Forwarders must be setup as deployment clients</li>
+<li>Primary configuration file is <strong><code>deploymentclient.conf</code></strong></li>
+</ul>
+<pre><code>Command
+
+$./splunk set deploy-poll 192.168.0.11:8089
+Configuration updated.
+</code></pre>
+<p><strong><code>deploymentclient.conf</code></strong></p>
+<pre><code>[targetbroker:deploymentServer]
+
+targetUri = 192.168.0.11:8089
+</code></pre>
+<p><strong>Forwarder Management</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_44.png" title="Body image" /></p>
+<p><strong><code>Deploymentclient.conf</code> Customization</strong></p>
+<p><strong>Configuration</strong></p>
+<ul>
+<li><code>targetUri = 192.168.0.11:8089</code> :  Must be under [targetbroker:deploymentServer] stanza. <ul>
+<li>Specifies deployment Server</li>
+</ul>
+</li>
+<li><code>clientName = myWebServer</code> : A custom name that can be used by deploymentServer in serverclass</li>
+<li><code>phoneHomeIntervalInSecs = 120</code> : How frequently the deployment server is checked for new content (default=60)</li>
+</ul>
+<h3 id="3-5-setting-up-serverclasses"><strong>3-5 Setting up Serverclasses</strong></h3>
+<p><strong>Serverclass</strong></p>
+<ul>
+<li>Mechanism to group hosts (deployment clients) and designate the deployment apps to be deployed</li>
+<li>You can group hosts based on <code>dns/ip/client</code> name</li>
+<li>You can also group hosts based on the machine type</li>
+<li>Serverclasses are defined in serverclass.conf</li>
+<li>Wild cards allowed when specifying the host names</li>
+</ul>
+<p><strong>Creating a Serverclass</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_45.png" title="Body image" /></p>
+<h3 id="3-6-monitoring-forwarders"><strong>3-6 Monitoring Forwarders</strong></h3>
+<p><strong>Monitoring Forwarders</strong></p>
+<ul>
+<li><strong>Forwarder monitoring can be enabled from monitoring console (recommended)</strong></li>
+<li>Periodically (<strong>15 minutes by default</strong>), <strong>using 
+internal logs from the forwarders</strong>, a forwarder asset table (lookup) is built</li>
+</ul>
+<blockquote>
+<p><strong>The lookup table name is <code>dmc_forwarder_assets</code></strong></p>
+</blockquote>
+<ul>
+<li>
+<p><strong>We can monitor</strong></p>
+</li>
+<li>
+<p>Forwarder state (active/missing)</p>
+</li>
+<li>Data throughput (kb/s)</li>
+<li>Events throughput (events/s)</li>
+</ul>
+<p><strong>Monitoring Console</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_46.png" title="Body image" /></p>
+<p><strong>Rebuilding Forwarder Assets</strong></p>
+<ul>
+<li>Monitoring console will mark a forwarder as missing if it has not reported in the past 15 minutes.</li>
+<li><strong>To avoid decommissioned servers from being reported</strong>, you can rebuild the forwarder assets table</li>
+<li>This is a resource intensive process, so run it during off-peak hours</li>
+<li><strong>Monitoring console &gt; Settings &gt; Forwarder Monitoring Setup &gt; Rebuild forwarder assets</strong></li>
+</ul>
+<h3 id="demo">Demo</h3>
+<ul>
+<li><strong>Configure deployment server</strong><ul>
+<li>Create a deployment app</li>
+</ul>
+</li>
+<li><strong>Configure deployment client</strong></li>
+<li>Create a serverclass<ul>
+<li>Add apps</li>
+<li>Add clients</li>
+</ul>
+</li>
+<li><strong>Deploy an app</strong></li>
+<li><strong>Monitor forwarders using monitoring console</strong></li>
+</ul>
+<h4 id="indexer">Indexer</h4>
+<p><strong>Create a deployment app</strong></p>
+<pre><code>cd etc/deployment-apps
+
+/etc/deployment-apps &gt; cd /tmp
+
+cd /tmp &gt; tree acme-forwarder-limits
+
+acme-forwarder-limits
+|
+| _ default
+        \_app. conf
+\_local
+    \_limits.conf
+\_metadata
+    \_default.meta
+
+3 directories, 3 files
+</code></pre>
+<pre><code>$ cat acme-forwarder-limits/default/app.conf
+[default]
+
+[install]
+state = enabled
+
+$ cat acme-forwarder-limits/metadata/default.meta
+[]
+access = read : [ * ], write:[ power, admin ]
+
+$ cat acme-forwarder-limits/local/limits.conf
+[thruput]
+maxKBps = 2048
+</code></pre>
+<blockquote>
+<p>On the indexers, maxKBps is set to 0 (unlimited) by default</p>
+</blockquote>
+<pre><code>/etc/deployment-apps &gt;  cp -r /tmp/acme-forwarder-limits .
+
+/etc/deployment-apps &gt; ls
+
+README
+acme-forwarder-limits
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_47.png" title="Body image" /></p>
+<h4 id="configure-deployment-client">Configure deployment client</h4>
+<pre><code>docker exec -u splunk -it uf1 /bin/bash
+
+[splunk@uf1 splunkforwarder]$ cd bin
+[splunk@uf1 bin]$ pwd
+/opt/splunkforwarder/bin
+
+[splunk@uf1 bin]$ ./splunk set deploy-poll 192.168.0.11:8089
+
+Your session is invalid. Please login.
+Splunk username: admin
+
+[splunk@uf1 local]$ cat deploymentclient.conf
+[target-broker: deploymentServer]
+targetUri=192.168.0.11:8089
+</code></pre>
+<blockquote>
+<p>deploymentclient.conf is created in
+<code>$SPLUNK_HOME/etc/system/local</code></p>
+</blockquote>
+<h4 id="create-a-serverclass">Create a serverclass</h4>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_48.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_49.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_50.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_51.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_52.png" title="Body image" /></p>
+<pre><code>$ cd ../../apps
+$ ll
+
+acme-forwarder-limits
+</code></pre>
+<p><strong>Monitor forwarders using monitoring console</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_53.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_54.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_3_55.png" title="Body image" /></p>
+<h2 id="summary_1">Summary</h2>
+<ul>
+<li>Deployment server manages the distribution of configuration files</li>
+<li><strong>Forwarders are deployment clients (deploymentclient.conf)</strong></li>
+<li>Configuration files are packaged as deployment apps</li>
+<li><strong>Serverclass groups forwarders and assigns apps to be deployed (serverclass.conf)</strong></li>
+<li>Monitoring console can monitor the availability and throughput of forwarders</li>
+</ul>
+<p>--</p>
+<ul>
+<li>Data goes through input, parsing and indexing phases</li>
+<li><strong>Master inputs.conf, outputs.conf, props.conf, and serverclass.conf</strong></li>
+<li>Heavy forwarders parse data and can be used to host add-ons</li>
+<li>Use deployment server to manage forwarders</li>
+</ul>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2020-9999 Jacob Xi
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.b4d07000.min.js"></script>
+      
+    
+  </body>
+</html>

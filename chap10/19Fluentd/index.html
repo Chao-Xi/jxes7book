@@ -1,0 +1,3742 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Jacob's Elasticsearch7 技术与实战教程">
+      
+      
+        <meta name="author" content="Jacob Xi">
+      
+      
+      
+        <link rel="prev" href="../7EFKLK_log_aggregator/">
+      
+      
+        <link rel="next" href="../../chap11/20Elastic_Stack_Monitoring1/">
+      
+      <link rel="icon" href="../../images/logo.png">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.15">
+    
+    
+      
+        <title>第八节 日志收集工具 Fluentd 使用教程 - Jacob ElasticSearch7 Book</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.26e3688c.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ecc896b0.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#fluentd" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Jacob ElasticSearch7 Book" class="md-header__button md-logo" aria-label="Jacob ElasticSearch7 Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Jacob ElasticSearch7 Book
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              第八节 日志收集工具 Fluentd 使用教程
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Chao-Xi/jxes7book.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxes7book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Jacob ElasticSearch7 Book" class="md-nav__button md-logo" aria-label="Jacob ElasticSearch7 Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    Jacob ElasticSearch7 Book
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Chao-Xi/jxes7book.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxes7book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Welcome
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          一、Elasticsearch 概述
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          一、Elasticsearch 概述
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/1Es_intro/" class="md-nav__link">
+        第一节 ElasticSearch 概述
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          二、Elasticsearch 安装手册
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          二、Elasticsearch 安装手册
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/1ES_vm_install/" class="md-nav__link">
+        第一节 Elasticsearch的安装与简单配置
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/2KB_vm_install/" class="md-nav__link">
+        第二节 Kibana的安装与界面快速预览
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/3ES_KB_docker/" class="md-nav__link">
+        第三节 在Docker容器中运行Elasticsearch Kibana和Cerebro
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/4LogStash_vm_install/" class="md-nav__link">
+        第四节 Logstash安装与导入数据
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          三、Elasticsearch 入门查询
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          三、Elasticsearch 入门查询
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/1ES_intro/" class="md-nav__link">
+        第一节 ElasticSearch 基本概念
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/2ES_CRUD/" class="md-nav__link">
+        第二节 文档的基本CRUD与批量操作 & 读取＆Bulk API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/3ES_ReverseIndex/" class="md-nav__link">
+        第三节 倒排索引
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/4ES_Analyzer/" class="md-nav__link">
+        第四节 使用分析器进行分词
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/5ES_Search/" class="md-nav__link">
+        第五节 ElasticSearch Search语句
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/6ES_Mapping/" class="md-nav__link">
+        第六节 ElasticSearch Mapping 介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/7ES_Index/" class="md-nav__link">
+        第七节 Index Template和Dynamic Template
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/8ES_Aggr/" class="md-nav__link">
+        第八节 Elasticsearch Aggregations聚合分析简介
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/9ES_SUM/" class="md-nav__link">
+        第九节 Elasticsearch 入门总结 & 测试
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          四、Elasticsearch 深入搜索
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          四、Elasticsearch 深入搜索
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/1ES_search/" class="md-nav__link">
+        第一节 基于词项和基于全文的搜索
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/2ES_search_str_score/" class="md-nav__link">
+        第二节 结构化搜索以及搜索的相关性算分
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/3ES_query_filter/" class="md-nav__link">
+        第三节 Query & Filtering与多字符串多字段查询
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/4ES_sin_mul_search/" class="md-nav__link">
+        第四节 单字符串多字段查询
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/5ES_multi_lag_ana/" class="md-nav__link">
+        第五节 多语言及中文分词与检索
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/6ES_pra_tmdb/" class="md-nav__link">
+        第六节 Space Jam，一次全文搜索的实例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/7ES_ST_IA/" class="md-nav__link">
+        第七节 使⽤ Search Template 和 Index Alias
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/8ES_FUNC_SCORE/" class="md-nav__link">
+        第八节 综合排序:Function Score Query 优化算分
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/9ES_suggester/" class="md-nav__link">
+        第九节 Term & Phrase Suggester
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/10ES_Autocomplete/" class="md-nav__link">
+        第十节 ⾃动补全与基于上下文的提示
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/11ES_CrossSearch/" class="md-nav__link">
+        第十一节 跨集群搜索
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          五、分布式特性及分布式搜索的机制
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          五、分布式特性及分布式搜索的机制
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/1ES_cluster/" class="md-nav__link">
+        第一节 集群分布式模型及选主与脑裂问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/2ES_shard/" class="md-nav__link">
+        第二节 分⽚与集群的故障转移
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/3ES_doc_shard/" class="md-nav__link">
+        第三节 ⽂档分布式存储
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/4ES_shared_lifecycle/" class="md-nav__link">
+        第四节 分⽚及其生命周期
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/5ES_SE_Score/" class="md-nav__link">
+        第五节 剖析分布式查询及相关性算分
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/6ES_Sort_query/" class="md-nav__link">
+        第六节 排序及Doc Values&Fielddata
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/7ES_Pages_Traverse/" class="md-nav__link">
+        第七节 分页与遍历 – From，Size，Search After & Scroll API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/8ES_Concurrent_process/" class="md-nav__link">
+        第八节 处理并发读写操作
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          六、深入聚合分析
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          六、深入聚合分析
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/1chap6_bucket_metrics/" class="md-nav__link">
+        第一节 Bucket & Metric 聚合分析及嵌套聚合
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/2chap6_pipeline_metrics/" class="md-nav__link">
+        第二节 Pipeline 聚合分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/3chap6_aggragate_scope_order/" class="md-nav__link">
+        第三节 聚合的作⽤范围及排序
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/4chap6_accurate_aggragate/" class="md-nav__link">
+        第四节 聚合的精准度问题
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+          七、数据建模
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          七、数据建模
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/1chap7_nested_obj/" class="md-nav__link">
+        第一节 对象及 Nested 对象
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/2chap7_parent_child/" class="md-nav__link">
+        第二节 文档的父子关系
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/3chap7_updateindex_reindex/" class="md-nav__link">
+        第三节 Update By Query & Reindex API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/4chap7_ingest_painless/" class="md-nav__link">
+        第四节 Ingest Pipeline 与 Painless Script
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/5chap7_es_model/" class="md-nav__link">
+        第五节 Elasticsearch 数据建模实例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/6chap7_es_model_pra/" class="md-nav__link">
+        第六节 Elasticsearch 数据建模最佳实践
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/7chap7_es_sum2/" class="md-nav__link">
+        第七节 第二部分总结回顾
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+          八、数据保护
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          八、数据保护
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/1ES_cluster_IAM/" class="md-nav__link">
+        第一节 集群身份认证与用户鉴权
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/2ES_cluster_enc_transit/" class="md-nav__link">
+        第二节 集群内部间的安全通信
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/3ES_cluster_out_sec/" class="md-nav__link">
+        第三节 集群与外部间的安全通信
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          九、水平扩展Elasticsearch集群
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          九、水平扩展Elasticsearch集群
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/1ES_cluster_deploy/" class="md-nav__link">
+        第一节 常见的集群部署方式
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/2ES_hot_warm/" class="md-nav__link">
+        第二节 Hot & Warm 架构与 Shard Filtering
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/3ES_shard_settings/" class="md-nav__link">
+        第三节 分片设定及管理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/4ES_cluster_plan/" class="md-nav__link">
+        第四节 如何对集群进行容量规划
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/5ES_Cloud/" class="md-nav__link">
+        第五节 云上管理 Elasticsearch 的一些方法
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          十、使用 Kubernets 安装 EFK 集群
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_11">
+          <span class="md-nav__icon md-icon"></span>
+          十、使用 Kubernets 安装 EFK 集群
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1log_architecture/" class="md-nav__link">
+        第一节 kubernetes 日志架构
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2EFK_log/" class="md-nav__link">
+        第二节 在 K8S 上搭建 EFK 日志收集系统
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16EFK_log_adv/" class="md-nav__link">
+        第三节 在 Kubernetes 安装 EFK 日志收集系统[更新]
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17EFK_log_Ana/" class="md-nav__link">
+        第四节 EFK kibana 日志分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18EFK_log_alert/" class="md-nav__link">
+        第五节 基于EKF日志的报警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3ECK_operator/" class="md-nav__link">
+        第六节 使用Operator快速部署Elasticsearch集群
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7EFKLK_log_aggregator/" class="md-nav__link">
+        第七节 使用 EFKLK 搭建 Kubernetes 日志收集工具栈 (Kafka/Logstash)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          第八节 日志收集工具 Fluentd 使用教程
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        第八节 日志收集工具 Fluentd 使用教程
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    安装
+  </a>
+  
+    <nav class="md-nav" aria-label="安装">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    环境配置
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ntp" class="md-nav__link">
+    设置 NTP
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#td-agent" class="md-nav__link">
+    td-agent 包
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#docker" class="md-nav__link">
+    Docker 方式
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    事件生命周期
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter" class="md-nav__link">
+    过滤器 Filter
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    配置文件
+  </a>
+  
+    <nav class="md-nav" aria-label="配置文件">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#source" class="md-nav__link">
+    source
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#match" class="md-nav__link">
+    match
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter_1" class="md-nav__link">
+    filter
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#system" class="md-nav__link">
+    system
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#label" class="md-nav__link">
+    label
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#include" class="md-nav__link">
+    @include
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parse" class="md-nav__link">
+    parse
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    模式匹配
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
+          十一、使用 Elastic Stack 构建 Kubernetes 全栈监控
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_12">
+          <span class="md-nav__icon md-icon"></span>
+          十一、使用 Elastic Stack 构建 Kubernetes 全栈监控
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/20Elastic_Stack_Monitoring1/" class="md-nav__link">
+        第一节 ElasticSearch 的集群安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/21Elastic_Stack_Monitoring2/" class="md-nav__link">
+        第二节 使用 Elastic Stack — Metricbeat 监控安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/22Elastic_Stack_Monitoring3/" class="md-nav__link">
+        第三节 使用 Elastic Stack - Filebeat 日志数据收集安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/23Elastic_Stack_Monitoring4/" class="md-nav__link">
+        第四节 使用 Elastic Stack — Elastic APM 应用性能监控的工具安装
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="0">
+          十二、生产环境中的集群运维
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_13">
+          <span class="md-nav__icon md-icon"></span>
+          十二、生产环境中的集群运维
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/1chap12_ES_prod/" class="md-nav__link">
+        第一节 生产环境常用配置和上线清单
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/2chap12_mon_es/" class="md-nav__link">
+        第二节 监控Elasticsearch集群
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/3chap12_es_diag/" class="md-nav__link">
+        第三节 诊断集群的潜在问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/4chap12_es_red_yellow/" class="md-nav__link">
+        第四节 解决集群 Yellow 与 Red 的问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/5chap12_es_cluster_perf/" class="md-nav__link">
+        第五节 集群写性能优化
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/6chap12_es_pre_test/" class="md-nav__link">
+        第六节 集群压力测试
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/7chap12_es_segment_merge/" class="md-nav__link">
+        第七节 段合并优化及注意事项
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/8chap12_Circuit_Breaker/" class="md-nav__link">
+        第八节 缓存及使用 Circuit Breaker 限制内存使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/9chap12_es_ops/" class="md-nav__link">
+        第九节 一些运维相关的建议
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_14" id="__nav_14_label" tabindex="0">
+          十三、索引生命周期管理
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_14">
+          <span class="md-nav__icon md-icon"></span>
+          十三、索引生命周期管理
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/1chap13_es_shrink_rolloverapi/" class="md-nav__link">
+        第一节 使用 Shrink 与 Rollover API 管理索引
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/2chap13_index_lms/" class="md-nav__link">
+        第二节 索引全生命周期管理及工具介绍
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_15" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_15" id="__nav_15_label" tabindex="0">
+          十四、用Logstash和Beats构建数据管道
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_15_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_15">
+          <span class="md-nav__icon md-icon"></span>
+          十四、用Logstash和Beats构建数据管道
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap14/1logstash_introduce/" class="md-nav__link">
+        第一节 Logstash 入门及架构介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap14/2JDBC_logstash_ES/" class="md-nav__link">
+        第二节 利用 JDBC 插件导入数据到 Elasticsearch
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap14/3Beats/" class="md-nav__link">
+        第三节 Beats 介绍
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_16" id="__nav_16_label" tabindex="0">
+          十五、用Kibana进行数据可视化分析
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_16">
+          <span class="md-nav__icon md-icon"></span>
+          十五、用Kibana进行数据可视化分析
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap15/1chap15_index_pattern/" class="md-nav__link">
+        第一节 使用 Index Pattern 配置数据
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap15/2chap15_kibana/" class="md-nav__link">
+        第二节 Kibana 使用的技巧
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_17" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_17" id="__nav_17_label" tabindex="0">
+          十六、探索X-Pack套件
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_17_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_17">
+          <span class="md-nav__icon md-icon"></span>
+          十六、探索X-Pack套件
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/1ES_monitor_alert_xpack/" class="md-nav__link">
+        第一节 用Monitoring和Alerting监控Elasticsearch集群
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/2Xpack_APM/" class="md-nav__link">
+        第二节 用 APM 进行程序性能监控
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/3Xpack_ML/" class="md-nav__link">
+        第三节 用机器学习实现异常检测
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/4ELK_Filebeat/" class="md-nav__link">
+        第四节 用 Elastic Stack 进行日志管理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/5xpack_canvas/" class="md-nav__link">
+        第五节 用 Canvas 进行数据的实时展示
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_18" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_18" id="__nav_18_label" tabindex="0">
+          十七、ELK 实战 Workshop
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_18_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_18">
+          <span class="md-nav__icon md-icon"></span>
+          十七、ELK 实战 Workshop
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap17/1ES_WS_movie/" class="md-nav__link">
+        第一节 电影搜索服务
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap17/2ES_WS_stackoverflow/" class="md-nav__link">
+        第二节 Stackoverflow用户调查问卷分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap17/3EFK_jfrog/" class="md-nav__link">
+        第三节 通过EFK对Artifactory进行日志分析
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_19" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_19" id="__nav_19_label" tabindex="0">
+          十八、Elastic认证, 开发与备份
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_19_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_19">
+          <span class="md-nav__icon md-icon"></span>
+          十八、Elastic认证, 开发与备份
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/1ES_Certified_test/" class="md-nav__link">
+        第一节 Elastic 认证考试
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/2ES_backup_restore/" class="md-nav__link">
+        第二节 集群 Backup & Restore
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/3ES_Java/" class="md-nav__link">
+        第三节 基于 Java 和 Elasticsearch 开发应用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/4ES_migration/" class="md-nav__link">
+        第四节 3种 Elasticsearch 数据离线迁移方案
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_20" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_20" id="__nav_20_label" tabindex="0">
+          十九、Elastic 操作总结篇
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_20_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_20">
+          <span class="md-nav__icon md-icon"></span>
+          十九、Elastic 操作总结篇
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum1_search_api/" class="md-nav__link">
+        ElasticSearch URI 常用语句总结篇
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum2_search_dep/" class="md-nav__link">
+        Elasticsearch 深入搜索总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum3_cross_search/" class="md-nav__link">
+        ElasticSearch 分布式搜索
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum4_agg_search/" class="md-nav__link">
+        ElasticSearch 深入聚合分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum5_datamodel/" class="md-nav__link">
+        ElasticSearch 数据建模
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum6_Opt_Mgt/" class="md-nav__link">
+        ElasticSearch Operation and Management
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum7_test/" class="md-nav__link">
+        期末考试
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum8_int/" class="md-nav__link">
+        ElasticSearch 面试
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_21" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_21" id="__nav_21_label" tabindex="0">
+          Splunk8 Admin Mgt
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_21_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_21">
+          <span class="md-nav__icon md-icon"></span>
+          Splunk8 Admin Mgt
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spl1/1spl_role_ad/" class="md-nav__link">
+        1 Splunk Managing Users and Authentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spl1/2config_indexes/" class="md-nav__link">
+        2 Working with Configuration Files and Indexes
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spl1/3datamgt_forwarder/" class="md-nav__link">
+        3 Managing Data and Forwarders
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spl1/4config_ds/" class="md-nav__link">
+        4 Splunk Configuring Distributed Search
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spl1/5Mon_create_inputs/" class="md-nav__link">
+        5 Splunk Monitoring and Creating Inputs
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spl1/6par_man/" class="md-nav__link">
+        6 Splunk Parsing and Manipulating Data
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spl1/7splunk_search/" class="md-nav__link">
+        7 Performing Basic Splunk Searches
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spl1/8spl_exam/" class="md-nav__link">
+        8 Splunk ADMIN Exam
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    安装
+  </a>
+  
+    <nav class="md-nav" aria-label="安装">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    环境配置
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ntp" class="md-nav__link">
+    设置 NTP
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#td-agent" class="md-nav__link">
+    td-agent 包
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#docker" class="md-nav__link">
+    Docker 方式
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    事件生命周期
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter" class="md-nav__link">
+    过滤器 Filter
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    配置文件
+  </a>
+  
+    <nav class="md-nav" aria-label="配置文件">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#source" class="md-nav__link">
+    source
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#match" class="md-nav__link">
+    match
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter_1" class="md-nav__link">
+    filter
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#system" class="md-nav__link">
+    system
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#label" class="md-nav__link">
+    label
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#include" class="md-nav__link">
+    @include
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parse" class="md-nav__link">
+    parse
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    模式匹配
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="fluentd"><strong>第八节 日志收集工具 Fluentd 使用教程</strong></h1>
+<p>Fluentd 是一个开源的数据收集器，致力于为用户搭建统一的日志收集层，它可以让你统一日志的收集和消费，以便更好地使用和理解日志，统一的日志记录层可让你和你的团队更好地利用数据并更快地迭代你的应用。</p>
+<p><img alt="Alt Image Text" src="../../images/chap10_19_1.png" title="Body image" /></p>
+<h2 id="_1"><strong>安装</strong></h2>
+<p>Fluentd 有多种安装方式，比如可以通过 Docker 或者手动进行安装，在手动安装 Fluentd 之前，请确保你的环境已正确设置，以避免以后出现任何不一致。</p>
+<h3 id="_2"><strong>环境配置</strong></h3>
+<p>请遵循以下建议：</p>
+<ul>
+<li>设置 NTP</li>
+<li>增加文件描述符的最大数量</li>
+<li>优化网络内核参数</li>
+</ul>
+<h3 id="ntp"><strong>设置 NTP</strong></h3>
+<p>强烈建议你在节点上设置 NTP 守护进程（例如 chrony、ntpd 等）以获得准确的当前时间戳，这对于所有生产服务至关重要。</p>
+<p><strong>增加文件描述符的最大数量</strong></p>
+<p>我们可以使用 <code>ulimit -n</code> 命令查看现有配置：</p>
+<pre><code>$ ulimit -n
+
+65535
+</code></pre>
+<p>如果你的控制台显示 1024，那是不够的。请将以下几行添加到 <code>/etc/security/limits.conf</code> 文件并重启机器：</p>
+<pre><code>root soft nofile 65536
+
+root hard nofile 65536
+
+* soft nofile 65536
+
+* hard nofile 65536
+</code></pre>
+<p>使用 sysctl -p 命令或重新启动节点使更改生效。</p>
+<h3 id="td-agent"><strong><code>td-agent</code> 包</strong></h3>
+<p>这里我们使用 td-agent deb 包进行安装，这是由 Treasure Data, Inc 和 Calyptia, Inc 维护的稳定 Fluentd 分发包。</p>
+<p>Fluentd 是用 Ruby 编写的，具有灵活性，对性能敏感的部分用 C 语言编写。但是，一些用户可能难以安装和操作 Ruby 守护程序。所以 Treasure Data, Inc 专门提供了一个 Fluentd 的稳定发行版，称为 td-agent。</p>
+<p>我这里是 Ubuntu Focal 的版本，可以使用下面的命令进行一键安装：</p>
+<pre><code>curl -fsSL https://toolbelt.treasuredata.com/sh/install-ubuntu-focal-td-agent4.sh | sh
+</code></pre>
+<p>上面的脚本会自动配置 systemd 的启动脚本，脚本内容如下所示：</p>
+<pre><code>$ cat /lib/systemd/system/td-agent.service;
+
+[Unit]
+
+Description=td-agent: Fluentd based data collector for Treasure Data
+
+Documentation=https://docs.treasuredata.com/display/public/PD/About+Treasure+Data%%27s+Server-Side+Agent
+
+After=network-online.target
+
+Wants=network-online.target
+
+
+
+[Service]
+
+User=td-agent
+
+Group=td-agent
+
+LimitNOFILE=65536
+
+Environment=LD_PRELOAD=/opt/td-agent/lib/libjemalloc.so
+
+Environment=GEM_HOME=/opt/td-agent/lib/ruby/gems/2.7.0/
+
+Environment=GEM_PATH=/opt/td-agent/lib/ruby/gems/2.7.0/
+
+Environment=FLUENT_CONF=/etc/td-agent/td-agent.conf
+
+Environment=FLUENT_PLUGIN=/etc/td-agent/plugin
+
+Environment=FLUENT_SOCKET=/var/run/td-agent/td-agent.sock
+
+Environment=TD_AGENT_LOG_FILE=/var/log/td-agent/td-agent.log
+
+Environment=TD_AGENT_OPTIONS=
+
+EnvironmentFile=-/etc/default/td-agent
+
+PIDFile=/var/run/td-agent/td-agent.pid
+
+RuntimeDirectory=td-agent
+
+Type=forking
+
+# XXX: Fix fluentd executables path
+
+ExecStart=/opt/td-agent/bin/fluentd --log $TD_AGENT_LOG_FILE --daemon /var/run/td-agent/td-agent.pid $TD_AGENT_OPTIONS
+
+ExecStop=/bin/kill -TERM ${MAINPID}
+
+ExecReload=/bin/kill -HUP ${MAINPID}
+
+Restart=always
+
+TimeoutStopSec=120
+
+
+
+[Install]
+
+WantedBy=multi-user.target
+</code></pre>
+<p>所以我们可以使用 systemctl 来管理 td-agent 服务：</p>
+<pre><code>$ sudo systemctl start td-agent
+
+$ sudo systemctl status td-agent
+
+● td-agent.service - td-agent: Fluentd based data collector for Treasure Data
+
+Loaded: loaded (/lib/systemd/system/td-agent.service; enabled; vendor preset: enabled)
+
+Active: active (running) since Sat 2022-06-11 11:00:04 CST; 4min 6s ago
+
+Docs: https://docs.treasuredata.com/display/public/PD/About+Treasure+Data%27s+Server-Side+Agent
+
+Process: 3664 ExecStart=/opt/td-agent/bin/fluentd --log $TD_AGENT_LOG_FILE --daemon /var/run/td-agent/td-agent.pid $TD_AGE&gt;
+
+Main PID: 3677 (fluentd)
+
+Tasks: 9 (limit: 19106)
+
+Memory: 99.0M
+
+CGroup: /system.slice/td-agent.service
+
+├─3677 /opt/td-agent/bin/ruby /opt/td-agent/bin/fluentd --log /var/log/td-agent/td-agent.log --daemon /var/run/td&gt;
+
+└─3680 /opt/td-agent/bin/ruby -Eascii-8bit:ascii-8bit /opt/td-agent/bin/fluentd --log /var/log/td-agent/td-agent.&gt;
+
+
+
+Jun 11 11:00:03 ydzsio systemd[1]: Starting td-agent: Fluentd based data collector for Treasure Data...
+
+Jun 11 11:00:04 ydzsio systemd[1]: Started td-agent: Fluentd based data collector for Treasure Data.
+
+lines 1-14/14 (END)
+</code></pre>
+<p>td-agent 启动后通过下面的命令来发送一条日志：</p>
+<pre><code>$ curl -X POST -d 'json={&quot;json&quot;:&quot;message&quot;}' http://localhost:8888/debug.test
+</code></pre>
+<p>发送后查看 td-agent 的日志，正常会收到如下所示的日志信息：</p>
+<pre><code>$ tail -n 1 /var/log/td-agent/td-agent.log
+
+2022-06-11 11:09:02.377608475 +0800 debug.test: {&quot;json&quot;:&quot;message&quot;}
+</code></pre>
+<h3 id="docker"><strong>Docker 方式</strong></h3>
+<p>当然更多的时候使用 Docker 方式使用 Fluentd 会更方便，这里我们创建一些简单的文件来进行测试：</p>
+<pre><code>
+$ mkdir fluentd
+
+$ cd fluentd
+
+# 创建用于保存 fluentd 的配置文件 etc 目录和保存日志的 logs 目录
+
+$ mkdir -p etc logs
+
+# 添加一个简单的配置文件
+
+$ cat etc/fluentd_basic.conf
+
+
+
+&lt;source&gt;
+
+@type http
+
+port 8888
+
+bind 0.0.0.0
+
+&lt;/source&gt;
+
+&lt;match test.basic&gt;
+
+@type stdout
+
+&lt;/match&gt;
+</code></pre>
+<p>这里我们创建了一个 fluentd 目录用于测试，其中 etc 目录用于保留配置文件、logs 目录保存日志，首先添加了一个最基本的配置文件 <code>etc/fluentd_basic.conf</code>，其中：</p>
+<ul>
+<li>source 部分使用了 http 类型的输入插件，在 8888 端口启动一个服务用于接收日志</li>
+<li>match 部分定义了日志匹配 <code>test.basic</code> 标签，就将日志输出到 stdout</li>
+</ul>
+<p>使用下面的命令进行 Fluentd 的启动：</p>
+<pre><code>$ docker run -p 8888:8888 --rm -v $(pwd)/etc:/fluentd/etc -v $(pwd)/logs:/fluentd/logs fluent/fluentd:v1.14-1 -c /fluentd/etc/fluentd_basic.conf -v
+</code></pre>
+<p>这里我们将 etc 目录和 logs 目录挂载到容器中，</p>
+<ul>
+<li>然后通过 <code>-c</code> 参数指定 <code>Fluentd</code> 的配置文件，</li>
+<li>最后一个 <code>-v</code> 参数是用于设置 <code>Fluentd</code> 开启 <code>verbose</code> 模式，便于查看 Fluentd 的日志方便调试，正常会看到如下所示的输出信息：</li>
+</ul>
+<pre><code>2022-06-11 07:23:48 +0000 [info]: fluent/log.rb:330:info: parsing config file is succeeded path=&quot;/fluentd/etc/fluentd_basic.conf&quot;
+
+2022-06-11 07:23:48 +0000 [info]: fluent/log.rb:330:info: gem 'fluentd' version '1.14.3'
+
+2022-06-11 07:23:48 +0000 [debug]: fluent/log.rb:309:debug: No fluent logger for internal event
+
+2022-06-11 07:23:48 +0000 [info]: fluent/log.rb:330:info: using configuration file: &lt;ROOT&gt;
+
+&lt;source&gt;
+
+@type http
+
+port 8888
+
+bind &quot;0.0.0.0&quot;
+
+&lt;/source&gt;
+
+&lt;match test.basic&gt;
+
+@type stdout
+
+&lt;/match&gt;
+
+&lt;/ROOT&gt;
+
+2022-06-11 07:23:48 +0000 [info]: fluent/log.rb:330:info: starting fluentd-1.14.3 pid=7 ruby=&quot;2.7.5&quot;
+
+2022-06-11 07:23:48 +0000 [info]: fluent/log.rb:330:info: spawn command to main: cmdline=[&quot;/usr/bin/ruby&quot;, &quot;-Eascii-8bit:ascii-8bit&quot;, &quot;/usr/bin/fluentd&quot;, &quot;-c&quot;, &quot;/fluentd/etc/fluentd_basic.conf&quot;, &quot;-v&quot;, &quot;--plugin&quot;, &quot;/fluentd/plugins&quot;, &quot;--under-supervisor&quot;]
+
+2022-06-11 07:23:49 +0000 [info]: fluent/log.rb:330:info: adding match pattern=&quot;test.basic&quot; type=&quot;stdout&quot;
+
+2022-06-11 07:23:49 +0000 [info]: fluent/log.rb:330:info: adding source type=&quot;http&quot;
+
+2022-06-11 07:23:49 +0000 [debug]: #0 fluent/log.rb:309:debug: No fluent logger for internal event
+
+2022-06-11 07:23:49 +0000 [info]: #0 fluent/log.rb:330:info: starting fluentd worker pid=16 ppid=7 worker=0
+
+2022-06-11 07:23:49 +0000 [debug]: #0 fluent/log.rb:309:debug: listening http bind=&quot;0.0.0.0&quot; port=8888
+
+2022-06-11 07:23:49 +0000 [info]: #0 fluent/log.rb:330:info: fluentd worker is now running worker=0
+</code></pre>
+<p>启动后我们同样可以发送一条日志到 Fluentd 来验证我们的配置：</p>
+<pre><code>$ curl -X POST -d 'json={&quot;action&quot;:&quot;login&quot;,&quot;user&quot;:100}' http://localhost:8888/test.logs
+</code></pre>
+<p>发送后正常会在 Fluentd 中查看到如下所示的一条信息：</p>
+<pre><code>2022-06-11 07:34:29.925695338 +0000 test.logs: {&quot;action&quot;:&quot;login&quot;,&quot;user&quot;:100}
+</code></pre>
+<h3 id="_3"><strong>事件生命周期</strong></h3>
+<p>Fluentd 是一个日志收集系统，一条日志消息在 Fluentd 中被看成一个 Event 事件，Fluentd 的事件主要由下面三部分组成：</p>
+<ul>
+<li>标签 tag：用于描述事件来源，可用于后面的事件路由</li>
+<li>时间 time：事件发生的时间，时间格式为 Unix 时间戳</li>
+<li>记录 record：事件内容本身，JSON 格式</li>
+</ul>
+<p>所有的输入插件都需要解析原始日志，生成满足上面结构的事件字段，比如一条 Apache 的访问日志：</p>
+<pre><code>192.168.0.1 - - [28/Feb/2013:12:00:00 +0900] &quot;GET / HTTP/1.1&quot; 200 777
+</code></pre>
+<p>在通过 <code>in_tail</code> 输入插件处理后，会得到如下所示的输出结果：</p>
+<pre><code>tag: apache.access # 通过配置文件指定
+
+time: 1362020400 # 28/Feb/2013:12:00:00 +0900
+
+record: {&quot;user&quot;: &quot;-&quot;, &quot;method&quot;: &quot;GET&quot;, &quot;code&quot;: 200, &quot;size&quot;: 777, &quot;host&quot;: &quot;192.168.0.1&quot;, &quot;path&quot;: &quot;/&quot;}
+</code></pre>
+<p>当 Fluentd 收到一条事件后会经过一系列的处理流程：</p>
+<ul>
+<li>修改事件的相关字段</li>
+<li>过滤掉一些不需要的事件</li>
+<li>路由事件输出到不同的地方</li>
+</ul>
+<h3 id="filter"><strong>过滤器 Filter</strong></h3>
+<p>Filter 用于定义一个事件是该被接受或是被过滤掉，接下来我们创建一个新的配置文件新增过滤器。</p>
+<pre><code>$ cat etc/fluentd_filter.conf
+
+
+
+&lt;source&gt;
+
+@type http
+
+port 8888
+
+bind 0.0.0.0
+
+&lt;/source&gt;
+
+
+
+&lt;filter test.logs&gt;
+
+@type grep
+
+&lt;exclude&gt;
+
+key action
+
+pattern ^logout$
+
+&lt;/exclude&gt;
+
+&lt;/filter&gt;
+
+
+
+&lt;match test.logs&gt;
+
+@type stdout
+
+&lt;/match&gt;
+</code></pre>
+<p>在该配置文件中我们新增了一个 filter 模块，使用 grep 插件，exclude 部分表示要过滤掉的日志配置，这里我们配置的是 action 这个 key 匹配 <code>^logout$</code> 的时候进行过滤，就是直接过滤掉 `logout 日志事件。</p>
+<p>使用新的配置文件，重新启动 fluentd：</p>
+<pre><code>$ docker run -p 8888:8888 --rm -v $(pwd)/etc:/fluentd/etc -v $(pwd)/logs:/fluentd/logs fluent/fluentd:v1.14-1 -c /fluentd/etc/fluentd_filter.conf -v
+</code></pre>
+<p>然后重新向 Fluentd 提交两条日志数据：</p>
+<pre><code>$ curl -X POST -d 'json={&quot;action&quot;:&quot;login&quot;,&quot;user&quot;:2}' http://localhost:8888/test.logs
+
+$ curl -X POST -d 'json={&quot;action&quot;:&quot;logout&quot;,&quot;user&quot;:2}' http://localhost:8888/test.logs
+</code></pre>
+<p>正常这个时候 Fluentd 只会收到第一条日志数据，logout 这条事件被过滤掉了：</p>
+<pre><code>2022-06-11 07:52:45.555576216 +0000 test.logs: {&quot;action&quot;:&quot;login&quot;,&quot;user&quot;:2}
+</code></pre>
+<p><strong>标识符 Labels</strong></p>
+<p>Fluentd 的处理流程是根据我们在配置文件中的定义从上到下依次执行的。<strong>但是假如我们在配置文件中定义了多个输入源，不同的输入源需要使用不同的 Filters 过滤器的时候，那么还按照顺序执行的方式话，配置文件就会变得非常复杂</strong>。为了解决这个问题，Fluentd 中提供了一种标识符 Labels 的方式，可以为不同的输入源指定不同的处理流程。</p>
+<p>如下所示创建一个新的配置文件 <code>fluentd_labels.conf</code>：</p>
+<pre><code>&lt;source&gt;
+
+@type http
+
+port 8888
+
+bind 0.0.0.0
+
+@label @TEST
+
+&lt;/source&gt;
+
+
+
+&lt;filter test.logs&gt;
+
+@type grep
+
+&lt;exclude&gt;
+
+key action
+
+pattern ^login$
+
+&lt;/exclude&gt;
+
+&lt;/filter&gt;
+
+
+
+&lt;label @TEST&gt;
+
+&lt;filter test.logs&gt;
+
+@type grep
+
+&lt;exclude&gt;
+
+key action
+
+pattern ^logout$
+
+&lt;/exclude&gt;
+
+&lt;/filter&gt;
+
+
+&lt;match test.logs&gt;
+
+@type stdout
+
+&lt;/match&gt;
+
+
+&lt;/label&gt;
+</code></pre>
+<p><strong>首先我们在输入源中给日志源定义了一个标签 <code>@label @TEST</code>，然后先定义了一个 filter 过滤掉 login 事件，然后在一个 <code>label</code> 模块里面过滤了 logout 事件</strong>。</p>
+<p>现在我们使用该配置重新启动 Fluentd：</p>
+<pre><code>$ docker run -p 8888:8888 --rm -v $(pwd)/etc:/fluentd/etc -v $(pwd)/logs:/fluentd/logs fluent/fluentd:v1.14-1 -c /fluentd/etc/fluentd_labels.conf -v
+</code></pre>
+<p>然后重新向 Fluentd 提交两条日志数据：</p>
+<pre><code>$ curl -X POST -d 'json={&quot;action&quot;:&quot;login&quot;,&quot;user&quot;:2}' http://localhost:8888/test.logs
+
+$ curl -X POST -d 'json={&quot;action&quot;:&quot;logout&quot;,&quot;user&quot;:2}' http://localhost:8888/test.logs
+</code></pre>
+<p>正常 Fluentd 中会输出一条日志记录：</p>
+<pre><code>2022-06-11 08:06:41.977559894 +0000 test.logs: {&quot;action&quot;:&quot;login&quot;,&quot;user&quot;:2}
+</code></pre>
+<p><strong>这是因为我们为输入日志设置了 <code>@TEST</code> 的标签，因此跳过中间设置的一些过滤器，只运行了 <code>&lt;label @TEST&gt;...&lt;/lable&gt;</code> 标签块里的过滤器，如果标签块里面没有定义过滤器则就不会过滤日志了</strong>。</p>
+<h2 id="_4"><strong>配置文件</strong></h2>
+<p>接下来我们再来详细介绍下 Fluentd 的配置文件，在配置文件中可以使用指令包括：</p>
+<ul>
+<li><code>source</code> 指令确定输入源</li>
+<li><code>match</code> 指令确定输出目的地</li>
+<li><code>filter</code> 指令确定事件处理管道</li>
+<li><code>system</code> 指令设置系统范围的配置</li>
+<li><code>label</code> 指令对内部路由的输出和过滤器进行分组</li>
+<li><code>@include</code> 指令包含其他文件</li>
+</ul>
+<h3 id="source"><strong>source</strong></h3>
+<p><strong>通过使用 <code>source</code> 指令选择和配置所需的输入插件来启用 Fluentd 输入源，Fluentd 标准输入插件包括 http 和 forward</strong>。</p>
+<p><strong>http 提供了一个 HTTP 端点来接受传入的 HTTP 消息，而 forward 提供了一个 TCP 端点来接受 TCP 数据包</strong>。当然，也可以同时是两者。例如：</p>
+<pre><code># 在24224端口接受TCP事件
+
+&lt;source&gt;
+
+@type forward
+
+port 24224
+
+&lt;/source&gt;
+
+
+
+# http://&lt;ip&gt;:9880/myapp.access?json={&quot;event&quot;:&quot;data&quot;}
+
+&lt;source&gt;
+
+@type http
+
+port 9880
+
+&lt;/source&gt;
+</code></pre>
+<p>输入源可以一次指定多个，<strong><code>@type</code> 参数用来指定输入插件</strong>，输入插件扩展了 Fluentd，以检索和提取来自外部的日志事件，<strong>一个输入插件通常创建一个线程、套接字和一个监听套接字，它也可以被写成定期从数据源中提取数据</strong>。Fluentd 支持非常多种输入插件，包括：</p>
+<ul>
+<li><code>in_tail</code></li>
+<li><code>in_forward</code></li>
+<li><code>in_udp</code></li>
+<li><code>in_tcp</code></li>
+<li><code>in_unix</code></li>
+<li><code>in_http</code></li>
+<li><code>in_syslog</code></li>
+<li><code>in_exec</code></li>
+<li><code>in_sample</code></li>
+<li><code>in_windows_eventlog</code></li>
+</ul>
+<p>tail 插件应该是平时我们使用得最多的输入插件了，<strong><code>in_tail</code> 输入插件允许 Fluentd 从文本文件的尾部读取事件，其行为类似于 <code>tail -F</code> 命令</strong>，比如下面的配置就定义了输入插件为 tail，其中的 path 属性指定了日志的源路径：</p>
+<pre><code>&lt;source&gt;
+
+@type tail
+
+path /var/log/httpd-access.log
+
+pos_file /var/log/td-agent/httpd-access.log.pos
+
+tag apache.access
+
+&lt;parse&gt;
+
+@type apache2
+
+&lt;/parse&gt;
+
+&lt;/source&gt;
+</code></pre>
+<p><strong>当 Fluentd 第一次被配置为 <code>in_tail</code> 时，它将从该日志的尾部开始读取，而不是从开始，一旦日志被轮转，Fluentd 就会从头开始读取新文件，它保持着对当前 inode 号的跟踪</strong>。</p>
+<p><strong>如果 Fluentd 重新启动，它会从重新启动前的最后一个位置继续读取，这个位置记录在 `pos_file`` 参数指定的位置文件中</strong>。</p>
+<h3 id="match"><strong>match</strong></h3>
+<p>match 用来指定日志的输出目的地，例如：</p>
+<pre><code># 将满足 myapp.acccess 标签的事件全部输出到
+
+# /var/log/fluent/access.%Y-%m-%d
+
+&lt;match myapp.access&gt;
+
+@type file
+
+path /var/log/fluent/access
+
+&lt;/match&gt;
+</code></pre>
+<p><strong>同样输出也可以一次指定多个，<code>@type</code> 参数指定使用哪一个输出插件。</strong> </p>
+<p>Fluentd 输出插件具有三种缓冲和刷新模式：</p>
+<ul>
+<li><strong>非缓冲模式</strong>不对数据进行缓冲，而是立即输出结果</li>
+<li><strong>同步缓冲模式</strong> 有一个<strong>暂存的 staged 的缓冲块 chunks</strong>（一个 chunk 是一个事件的集合）和<strong>一个 chunk 队列</strong>，其行为可以由 <code>&lt;buffer&gt;</code>  部分控制</li>
+<li><strong>异步缓冲模式</strong>也有暂存和队列，但输出插件不会在方法中同步提交写块，而是稍后提交</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/chap10_19_2.jpeg" title="Body image" /></p>
+<p>输出插件可以支持所有的模式，但可能只支持其中一种模式，如果配置中没有 <code>&lt;buffer&gt;</code> 部分，Fluentd 会自动选择合适的模式。同样 Fluentd 支持多种输出插件, 比如:</p>
+<ul>
+<li><code>out_copy</code></li>
+<li><code>out_null</code></li>
+<li><code>out_roundrobin</code></li>
+<li><code>out_stdout</code></li>
+<li><code>out_exec_filter</code></li>
+<li><code>out_forward</code></li>
+<li><code>out_mongo / out_mongo_replset</code></li>
+<li><code>out_exec</code></li>
+<li><code>out_file</code></li>
+<li><code>out_s3</code></li>
+<li><code>out_webhdfs</code></li>
+<li>......</li>
+</ul>
+<p>比如我们使用 <code>out_file</code> 作为输出目的地插件，<code>out_file</code> 输出插件将事件写入文件。当满足 <code>timekey</code> 条件时，将创建该文件，要改变输出频率，需要修改 timekey 的值，如下所示：</p>
+<pre><code>&lt;match pattern&gt;
+
+@type file
+
+path /var/log/fluent/myapp
+
+compress gzip
+
+&lt;buffer&gt;
+
+timekey 1d
+
+timekey_use_utc true
+
+timekey_wait 10m
+
+&lt;/buffer&gt;
+
+&lt;/match&gt;
+</code></pre>
+<h3 id="filter_1"><strong>filter</strong></h3>
+<p>使用 filter 可以指定事件的处理流程，多个 filter 可以串联起来使用：</p>
+<pre><code>Input -&gt; filter 1 -&gt; ... -&gt; filter N -&gt; Output
+</code></pre>
+<p>比如我们添加一个标准的 <code>record_transformer</code> 过滤器来匹配事件。</p>
+<pre><code># http://this.host:9880/myapp.access?json={&quot;event&quot;:&quot;data&quot;}
+
+&lt;source&gt;
+
+@type http
+
+port 9880
+
+&lt;/source&gt;
+
+
+
+&lt;filter myapp.access&gt;
+
+@type record_transformer
+
+&lt;record&gt;
+
+host_param &quot;#{Socket.gethostname}&quot;
+
+&lt;/record&gt;
+
+&lt;/filter&gt;
+
+
+
+&lt;match myapp.access&gt;
+
+@type file
+
+path /var/log/fluent/access
+
+&lt;/match&gt;
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/chap10_19_3.jpeg" title="Body image" /></p>
+<p><strong>接收到的事件 <code>{"event":"data"}</code> 首先进入 <code>record_transformer</code> 过滤器，该过滤器将 <code>host_param</code> 字段添加到事件中，然后过滤后的事件变为 <code>{"event":"data","host_param":"webserver1"}</code> 进入 <code>file</code> 文件输出插件</strong>。</p>
+<h3 id="system"><strong>system</strong></h3>
+<p>系统范围的配置由 system 指令设置，它们中的大多数也可以通过命令行选项获得。例如可以使用以下配置：</p>
+<ul>
+<li><code>log_level</code></li>
+<li><code>suppress_repeated_stacktrace</code></li>
+<li><code>emit_error_log_interval</code></li>
+<li><code>suppress_config_dump</code></li>
+<li><code>without_source</code></li>
+<li><code>process_name</code> (仅在 system 指令中可用，没有 fluentd 选项)</li>
+</ul>
+<p>例如下面的配置：</p>
+<pre><code>&lt;system&gt;
+
+# 等同于 -qq 选项
+
+log_level error
+
+# 等同于 --without-source 选项
+
+without_source
+
+# ...
+
+&lt;/system&gt;
+</code></pre>
+<p><strong>此外如果设置了 <code>process_name</code> 参数，则 <code>fluentd supervisor</code> 和工作进程名称将更改</strong>。</p>
+<pre><code>&lt;system&gt;
+
+process_name fluentd1
+
+&lt;/system&gt;
+</code></pre>
+<p>使用此配置，ps 命令显示以下结果：</p>
+<pre><code>% ps aux | grep fluentd1
+
+foo 45673 0.4 0.2 2523252 38620 s001 S+ 7:04AM 0:00.44 worker:fluentd1
+
+foo 45647 0.0 0.1 2481260 23700 s001 S+ 7:04AM 0:00.40 supervisor:fluentd1
+</code></pre>
+<h3 id="label"><strong>label</strong></h3>
+<p><strong><code>label</code> 指令可以对内部路由的过滤器和输出进行分组，<code>label</code> 降低了 <code>tag</code> 处理的复杂性</strong>。
+label 参数是内置插件参数，因此需要 <code>@</code> 前缀。例如下面的配置示例：</p>
+<pre><code>&lt;source&gt;
+
+@type forward
+
+&lt;/source&gt;
+
+
+
+&lt;source&gt;
+
+@type tail
+
+@label @SYSTEM
+
+&lt;/source&gt;
+
+
+
+&lt;filter access.**&gt;
+
+@type record_transformer
+
+&lt;record&gt;
+
+# ...
+
+&lt;/record&gt;
+
+&lt;/filter&gt;
+
+
+
+&lt;match **&gt;
+
+@type elasticsearch
+
+# ...
+
+&lt;/match&gt;
+
+
+
+&lt;label @SYSTEM&gt;
+
+&lt;filter var.log.middleware.**&gt;
+
+@type grep
+
+# ...
+
+&lt;/filter&gt;
+
+&lt;match **&gt;
+
+@type s3
+
+# ...
+
+&lt;/match&gt;
+
+&lt;/label&gt;
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/chap10_19_4.jpeg" title="Body image" /></p>
+<p><strong>在该配置中，forward 事件被路由到<code>record_transformer</code> 过滤器，然后输出到 elasticsearch，而 <code>in_tail</code> 事件被路由到 <code>@SYSTEM</code> 标签内的 <code>grep</code> 过滤器，然后输出到 s3</strong>。</p>
+<p>label 参数对于没有 tag 前缀的事件流分离很有用。</p>
+<p><strong><code>@ERROR</code> 标签是一个内置标签，用于插件的 <code>emit_error_event API</code> 发出的错误记录。如果设置了 <code>&lt;label @ERROR&gt;</code>，则在发出相关错误时将事件路由到此标签，例如缓冲区已满或记录无效</strong>。</p>
+<p><code>@ROOT</code> 标签也是一个内置标签，用于通过插件的 <code>event_emitter_router</code> API 获取根路由器。从 v1.14.0 开始引入此标签，以将标签分配回默认路由，例如，由 concat 过滤器处理的超时事件记录可以发送到默认路由。</p>
+<h3 id="include"><strong><code>@include</code></strong></h3>
+<p><strong>使用 <code>@include</code> 指令可以导入单独的配置文件中的指令，例如</strong>：</p>
+<pre><code># 包含 ./config.d 目录中的所有配置文件
+
+@include config.d/*.conf
+</code></pre>
+<p><strong><code>@include</code> 指令支持常规文件路径、glob 模式和 http URL 约定</strong>：</p>
+<pre><code># 绝对路径
+
+@include /path/to/config.conf
+
+
+
+# 如果使用相对路径，指令将使用此配置文件的目录名来扩展路径
+
+@include extra.conf
+
+
+
+# glob 匹配模式
+
+@include config.d/*.conf
+
+
+
+# http
+
+@include http://example.com/fluent.conf
+</code></pre>
+<h3 id="parse"><strong>parse</strong></h3>
+<p>一些 Fluentd 插件支持 <code>&lt;parse&gt;</code> 指令来指定如何解析原始日志数据。<code>&lt;parse&gt;</code> 指令可以在 <code>&lt;source&gt;</code>、<code>&lt;match&gt;</code> 或<code>&lt;filter&gt;</code> 下配置，例如：</p>
+<pre><code>
+&lt;source&gt;
+
+@type tail
+
+path /path/to/input/file
+
+&lt;parse&gt;
+
+@type nginx
+
+keep_time_key true
+
+&lt;/parse&gt;
+
+&lt;/source&gt;
+</code></pre>
+<p><strong><code>&lt;parse&gt;</code> 中通过 <code>@type</code> 参数来指定解析器插件的类型。<code>Fluentd</code> 内置了一些有用的解析器插件</strong>，包括：</p>
+<ul>
+<li>regexp</li>
+<li>apache2</li>
+<li><code>apache_error</code></li>
+<li>nginx</li>
+<li>syslog</li>
+<li>csv</li>
+<li>tsv</li>
+<li>ltsv</li>
+<li>json</li>
+<li>multiline</li>
+<li>none</li>
+</ul>
+<p>还有一些第三方的解析器插件：</p>
+<ul>
+<li>grok：如果你熟悉 grok 模式，则 grok-parser 插件很有用</li>
+<li>multi-format-parser：如果你需要在一个数据流中解析多种格式，那么可以使用这个解析器</li>
+<li>protobuf：protocol buffers</li>
+<li>avro：Apache Avro</li>
+</ul>
+<p>比如我们的日志事件中有包含多行日志的数据，那么我们就可以使用 multiline 这个解析器来解决，该插件可以用来解析多行日志。这个插件是正则表达式解析器的多行版本。</p>
+<p><strong>多行解析器使用 <code>formatN</code> 和 <code>format_firstline</code> 参数解析日志，<code>format_firstline</code> 用于检测多行日志的起始行。formatN，其中 N 的范围是 <code>[1..20]</code>，是多行日志的 Regexp 格式列表</strong>。</p>
+<p><strong>与其他解析器插件不同，此插件需要输入插件中的特殊代码，例如处理 <code>format_firstline</code>。目前，<code>in_tail</code> 插件适用于多行，但其他输入插件不适用于它</strong>。</p>
+<p>比如有一条如下所示的输入日志：</p>
+<pre><code>
+Started GET &quot;/users/123/&quot; for 127.0.0.1 at 2013-06-14 12:00:11 +0900
+
+Processing by UsersController#show as HTML
+
+Parameters: {&quot;user_id&quot;=&gt;&quot;123&quot;}
+
+Rendered users/show.html.erb within layouts/application (0.3ms)
+
+Completed 200 OK in 4ms (Views: 3.2ms | ActiveRecord: 0.0ms)
+</code></pre>
+<p>我们可以添加如下所示的配置来进行解析：</p>
+<pre><code>&lt;parse&gt;
+
+@type multiline
+
+format_firstline /^Started/
+
+format1 /Started (?&lt;method&gt;[^ ]+) &quot;(?&lt;path&gt;[^&quot;]+)&quot; for (?&lt;host&gt;[^ ]+) at (?&lt;time&gt;[^ ]+ [^ ]+ [^ ]+)\n/
+
+format2 /Processing by (?&lt;controller&gt;[^\u0023]+)\u0023(?&lt;controller_method&gt;[^ ]+) as (?&lt;format&gt;[^ ]+?)\n/
+
+format3 /( Parameters: (?&lt;parameters&gt;[^ ]+)\n)?/
+
+format4 / Rendered (?&lt;template&gt;[^ ]+) within (?&lt;layout&gt;.+) \([\d\.]+ms\)\n/
+
+format5 /Completed (?&lt;code&gt;[^ ]+) [^ ]+ in (?&lt;runtime&gt;[\d\.]+)ms \(Views: (?&lt;view_runtime&gt;[\d\.]+)ms \| ActiveRecord: (?&lt;ar_runtime&gt;[\d\.]+)ms\)/
+
+&lt;/parse&gt;
+</code></pre>
+<p>其中的 <code>format_firstline /^Started/</code> 用来指定第一行日志的匹配规则，<code>formatN</code> 指定后面几行的匹配规则，最后可以解析成如下所示的结果：</p>
+<pre><code>
+time:
+
+1371178811 (2013-06-14 12:00:11 +0900)
+
+
+
+record:
+
+{
+
+&quot;method&quot; :&quot;GET&quot;,
+
+&quot;path&quot; :&quot;/users/123/&quot;,
+
+&quot;host&quot; :&quot;127.0.0.1&quot;,
+
+&quot;controller&quot; :&quot;UsersController&quot;,
+
+&quot;controller_method&quot;:&quot;show&quot;,
+
+&quot;format&quot; :&quot;HTML&quot;,
+
+&quot;parameters&quot; :&quot;{ \&quot;user_id\&quot;:\&quot;123\&quot;}&quot;,
+
+...
+
+}
+</code></pre>
+<p>同样有如下所示的 JAVA 日志事件：</p>
+<pre><code>
+2013-3-03 14:27:33 [main] INFO Main - Start
+
+2013-3-03 14:27:33 [main] ERROR Main - Exception
+
+javax.management.RuntimeErrorException: null
+
+at Main.main(Main.java:16) ~[bin/:na]
+
+2013-3-03 14:27:33 [main] INFO Main - End
+</code></pre>
+<p>我们可以使用下面的配置来解析：</p>
+<pre><code>&lt;parse&gt;
+
+@type multiline
+
+format_firstline /\d{4}-\d{1,2}-\d{1,2}/
+
+format1 /^(?&lt;time&gt;\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}) \[(?&lt;thread&gt;.*)\] (?&lt;level&gt;[^\s]+)(?&lt;message&gt;.*)/
+
+&lt;/parse&gt;
+</code></pre>
+<p>这样就可以解析成如下所示的结果了：</p>
+<pre><code>time:
+
+2013-03-03 14:27:33 +0900
+
+record:
+
+{
+
+&quot;thread&quot; :&quot;main&quot;,
+
+&quot;level&quot; :&quot;INFO&quot;,
+
+&quot;message&quot;:&quot; Main - Start&quot;
+
+}
+
+
+
+time:
+
+2013-03-03 14:27:33 +0900
+
+record:
+
+{
+
+&quot;thread&quot; :&quot;main&quot;,
+
+&quot;level&quot; :&quot;ERROR&quot;,
+
+&quot;message&quot;:&quot; Main - Exception\njavax.management.RuntimeErrorException: null\n at Main.main(Main.java:16) ~[bin/:na]&quot;
+
+}
+
+
+
+time:
+
+2013-03-03 14:27:33 +0900
+
+record:
+
+{
+
+&quot;thread&quot; :&quot;main&quot;,
+
+&quot;level&quot; :&quot;INFO&quot;,
+
+&quot;message&quot;:&quot; Main - End&quot;
+
+}
+</code></pre>
+<h3 id="_5"><strong>模式匹配</strong></h3>
+<p>如上所述，Fluentd 允许你根据事件的 tag 来路由事件，我们可以明确指定需要处理的 tag，比如 <code>&lt;filter app.log&gt;</code> 来指定只处理 <code>tag</code> 为 <code>app.log</code> 的事件，我们也可以在 <code>filter</code> 和 <code>match</code> 中通过通配符，来处理同一类 <code>tag</code> 的事件。</p>
+<p><strong>tag 通常是一个字符串，由 <code>.</code> 分隔，比如 <code>myapp.access</code>：</strong></p>
+<ul>
+<li><code>*</code>: 匹配满足一个 tag 部分的事件, 比如: <code>a.*</code> 将匹配 a.b 这样的 tag, 但是不会处理 a 或者 a.b.c 这类 tag</li>
+<li><code>**</code>: 匹配满足 0 个或多个 tag 部分的事件，比如 <code>a.**</code> 将匹配 a、a.b、a.b.c 这三种 tag</li>
+<li><code>{X, Y, Z}</code>: 匹配满足 X、Y 或者 Z 的 tag，比如<code>{a, b}</code> 将匹配 a 或者 b，但是不会匹配 c，这种格式也可以和通配符组合使用,比如 <code>a.{b.c}.*</code> 或 <code>a.{b.c}.**</code></li>
+<li><code>#{...}</code> 会把花括号内的字符串当做是 ruby 的表达式处理。比如</li>
+</ul>
+<pre><code>&lt;match &quot;app.#{ENV['FLUENTD_TAG']}&quot;&gt;
+
+@type stdout
+
+&lt;/match&gt;
+</code></pre>
+<p>如果设置了环境变量 <code>FLUENTD_TAG</code> 为 dev，那上面等价于 <code>app.dev</code>。</p>
+<p>当指定了多个模式时（使用一个或多个空格分开），只要满足其中任意一个就行。比如: <code>&lt;match a b&gt;</code> 匹配 a 和 b，<code>&lt;match a.** b.*&gt;</code> 匹配 <code>a, a.b, a.b.c, b.d</code> 等</p>
+<p>当有多个 match，需要注意一下它们的顺序，如下面的例子，第二个 match 永远也不会生效：</p>
+<pre><code># ** 匹配所有的 tags. Bad :(
+
+&lt;match **&gt;
+
+@type blackhole_plugin
+
+&lt;/match&gt;
+
+
+
+&lt;match myapp.access&gt;
+
+@type file
+
+path /var/log/fluent/access
+
+&lt;/match&gt;
+</code></pre>
+<p>正确的写法应该是将确定的 tag 尽量写在前面，模糊匹配的写在后面。</p>
+<pre><code>&lt;match myapp.access&gt;
+
+@type file
+
+path /var/log/fluent/access
+
+&lt;/match&gt;
+
+
+
+# Capture all unmatched tags. Good :)
+
+&lt;match **&gt;
+
+@type blackhole_plugin
+
+&lt;/match&gt;
+</code></pre>
+<p><strong>另外需要注意顺序的是 filter 和 match，如果将 filter 放在 match 之后</strong>，那么它也永远不会生效。</p>
+<p>关于 Fluentd 的更多使用配置可以参考官方文档了解更多信息 https://docs.fluentd.org 。</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2020-9999 Jacob Xi
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.b4d07000.min.js"></script>
+      
+    
+  </body>
+</html>

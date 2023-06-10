@@ -1,0 +1,3394 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Jacob's Elasticsearch7 技术与实战教程">
+      
+      
+        <meta name="author" content="Jacob Xi">
+      
+      
+      
+        <link rel="prev" href="../3datamgt_forwarder/">
+      
+      
+        <link rel="next" href="../5Mon_create_inputs/">
+      
+      <link rel="icon" href="../../images/logo.png">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.15">
+    
+    
+      
+        <title>4 Splunk Configuring Distributed Search - Jacob ElasticSearch7 Book</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.26e3688c.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ecc896b0.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#4-splunk-administration-configuring-distributed-search" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Jacob ElasticSearch7 Book" class="md-header__button md-logo" aria-label="Jacob ElasticSearch7 Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Jacob ElasticSearch7 Book
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              4 Splunk Configuring Distributed Search
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Chao-Xi/jxes7book.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxes7book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Jacob ElasticSearch7 Book" class="md-nav__button md-logo" aria-label="Jacob ElasticSearch7 Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    Jacob ElasticSearch7 Book
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Chao-Xi/jxes7book.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxes7book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Welcome
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          一、Elasticsearch 概述
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          一、Elasticsearch 概述
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/1Es_intro/" class="md-nav__link">
+        第一节 ElasticSearch 概述
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          二、Elasticsearch 安装手册
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          二、Elasticsearch 安装手册
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/1ES_vm_install/" class="md-nav__link">
+        第一节 Elasticsearch的安装与简单配置
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/2KB_vm_install/" class="md-nav__link">
+        第二节 Kibana的安装与界面快速预览
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/3ES_KB_docker/" class="md-nav__link">
+        第三节 在Docker容器中运行Elasticsearch Kibana和Cerebro
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/4LogStash_vm_install/" class="md-nav__link">
+        第四节 Logstash安装与导入数据
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          三、Elasticsearch 入门查询
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          三、Elasticsearch 入门查询
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/1ES_intro/" class="md-nav__link">
+        第一节 ElasticSearch 基本概念
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/2ES_CRUD/" class="md-nav__link">
+        第二节 文档的基本CRUD与批量操作 & 读取＆Bulk API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/3ES_ReverseIndex/" class="md-nav__link">
+        第三节 倒排索引
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/4ES_Analyzer/" class="md-nav__link">
+        第四节 使用分析器进行分词
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/5ES_Search/" class="md-nav__link">
+        第五节 ElasticSearch Search语句
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/6ES_Mapping/" class="md-nav__link">
+        第六节 ElasticSearch Mapping 介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/7ES_Index/" class="md-nav__link">
+        第七节 Index Template和Dynamic Template
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/8ES_Aggr/" class="md-nav__link">
+        第八节 Elasticsearch Aggregations聚合分析简介
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/9ES_SUM/" class="md-nav__link">
+        第九节 Elasticsearch 入门总结 & 测试
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          四、Elasticsearch 深入搜索
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          四、Elasticsearch 深入搜索
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/1ES_search/" class="md-nav__link">
+        第一节 基于词项和基于全文的搜索
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/2ES_search_str_score/" class="md-nav__link">
+        第二节 结构化搜索以及搜索的相关性算分
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/3ES_query_filter/" class="md-nav__link">
+        第三节 Query & Filtering与多字符串多字段查询
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/4ES_sin_mul_search/" class="md-nav__link">
+        第四节 单字符串多字段查询
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/5ES_multi_lag_ana/" class="md-nav__link">
+        第五节 多语言及中文分词与检索
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/6ES_pra_tmdb/" class="md-nav__link">
+        第六节 Space Jam，一次全文搜索的实例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/7ES_ST_IA/" class="md-nav__link">
+        第七节 使⽤ Search Template 和 Index Alias
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/8ES_FUNC_SCORE/" class="md-nav__link">
+        第八节 综合排序:Function Score Query 优化算分
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/9ES_suggester/" class="md-nav__link">
+        第九节 Term & Phrase Suggester
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/10ES_Autocomplete/" class="md-nav__link">
+        第十节 ⾃动补全与基于上下文的提示
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/11ES_CrossSearch/" class="md-nav__link">
+        第十一节 跨集群搜索
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          五、分布式特性及分布式搜索的机制
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          五、分布式特性及分布式搜索的机制
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/1ES_cluster/" class="md-nav__link">
+        第一节 集群分布式模型及选主与脑裂问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/2ES_shard/" class="md-nav__link">
+        第二节 分⽚与集群的故障转移
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/3ES_doc_shard/" class="md-nav__link">
+        第三节 ⽂档分布式存储
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/4ES_shared_lifecycle/" class="md-nav__link">
+        第四节 分⽚及其生命周期
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/5ES_SE_Score/" class="md-nav__link">
+        第五节 剖析分布式查询及相关性算分
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/6ES_Sort_query/" class="md-nav__link">
+        第六节 排序及Doc Values&Fielddata
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/7ES_Pages_Traverse/" class="md-nav__link">
+        第七节 分页与遍历 – From，Size，Search After & Scroll API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/8ES_Concurrent_process/" class="md-nav__link">
+        第八节 处理并发读写操作
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          六、深入聚合分析
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          六、深入聚合分析
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/1chap6_bucket_metrics/" class="md-nav__link">
+        第一节 Bucket & Metric 聚合分析及嵌套聚合
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/2chap6_pipeline_metrics/" class="md-nav__link">
+        第二节 Pipeline 聚合分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/3chap6_aggragate_scope_order/" class="md-nav__link">
+        第三节 聚合的作⽤范围及排序
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/4chap6_accurate_aggragate/" class="md-nav__link">
+        第四节 聚合的精准度问题
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+          七、数据建模
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          七、数据建模
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/1chap7_nested_obj/" class="md-nav__link">
+        第一节 对象及 Nested 对象
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/2chap7_parent_child/" class="md-nav__link">
+        第二节 文档的父子关系
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/3chap7_updateindex_reindex/" class="md-nav__link">
+        第三节 Update By Query & Reindex API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/4chap7_ingest_painless/" class="md-nav__link">
+        第四节 Ingest Pipeline 与 Painless Script
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/5chap7_es_model/" class="md-nav__link">
+        第五节 Elasticsearch 数据建模实例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/6chap7_es_model_pra/" class="md-nav__link">
+        第六节 Elasticsearch 数据建模最佳实践
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/7chap7_es_sum2/" class="md-nav__link">
+        第七节 第二部分总结回顾
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+          八、数据保护
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          八、数据保护
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/1ES_cluster_IAM/" class="md-nav__link">
+        第一节 集群身份认证与用户鉴权
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/2ES_cluster_enc_transit/" class="md-nav__link">
+        第二节 集群内部间的安全通信
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/3ES_cluster_out_sec/" class="md-nav__link">
+        第三节 集群与外部间的安全通信
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          九、水平扩展Elasticsearch集群
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          九、水平扩展Elasticsearch集群
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/1ES_cluster_deploy/" class="md-nav__link">
+        第一节 常见的集群部署方式
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/2ES_hot_warm/" class="md-nav__link">
+        第二节 Hot & Warm 架构与 Shard Filtering
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/3ES_shard_settings/" class="md-nav__link">
+        第三节 分片设定及管理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/4ES_cluster_plan/" class="md-nav__link">
+        第四节 如何对集群进行容量规划
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/5ES_Cloud/" class="md-nav__link">
+        第五节 云上管理 Elasticsearch 的一些方法
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          十、使用 Kubernets 安装 EFK 集群
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_11">
+          <span class="md-nav__icon md-icon"></span>
+          十、使用 Kubernets 安装 EFK 集群
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/1log_architecture/" class="md-nav__link">
+        第一节 kubernetes 日志架构
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/2EFK_log/" class="md-nav__link">
+        第二节 在 K8S 上搭建 EFK 日志收集系统
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/16EFK_log_adv/" class="md-nav__link">
+        第三节 在 Kubernetes 安装 EFK 日志收集系统[更新]
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/17EFK_log_Ana/" class="md-nav__link">
+        第四节 EFK kibana 日志分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/18EFK_log_alert/" class="md-nav__link">
+        第五节 基于EKF日志的报警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/3ECK_operator/" class="md-nav__link">
+        第六节 使用Operator快速部署Elasticsearch集群
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/7EFKLK_log_aggregator/" class="md-nav__link">
+        第七节 使用 EFKLK 搭建 Kubernetes 日志收集工具栈 (Kafka/Logstash)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/19Fluentd/" class="md-nav__link">
+        第八节 日志收集工具 Fluentd 使用教程
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
+          十一、使用 Elastic Stack 构建 Kubernetes 全栈监控
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_12">
+          <span class="md-nav__icon md-icon"></span>
+          十一、使用 Elastic Stack 构建 Kubernetes 全栈监控
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/20Elastic_Stack_Monitoring1/" class="md-nav__link">
+        第一节 ElasticSearch 的集群安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/21Elastic_Stack_Monitoring2/" class="md-nav__link">
+        第二节 使用 Elastic Stack — Metricbeat 监控安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/22Elastic_Stack_Monitoring3/" class="md-nav__link">
+        第三节 使用 Elastic Stack - Filebeat 日志数据收集安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/23Elastic_Stack_Monitoring4/" class="md-nav__link">
+        第四节 使用 Elastic Stack — Elastic APM 应用性能监控的工具安装
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="0">
+          十二、生产环境中的集群运维
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_13">
+          <span class="md-nav__icon md-icon"></span>
+          十二、生产环境中的集群运维
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/1chap12_ES_prod/" class="md-nav__link">
+        第一节 生产环境常用配置和上线清单
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/2chap12_mon_es/" class="md-nav__link">
+        第二节 监控Elasticsearch集群
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/3chap12_es_diag/" class="md-nav__link">
+        第三节 诊断集群的潜在问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/4chap12_es_red_yellow/" class="md-nav__link">
+        第四节 解决集群 Yellow 与 Red 的问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/5chap12_es_cluster_perf/" class="md-nav__link">
+        第五节 集群写性能优化
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/6chap12_es_pre_test/" class="md-nav__link">
+        第六节 集群压力测试
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/7chap12_es_segment_merge/" class="md-nav__link">
+        第七节 段合并优化及注意事项
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/8chap12_Circuit_Breaker/" class="md-nav__link">
+        第八节 缓存及使用 Circuit Breaker 限制内存使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/9chap12_es_ops/" class="md-nav__link">
+        第九节 一些运维相关的建议
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_14" id="__nav_14_label" tabindex="0">
+          十三、索引生命周期管理
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_14">
+          <span class="md-nav__icon md-icon"></span>
+          十三、索引生命周期管理
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/1chap13_es_shrink_rolloverapi/" class="md-nav__link">
+        第一节 使用 Shrink 与 Rollover API 管理索引
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/2chap13_index_lms/" class="md-nav__link">
+        第二节 索引全生命周期管理及工具介绍
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_15" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_15" id="__nav_15_label" tabindex="0">
+          十四、用Logstash和Beats构建数据管道
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_15_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_15">
+          <span class="md-nav__icon md-icon"></span>
+          十四、用Logstash和Beats构建数据管道
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap14/1logstash_introduce/" class="md-nav__link">
+        第一节 Logstash 入门及架构介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap14/2JDBC_logstash_ES/" class="md-nav__link">
+        第二节 利用 JDBC 插件导入数据到 Elasticsearch
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap14/3Beats/" class="md-nav__link">
+        第三节 Beats 介绍
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_16" id="__nav_16_label" tabindex="0">
+          十五、用Kibana进行数据可视化分析
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_16">
+          <span class="md-nav__icon md-icon"></span>
+          十五、用Kibana进行数据可视化分析
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap15/1chap15_index_pattern/" class="md-nav__link">
+        第一节 使用 Index Pattern 配置数据
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap15/2chap15_kibana/" class="md-nav__link">
+        第二节 Kibana 使用的技巧
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_17" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_17" id="__nav_17_label" tabindex="0">
+          十六、探索X-Pack套件
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_17_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_17">
+          <span class="md-nav__icon md-icon"></span>
+          十六、探索X-Pack套件
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/1ES_monitor_alert_xpack/" class="md-nav__link">
+        第一节 用Monitoring和Alerting监控Elasticsearch集群
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/2Xpack_APM/" class="md-nav__link">
+        第二节 用 APM 进行程序性能监控
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/3Xpack_ML/" class="md-nav__link">
+        第三节 用机器学习实现异常检测
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/4ELK_Filebeat/" class="md-nav__link">
+        第四节 用 Elastic Stack 进行日志管理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/5xpack_canvas/" class="md-nav__link">
+        第五节 用 Canvas 进行数据的实时展示
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_18" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_18" id="__nav_18_label" tabindex="0">
+          十七、ELK 实战 Workshop
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_18_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_18">
+          <span class="md-nav__icon md-icon"></span>
+          十七、ELK 实战 Workshop
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap17/1ES_WS_movie/" class="md-nav__link">
+        第一节 电影搜索服务
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap17/2ES_WS_stackoverflow/" class="md-nav__link">
+        第二节 Stackoverflow用户调查问卷分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap17/3EFK_jfrog/" class="md-nav__link">
+        第三节 通过EFK对Artifactory进行日志分析
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_19" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_19" id="__nav_19_label" tabindex="0">
+          十八、Elastic认证, 开发与备份
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_19_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_19">
+          <span class="md-nav__icon md-icon"></span>
+          十八、Elastic认证, 开发与备份
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/1ES_Certified_test/" class="md-nav__link">
+        第一节 Elastic 认证考试
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/2ES_backup_restore/" class="md-nav__link">
+        第二节 集群 Backup & Restore
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/3ES_Java/" class="md-nav__link">
+        第三节 基于 Java 和 Elasticsearch 开发应用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/4ES_migration/" class="md-nav__link">
+        第四节 3种 Elasticsearch 数据离线迁移方案
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_20" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_20" id="__nav_20_label" tabindex="0">
+          十九、Elastic 操作总结篇
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_20_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_20">
+          <span class="md-nav__icon md-icon"></span>
+          十九、Elastic 操作总结篇
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum1_search_api/" class="md-nav__link">
+        ElasticSearch URI 常用语句总结篇
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum2_search_dep/" class="md-nav__link">
+        Elasticsearch 深入搜索总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum3_cross_search/" class="md-nav__link">
+        ElasticSearch 分布式搜索
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum4_agg_search/" class="md-nav__link">
+        ElasticSearch 深入聚合分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum5_datamodel/" class="md-nav__link">
+        ElasticSearch 数据建模
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum6_Opt_Mgt/" class="md-nav__link">
+        ElasticSearch Operation and Management
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum7_test/" class="md-nav__link">
+        期末考试
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum8_int/" class="md-nav__link">
+        ElasticSearch 面试
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_21" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_21" id="__nav_21_label" tabindex="0">
+          Splunk8 Admin Mgt
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_21_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_21">
+          <span class="md-nav__icon md-icon"></span>
+          Splunk8 Admin Mgt
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1spl_role_ad/" class="md-nav__link">
+        1 Splunk Managing Users and Authentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2config_indexes/" class="md-nav__link">
+        2 Working with Configuration Files and Indexes
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3datamgt_forwarder/" class="md-nav__link">
+        3 Managing Data and Forwarders
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          4 Splunk Configuring Distributed Search
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        4 Splunk Configuring Distributed Search
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-understanding-distributed-search" class="md-nav__link">
+    1 Understanding distributed search
+  </a>
+  
+    <nav class="md-nav" aria-label="1 Understanding distributed search">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-1-anatomy-of-a-search" class="md-nav__link">
+    1-1 Anatomy of a Search
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-2-distributed-search-overview" class="md-nav__link">
+    1-2 Distributed Search Overview
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-3-splunk-knowledge-bundle" class="md-nav__link">
+    1-3 Splunk Knowledge Bundle
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-4-knowledge-bundle-replication" class="md-nav__link">
+    1-4 Knowledge Bundle Replication
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo" class="md-nav__link">
+    Demo
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-configuring-distributed-search" class="md-nav__link">
+    2 Configuring Distributed Search
+  </a>
+  
+    <nav class="md-nav" aria-label="2 Configuring Distributed Search">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2-1-configuration-at-a-glance" class="md-nav__link">
+    2-1 Configuration at a Glance
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-2-adding-search-peer-using-splunk-web" class="md-nav__link">
+    2-2 Adding Search Peer Using Splunk Web
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-3-distributed-search-groups" class="md-nav__link">
+    2-3 Distributed Search Groups
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-4-quarantining-a-search-peer" class="md-nav__link">
+    2-4 Quarantining a Search Peer
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-5-demo" class="md-nav__link">
+    2-5 Demo
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo_1" class="md-nav__link">
+    Demo
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-scaling-distributed-search" class="md-nav__link">
+    3 Scaling Distributed Search
+  </a>
+  
+    <nav class="md-nav" aria-label="3 Scaling Distributed Search">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3-1-search-head-scaling-options" class="md-nav__link">
+    3-1 Search Head Scaling Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-2-search-head-cluster-architecture" class="md-nav__link">
+    3-2 Search Head Cluster Architecture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-3-how-does-the-search-head-cluster-work" class="md-nav__link">
+    3-3 How Does the Search Head Cluster Work?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo_2" class="md-nav__link">
+    Demo
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5Mon_create_inputs/" class="md-nav__link">
+        5 Splunk Monitoring and Creating Inputs
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6par_man/" class="md-nav__link">
+        6 Splunk Parsing and Manipulating Data
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7splunk_search/" class="md-nav__link">
+        7 Performing Basic Splunk Searches
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../8spl_exam/" class="md-nav__link">
+        8 Splunk ADMIN Exam
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-understanding-distributed-search" class="md-nav__link">
+    1 Understanding distributed search
+  </a>
+  
+    <nav class="md-nav" aria-label="1 Understanding distributed search">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-1-anatomy-of-a-search" class="md-nav__link">
+    1-1 Anatomy of a Search
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-2-distributed-search-overview" class="md-nav__link">
+    1-2 Distributed Search Overview
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-3-splunk-knowledge-bundle" class="md-nav__link">
+    1-3 Splunk Knowledge Bundle
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-4-knowledge-bundle-replication" class="md-nav__link">
+    1-4 Knowledge Bundle Replication
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo" class="md-nav__link">
+    Demo
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-configuring-distributed-search" class="md-nav__link">
+    2 Configuring Distributed Search
+  </a>
+  
+    <nav class="md-nav" aria-label="2 Configuring Distributed Search">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2-1-configuration-at-a-glance" class="md-nav__link">
+    2-1 Configuration at a Glance
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-2-adding-search-peer-using-splunk-web" class="md-nav__link">
+    2-2 Adding Search Peer Using Splunk Web
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-3-distributed-search-groups" class="md-nav__link">
+    2-3 Distributed Search Groups
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-4-quarantining-a-search-peer" class="md-nav__link">
+    2-4 Quarantining a Search Peer
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-5-demo" class="md-nav__link">
+    2-5 Demo
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo_1" class="md-nav__link">
+    Demo
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-scaling-distributed-search" class="md-nav__link">
+    3 Scaling Distributed Search
+  </a>
+  
+    <nav class="md-nav" aria-label="3 Scaling Distributed Search">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3-1-search-head-scaling-options" class="md-nav__link">
+    3-1 Search Head Scaling Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-2-search-head-cluster-architecture" class="md-nav__link">
+    3-2 Search Head Cluster Architecture
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-3-how-does-the-search-head-cluster-work" class="md-nav__link">
+    3-3 How Does the Search Head Cluster Work?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo_2" class="md-nav__link">
+    Demo
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="4-splunk-administration-configuring-distributed-search">4 Splunk Administration: Configuring Distributed Search</h1>
+<h2 id="1-understanding-distributed-search"><strong>1 Understanding distributed search</strong></h2>
+<ul>
+<li>Anatomy of a search</li>
+<li>Distributed search overview</li>
+<li>Search peers</li>
+<li>Knowledge bundle</li>
+<li>Knowledge bundle replication</li>
+</ul>
+<h3 id="1-1-anatomy-of-a-search"><strong>1-1 Anatomy of a Search</strong></h3>
+<p><strong>The Splunk Platform</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_1.png" title="Body image" /></p>
+<p><strong>Standalone Splunk</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_2.png" title="Body image" /></p>
+<blockquote>
+<p>Technically, this is known as inverted index</p>
+</blockquote>
+<p><strong>Search Overview</strong></p>
+<ul>
+<li>During indexing, Splunk indexers convert the machine data stream into searchable events which are stored in indexes</li>
+<li>Indexes contain compressed raw data (journal.gz) and time-series index files (TSIDX)</li>
+<li><strong>Indexes store data in time-oriented buckets</strong> (hot, warm, cold and frozen)</li>
+<li><strong>Indexers perform the search and return the results</strong></li>
+<li>Search results and meta data are stored as search artifacts until the search job expires</li>
+</ul>
+<p><strong>How Splunk Retrieves Data</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_3.png" title="Body image" /></p>
+<ul>
+<li><strong>Timeframe</strong>： Identify data buckets based on the time range</li>
+<li><strong>Bloom Filter</strong>： Calculate bloom filter on base search and compare against  bucket’s bloom filter</li>
+</ul>
+<p><strong>Bloom Filter</strong></p>
+<ul>
+<li><strong>Bloom filter is a bit array created by running search terms through set of hashing algorithm</strong></li>
+<li>Splunk creates a bloom filter for each bucket</li>
+<li>When a search is run, <strong>Splunk calculates the bloom filter for the base search, and compares with the bucket bloom filter</strong></li>
+<li>Only the matching buckets are opened</li>
+<li>Having as many filtering terms as possible in the base search improves search performance</li>
+</ul>
+<p><strong>Search Artifact</strong></p>
+<ul>
+<li>Contains results and metadata</li>
+<li>Stored on <code>$SPLUNK_HOME/var/run/dispatch</code></li>
+<li>Deleted when the search job expires</li>
+<li>Each job has its own directory</li>
+<li>Too many search artifacts can cause performance degradation</li>
+</ul>
+<p><strong>Contents of Dispatch Directory</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_4.png" title="Body image" /></p>
+<p><strong>Dispatch Directory Naming Convention</strong></p>
+<p>Type of search</p>
+<ul>
+<li>Ad-hoc: Unix Time of the search. (1596904237.80)</li>
+<li><strong>Saved search</strong>: <ul>
+<li><code>&lt;run by user&gt;__&lt;context_user&gt;__&lt;app&gt;__search
+(admin__admin__search__mysearch_ 1596904237.80)</code></li>
+</ul>
+</li>
+<li><strong>Scheduled search</strong><ul>
+<li><code>scheduler_nobody__web__mysearch__ 
+1596904237.80</code></li>
+</ul>
+</li>
+<li><strong>Remote search</strong><ul>
+<li><code>remote_&lt;peer&gt;_&lt;search&gt;</code></li>
+</ul>
+</li>
+</ul>
+<p><strong>Default Time To Live of Search Artifacts</strong></p>
+<ul>
+<li><strong>Ad-hoc</strong> : 10 minutes</li>
+<li>Manually invoked saved search: <strong>10 minutes</strong></li>
+<li>Scheduled search without alert action: <strong>Twice the scheduled period</strong></li>
+<li>Scheduled search with email action: <strong>24 hours</strong></li>
+<li>Scheduled search with script action: <strong>10 minutes</strong></li>
+<li>Scheduled search with summary indexing action   <strong>2 minutes</strong></li>
+</ul>
+<p><strong>Changing the TTL</strong></p>
+<ul>
+<li>Global search behavior can be updated in <strong><em>limits.conf</em></strong> using <strong><em>ttl</em></strong> or <strong><code>remote_ttl</code></strong> parameters under search stanza</li>
+<li>Individual sched searches can override TTL using <code>savedsearches.conf</code> or using Splunk Web</li>
+<li>Alert actions can override TTL using <code>alert_actions.conf</code> or using Splunk Web</li>
+</ul>
+<p><strong>Overriding Alert Actions TTL</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_5.png" title="Body image" /></p>
+<h3 id="1-2-distributed-search-overview"><strong>1-2 Distributed Search Overview</strong></h3>
+<p><strong>Distributed search separates search management &amp; presentation layer from indexing &amp; search retrieval layer</strong></p>
+<p>Distributed Environment</p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_6.png" title="Body image" /></p>
+<p><strong>Scaling</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_7.png" title="Body image" /></p>
+<p><strong>How Distributed Search Works?</strong></p>
+<ul>
+<li>Search head receives user’s search request</li>
+<li><strong>Search head dispatches searches to the search peers (indexers)</strong></li>
+<li>Search peers run the search on behalf of search heads and return the results to the search head</li>
+<li>Search head merges the results from all the search peers</li>
+<li>Search head runs additional filtering and transformation commands (if applicable) and returns the results to the user</li>
+</ul>
+<p><strong>Search Peers</strong></p>
+<ul>
+<li>The indexers that participate in distributed search are called search peers</li>
+<li><strong>Search peers must be added in search heads</strong></li>
+<li>If the search head participates in indexer cluster, search peers are automatically added</li>
+<li><strong>When a peer goes down, search head removes it from the peers list (default timeout 10 seconds)</strong></li>
+</ul>
+<h3 id="1-3-splunk-knowledge-bundle"><strong>1-3 Splunk Knowledge Bundle</strong></h3>
+<p><strong>Knowledge Bundle</strong></p>
+<ul>
+<li>Archive of knowledge objects that search head sends to all search peers</li>
+<li>Includes knowledge objects such as event types, saved searches.</li>
+<li><strong>Search peers need these knowledge objects to execute searches on behalf of search heads</strong></li>
+<li>Contains a subset of <code>$SPLUNK_HOME/etc/system</code>, <code>$SPLUNK_HOME/etc/apps</code> &amp; <code>$SPLUNK_HOME/etc/users</code></li>
+</ul>
+<p><strong>Location of Knowledge Bundle</strong></p>
+<ul>
+<li>Search Head   <code>$SPLUNK_HOME/var/run</code> (<code>.bundle</code> or <code>.delta</code> extension)</li>
+<li><strong>Search Peers</strong>: <code>$SPLUNK_HOME/var/run/</code>
+searchpeers</li>
+</ul>
+<p>Content of Knowledge Bundle</p>
+<p><strong>On the search peers:</strong></p>
+<p><code>$SPLUNK_HOME/var/run/searchpeers/&lt;bundleid&gt;</code></p>
+<ul>
+<li>system</li>
+<li>users</li>
+<li>apps</li>
+<li>bundle.info</li>
+</ul>
+<h3 id="1-4-knowledge-bundle-replication"><strong>1-4 Knowledge Bundle Replication</strong></h3>
+<p>As part of distributed search, search head periodically 
+distributes its knowledge bundle to its search peers</p>
+<p><strong>What is Replicated?</strong></p>
+<p>Search head periodically replicates knowledge bundle in the background or when initiating a search</p>
+<p><strong>Full bundle</strong></p>
+<p>The entire knowledge bundle</p>
+<p><strong>Delta</strong></p>
+<p>Changes since the last full bundle push</p>
+<p><strong>Four Replication Policies</strong></p>
+<ul>
+<li><strong>Classic</strong>：  Search head directly replicates to all search peers</li>
+<li><strong>Cascading</strong>： Replicates to a subset of search peers which replicates to other search peers &amp; so on</li>
+<li><strong>Mounted</strong>: Search head places the knowledge bundle in shared storage (NOT recommended)</li>
+<li><strong>RFS</strong>: Search head uploads knowledge bundle to a remote file system</li>
+</ul>
+<p><strong>Configuring Replication Policy</strong></p>
+<blockquote>
+<p>The configuration file must reside on the search head</p>
+</blockquote>
+<p><code>distsearch.conf</code></p>
+<pre><code>[replicationSettings]
+replicationPolicy = [classic | cascading | rfs | mounted]
+connectionTimeout = 60
+maxBundleSize = 2048
+</code></pre>
+<p><strong>Managing Knowledge Bundle</strong></p>
+<ul>
+<li>You can customize what gets replicated</li>
+<li>Use <code>distsearch.conf</code> to blacklist large files you don’t need replicated</li>
+</ul>
+<pre><code>[replicationBlacklist]
+excludeLookups = apps/myapp/lookups/mybiglookup*
+</code></pre>
+<p><strong>Monitoring Knowledge Bundle Replication</strong></p>
+<ul>
+<li><strong>Splunk Web</strong>  <code>Settings -&gt; Distributed Search</code></li>
+<li><strong>Monitoring Console</strong> <code>Search -&gt; Distributed Search</code></li>
+<li>Command line  <code>$SPLUNK_HOME/bin/splunk show bundle-replication-status</code></li>
+<li><strong>REST API</strong>   <code>/services/search/distributed/bun dle/replication/config</code></li>
+</ul>
+<h3 id="demo">Demo</h3>
+<ul>
+<li>Review search in standalone environment</li>
+<li>Run an ad-hoc search and check the dispatch directory</li>
+<li>Review job inspector and search.log</li>
+<li>Change the default TTL of ad-hoc search</li>
+<li>Change the default TTL of a scheduled search</li>
+</ul>
+<p><code>index=main sourcetype=secure Failed</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_8.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_9.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_10.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_11.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_12.png" title="Body image" /></p>
+<p><strong><code>arg.txt</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_13.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_14.png" title="Body image" /></p>
+<h2 id="2-configuring-distributed-search"><strong>2 Configuring Distributed Search</strong></h2>
+<p><strong>Overview</strong></p>
+<ul>
+<li>Preparing indexers to participate in distributed search</li>
+<li>Adding search peers</li>
+<li>Configuring distributed search groups</li>
+<li>Monitoring search peers</li>
+<li>Quarantining search peers</li>
+</ul>
+<h3 id="2-1-configuration-at-a-glance"><strong>2-1 Configuration at a Glance</strong></h3>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_15.png" title="Body image" /></p>
+<p><strong>Setting up Distributed Search</strong></p>
+<ul>
+<li>Install the same version of Splunk Enterprise in search head and search peers</li>
+<li><strong>Search head and search peers must use a license master</strong></li>
+<li><strong>Setup the same indexes in all search peers</strong></li>
+<li>Create a user with <code>edit_user</code> capability on all search peers</li>
+<li>Add search peers in search head via Splunk Web</li>
+</ul>
+<p><strong>Preparing the Indexer</strong></p>
+<ul>
+<li><strong>Access</strong>: Create a user with <code>edit_user</code> capability</li>
+<li><strong>Index</strong>: Ensure indexes have data coming in from  forwarders</li>
+<li><strong>Connectivity</strong>： Ensure search head can connect to management port (8089) of the indexer</li>
+</ul>
+<h3 id="2-2-adding-search-peer-using-splunk-web"><strong>2-2 Adding Search Peer Using Splunk Web</strong></h3>
+<p>Adding Search Peer Using Splunk Web</p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_16.png" title="Body image" /></p>
+<p><strong>Verifying Distributed Search</strong></p>
+<ul>
+<li>Examine the search peer in distributed search page in Splunk Web. Look for Replication Status</li>
+<li>Run a search to retrieve events from an index</li>
+<li>Check the internal logs on the indexer</li>
+</ul>
+<p><strong>Verifying Search Peers</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_17.png" title="Body image" /></p>
+<h3 id="2-3-distributed-search-groups"><strong>2-3 Distributed Search Groups</strong></h3>
+<p><strong>Distributed Search Groups</strong></p>
+<ul>
+<li>Search peers configured into specific groups using <code>distsearch.conf</code></li>
+<li>Enables to run searches on targeted indexers</li>
+<li>Use <code>splunk_server_group</code> option in SPL to specify the group</li>
+</ul>
+<p><strong>Distributed search groups should be avoided in indexer clusters</strong></p>
+<ul>
+<li>The primary copy of a data bucket can be in any indexer</li>
+<li>Enables to run searches on targeted indexers</li>
+<li>Can be employed in multiple indexer cluster scenarios</li>
+</ul>
+<p><strong>Configuring  Distributed  Search Groups</strong></p>
+<p><code>distsearch.conf</code></p>
+<pre><code>[distributedSearch]
+servers = https://172.31.22.35:8089,https://172.31.27.11:8089,https://172.31.22.115:8089
+
+[distributedSearch:sec]
+servers = https://172.31.22.35:8089,https://172.31.27.11:8089
+
+default = false
+
+[distributedSearch:sre]
+servers = https://172.31.22.115:8089
+default = false
+</code></pre>
+<p><strong>Using Distributed Search Groups</strong></p>
+<ul>
+<li>Specify the distributed search group as part of SPL</li>
+</ul>
+<p><code>index=infra splunk_search_group = sre</code></p>
+<p>Verify by examining <code>splunk_server</code> field</p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_18.png" title="Body image" /></p>
+<h3 id="2-4-quarantining-a-search-peer"><strong>2-4 Quarantining a Search Peer</strong></h3>
+<ul>
+<li>You can quarantine search peers from participating in searches</li>
+<li>Enables to perform maintenance on the search peer without affecting searches</li>
+<li>You can use Splunk Web’s to quarantine search peers</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_19.png" title="Body image" /></p>
+<h3 id="2-5-demo"><strong>2-5 Demo</strong></h3>
+<ul>
+<li>Prepare an indexer for distributed search</li>
+<li>Add search peers (indexer) in search head</li>
+<li>Verify distributed search</li>
+</ul>
+<p><strong>Distributed Search Environment</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_20.png" title="Body image" /></p>
+<p><strong>Add new search peer</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_21.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_22.png" title="Body image" /></p>
+<p><strong>Add new search peer user</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_23.png" title="Body image" /></p>
+<p>Add search peers</p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_24.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_24.png" title="Body image" /></p>
+<pre><code>[splunk@ip-172-31-19-217 sh1 splunk]$ cd /opt/splunk
+[spunk@ip-172-31-19-217 sh1 splunk]$ pwd
+/opt/splunk
+[plunk@ip-172-31-19-217 sh1 splunk]$ cd etc/system/local
+[splunk@ip-172-31-19-217 sh1 local]$ ls
+README
+inputs.conf
+migration. conf
+server.conf
+</code></pre>
+<p><strong><code>"distsearch. conf"</code></strong></p>
+<pre><code>[distributedSearch]
+servers = https://172.31.22.115:8089.https://172.31.22.35:8089.https://172.31.27.11:8089
+</code></pre>
+<p><code>index=infra</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_26.png" title="Body image" /></p>
+<p><code>idx1           idx2             idx3</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_27.png" title="Body image" /></p>
+<p>You can also <code>Inspect job</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_28.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_29.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_30.png" title="Body image" /></p>
+<pre><code>[plunk@ip-172-31-19-175 fw1 splunk]$ cd /opt/splunkforwarder/
+[spunk@ip-172-31-19-175 fw1 splunkforwarder]$ cd etc/system/local
+[plunk@ip-172-31-19-175 fw1 local]$
+
+# outputs configuration to send data to indexers in aws
+[tcpout: idxGroup]
+server = 172.31.27.11:9997,172.31.22.35:9997,172.31.22.115:9997
+</code></pre>
+<p><strong><code>inputs.conf</code></strong></p>
+<pre><code># Inputs to capture system logs and send it to aws indexers
+[default]
+host = fw1
+
+[monitor:///var/log/messages]
+TCP ROUTING = idxGroup
+index = infra
+sourcetype = syslog
+ignore0lderThan = 7d
+</code></pre>
+<p><strong>The tepgroup idxGroup is defined in <code>outputs.conf</code></strong></p>
+<p><code>index=_internal host=fwl</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_31.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_32.png" title="Body image" /></p>
+<h3 id="demo_1">Demo</h3>
+<ul>
+<li>Configure distributed search group</li>
+<li>Invoke a search using distributed search group</li>
+<li>Quarantine a search peer</li>
+</ul>
+<pre><code>[Splunk@ip-172-31-19-217 sh1 local]$ pwd
+/opt/splunk/etc/system/local
+
+[Splunk@ip-172-31-19-217 sh1 local]$ ls
+...
+distsearch. conf
+
+[Splunk@ip-172-31-19-217 sh1 local]$ vi distsearch. conf
+[distributedSearch]
+servers = https://172.31.22.115:8089.https://172.31.22.35:8089.httos://172.31.27.11:8089
+</code></pre>
+<p>Add sec search group and sre searcg group</p>
+<pre><code>[distributedSearch]
+servers = https://172.31.22.115:8089.https://172.31.22.35:8089.httos://172.31.27.11:8089
+
+[distributedSearch:sec]
+servers = https://172.31.22.115:8089.https://172.31.22.35:8089.httos://172.31.27.11:8089
+default = false
+
+[distributedSearch:sre]
+servers = https://172.31.22.115:8089
+default = false
+</code></pre>
+<pre><code>[plunk@ip-172-31-19-217 sh1 local]$ cd /opt/splunk/bin
+sudo  ./splunk restart
+</code></pre>
+<p><strong>New Search</strong></p>
+<pre><code>index=infra splunk_server_group=&quot;sec&quot;
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_33.png" title="Body image" /></p>
+<pre><code>index=infra splunk_server group = &quot;sre&quot;
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_34.png" title="Body image" /></p>
+<pre><code>index=infra
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_35.png" title="Body image" /></p>
+<p><code>splunk_server_group</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_36.png" title="Body image" /></p>
+<p><code>Quarantine splunk_server</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_37.png" title="Body image" /></p>
+<ul>
+<li>Quarantined 172.31.2711:8089</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_38.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_39.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_40.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_41.png" title="Body image" /></p>
+<h2 id="3-scaling-distributed-search">3 Scaling Distributed Search</h2>
+<p><strong>Overview</strong></p>
+<ul>
+<li>Scaling options available</li>
+<li><strong>Search head cluster architecture</strong></li>
+<li>Search head cluster operation<ul>
+<li><strong>Configuration replication</strong></li>
+<li><strong>Artifact replication</strong></li>
+<li>Deployer</li>
+</ul>
+</li>
+<li>Creating a search head cluster</li>
+</ul>
+<h3 id="3-1-search-head-scaling-options"><strong>3-1 Search Head Scaling Options</strong></h3>
+<p><strong>Why Scale?</strong></p>
+<ul>
+<li>Prevention of single point of failure</li>
+<li>Prevention of performance issue due to resource constraints</li>
+<li>Distribute load across many servers geographically</li>
+<li>Efficiently perform server maintenance without causing outages</li>
+</ul>
+<p><strong>Scaling Options</strong></p>
+<ul>
+<li><strong>Independent search heads</strong>: Dedicated search heads 
+with no communication between them</li>
+<li><strong>Search head clusters</strong>: A group of search heads (minimum 3) in a cluster communicating with each other</li>
+<li><strong>Indexer clusters</strong>:  Search heads that join indexer cluster can be independent or search head cluster</li>
+</ul>
+<p><strong>Independent Search Heads</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_42.png" title="Body image" /></p>
+<p><strong>Search Head Cluster</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_43.png" title="Body image" /></p>
+<h3 id="3-2-search-head-cluster-architecture"><strong>3-2 Search Head Cluster Architecture</strong></h3>
+<p><strong>Search Head Cluster Considerations</strong></p>
+<ul>
+<li>Minimum 3 members required</li>
+<li><strong>Always use new Splunk instances to create the cluster</strong></li>
+<li>Cluster members must have the same hardware capacity</li>
+<li><strong>Synchronize the clocks of all members including search peers</strong></li>
+</ul>
+<p><strong>Key Benefits of Search Head Clustering</strong></p>
+<ul>
+<li>High availability and load balancing</li>
+<li><strong>Captain manages and distributes the scheduled jobs</strong></li>
+<li>Configuration and search artifacts replication</li>
+<li>Seamless user experience</li>
+</ul>
+<p><strong>Search Head Cluster Architecture</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_44.png" title="Body image" /></p>
+<h3 id="3-3-how-does-the-search-head-cluster-work"><strong>3-3 How Does the Search Head Cluster Work?</strong></h3>
+<p><strong>Search Head Captain</strong></p>
+<ul>
+<li>Captain centrally coordinates all <strong>cluster-wide activities. Captain is also a member of the cluster</strong></li>
+<li>Captaincy can be configured to be <strong>dynamic (default) or static</strong><ul>
+<li>With dynamic captaincy, <strong>the cluster automatically elects a new captain using RAFT consensus algorithm</strong></li>
+<li>Captain consumes more CPU and memory</li>
+</ul>
+</li>
+</ul>
+<p><strong>Scheduled Jobs and Artifacts</strong></p>
+<ul>
+<li>Captain is the <strong>only scheduler</strong></li>
+<li>Captain chooses the search head cluster member to run search jobs based on load</li>
+<li>Search artifacts are replicated by captain to other members. <ul>
+<li>Ad-hoc and real-time artifacts are not replicated</li>
+</ul>
+</li>
+</ul>
+<p><strong>Configuration Management</strong></p>
+<ul>
+<li><strong>Automatic Replication</strong><ul>
+<li>Changes done via Splunk Web, CLI and REST API are automatically replicated</li>
+</ul>
+</li>
+<li><strong>Deployer</strong><ul>
+<li>Changes done to the <code>.conf</code> files must be distributed through Search head deployer </li>
+</ul>
+</li>
+</ul>
+<p><strong>Deployer</strong></p>
+<ul>
+<li>A Splunk instance outside of SHC (search head cluster). Associated with SHC by using <strong>pass4SymmKey</strong> in <code>server.conf</code></li>
+<li>Apps to be deployed are stored in <code>/etc/shcluster/apps</code></li>
+<li>Merges <strong><em>default</em></strong> and <strong><em>local</em></strong> directory files and deploys to default directory on the <strong>SHC members (never to local)</strong></li>
+<li>Automatically triggers a rolling restart if necessary</li>
+</ul>
+<h3 id="demo_2">Demo</h3>
+<ul>
+<li>Initialize a 3-member search head cluster</li>
+<li>Add search peers</li>
+<li>Verify configuration replication</li>
+</ul>
+<p><strong>Search Head Cluster Environment</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_45.png" title="Body image" /></p>
+<p>Search heads are going to be configured in a search head cluster</p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_46.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_47.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_48.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_49.png" title="Body image" /></p>
+<p><strong>sh1</strong></p>
+<pre><code>[Splunk@ip-172-31-25-141 sh1 ~]$ cd /opt/splunk/bin
+
+$ ./splunk init shcluster-config -mgmt_uri https://172.31.25.141:8089 replication_port 9200 -secrect  shcluster
+
+cd /opt/splunk/bin
+
+$ sudo ./splunk restart
+</code></pre>
+<p><strong>sh2</strong></p>
+<pre><code>[splunk@ip-172-31-19-166 sh2 ~]$ cd /opt/splunk/bin
+[splunk@ip-172-31-19-166 sh2 bin]$  ./splunk init shcluster-config -mgmt_uri https: //172.31.19.166:8089 -replication_port 9200 -secret shcluster
+
+[splunk@ip-172-31-19-166 sh2 bin]$ sudo ./splunk restart
+</code></pre>
+<p><strong>sh3</strong></p>
+<pre><code>[splunk@ip-172-31-21-109 sh3 bin]$ ./splunk init shcluster-config -mgmt_uri https://172.31.21.109:8089 -replication_port 9200 -secret shcluster
+
+[splunk@ip-172-31-19-166 sh2 bin]$ sudo ./splunk restart
+</code></pre>
+<p><strong>sh1</strong></p>
+<pre><code>[splunk@ip-172-31-25-141 sh1 bin]$ ./splunk bootstrap shcluster-captain -servers_list https://172.31.25.141:8089,https://172.31.19.166:8089.https://172.31.21.109:8089
+
+[splunk@ip-172-31-25-141 sh1 bin]$ cd ../etc/system/local
+[splunk@ip-172-31-25-141 sh1 local]$ vi server.conf
+[splunk@ip-172-31-25-141 sh1 local]$ cd /opt/splunk/bin
+[splunk@ip-172-31-25-141 sh1 bin]$ ./splunk show shcluster-status
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_50.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_51.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_4_52.png" title="Body image" /></p>
+<p><strong><code>Begin Rolling Restart</code></strong></p>
+<p><strong>sh1</strong></p>
+<pre><code>cd ../etc/system/local
+vi server.conf
+
+[raft_statemachine]
+disabled = false
+replicate_search_peers = true
+</code></pre>
+<p><strong>sh2</strong></p>
+<pre><code>[splunk@ip-172-31-19-166 sh2 bin]$ cd ../etc/system/local
+[splunk@ip-172-31-19-166 sh2 local]$ vi server.conf
+
+[raft_statemachine]
+disabled = false
+replicate_search_peers = true
+
+[splunk@ip-172-31-19-166 sh2 bin]$ sudo ./splunk restart
+</code></pre>
+<p><strong>sh3</strong></p>
+<pre><code>[splunk@ip-172-31-21-109 sh3 bin]$ cd ../etc/system/local
+[splunk@ip-172-31-21-109 sh3 loca]$ vi server.conf
+[raft_statemachine]
+disabled = false
+replicate_search_peers = true
+
+[splunk@ip-172-31-21-109 sh3 loca]$ sudo ./splunk restart
+</code></pre>
+<pre><code>[splunk@ip-172-31-25-141 sh1 bin$ ./splunk add search-server https: //172.31.27.192:8089 -remoteUsername shuser -remotePassword
+
+Peer added
+</code></pre>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2020-9999 Jacob Xi
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.b4d07000.min.js"></script>
+      
+    
+  </body>
+</html>

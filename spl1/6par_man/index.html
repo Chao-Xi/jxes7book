@@ -1,0 +1,4367 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Jacob's Elasticsearch7 技术与实战教程">
+      
+      
+        <meta name="author" content="Jacob Xi">
+      
+      
+      
+        <link rel="prev" href="../5Mon_create_inputs/">
+      
+      
+        <link rel="next" href="../7splunk_search/">
+      
+      <link rel="icon" href="../../images/logo.png">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.15">
+    
+    
+      
+        <title>6 Splunk Parsing and Manipulating Data - Jacob ElasticSearch7 Book</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.26e3688c.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ecc896b0.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#6-splunk-administration-parsing-and-manipulating-data" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Jacob ElasticSearch7 Book" class="md-header__button md-logo" aria-label="Jacob ElasticSearch7 Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Jacob ElasticSearch7 Book
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              6 Splunk Parsing and Manipulating Data
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Chao-Xi/jxes7book.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxes7book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Jacob ElasticSearch7 Book" class="md-nav__button md-logo" aria-label="Jacob ElasticSearch7 Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    Jacob ElasticSearch7 Book
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Chao-Xi/jxes7book.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxes7book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Welcome
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          一、Elasticsearch 概述
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          一、Elasticsearch 概述
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/1Es_intro/" class="md-nav__link">
+        第一节 ElasticSearch 概述
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          二、Elasticsearch 安装手册
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          二、Elasticsearch 安装手册
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/1ES_vm_install/" class="md-nav__link">
+        第一节 Elasticsearch的安装与简单配置
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/2KB_vm_install/" class="md-nav__link">
+        第二节 Kibana的安装与界面快速预览
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/3ES_KB_docker/" class="md-nav__link">
+        第三节 在Docker容器中运行Elasticsearch Kibana和Cerebro
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/4LogStash_vm_install/" class="md-nav__link">
+        第四节 Logstash安装与导入数据
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          三、Elasticsearch 入门查询
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          三、Elasticsearch 入门查询
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/1ES_intro/" class="md-nav__link">
+        第一节 ElasticSearch 基本概念
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/2ES_CRUD/" class="md-nav__link">
+        第二节 文档的基本CRUD与批量操作 & 读取＆Bulk API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/3ES_ReverseIndex/" class="md-nav__link">
+        第三节 倒排索引
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/4ES_Analyzer/" class="md-nav__link">
+        第四节 使用分析器进行分词
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/5ES_Search/" class="md-nav__link">
+        第五节 ElasticSearch Search语句
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/6ES_Mapping/" class="md-nav__link">
+        第六节 ElasticSearch Mapping 介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/7ES_Index/" class="md-nav__link">
+        第七节 Index Template和Dynamic Template
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/8ES_Aggr/" class="md-nav__link">
+        第八节 Elasticsearch Aggregations聚合分析简介
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/9ES_SUM/" class="md-nav__link">
+        第九节 Elasticsearch 入门总结 & 测试
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          四、Elasticsearch 深入搜索
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          四、Elasticsearch 深入搜索
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/1ES_search/" class="md-nav__link">
+        第一节 基于词项和基于全文的搜索
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/2ES_search_str_score/" class="md-nav__link">
+        第二节 结构化搜索以及搜索的相关性算分
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/3ES_query_filter/" class="md-nav__link">
+        第三节 Query & Filtering与多字符串多字段查询
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/4ES_sin_mul_search/" class="md-nav__link">
+        第四节 单字符串多字段查询
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/5ES_multi_lag_ana/" class="md-nav__link">
+        第五节 多语言及中文分词与检索
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/6ES_pra_tmdb/" class="md-nav__link">
+        第六节 Space Jam，一次全文搜索的实例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/7ES_ST_IA/" class="md-nav__link">
+        第七节 使⽤ Search Template 和 Index Alias
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/8ES_FUNC_SCORE/" class="md-nav__link">
+        第八节 综合排序:Function Score Query 优化算分
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/9ES_suggester/" class="md-nav__link">
+        第九节 Term & Phrase Suggester
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/10ES_Autocomplete/" class="md-nav__link">
+        第十节 ⾃动补全与基于上下文的提示
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/11ES_CrossSearch/" class="md-nav__link">
+        第十一节 跨集群搜索
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          五、分布式特性及分布式搜索的机制
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          五、分布式特性及分布式搜索的机制
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/1ES_cluster/" class="md-nav__link">
+        第一节 集群分布式模型及选主与脑裂问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/2ES_shard/" class="md-nav__link">
+        第二节 分⽚与集群的故障转移
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/3ES_doc_shard/" class="md-nav__link">
+        第三节 ⽂档分布式存储
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/4ES_shared_lifecycle/" class="md-nav__link">
+        第四节 分⽚及其生命周期
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/5ES_SE_Score/" class="md-nav__link">
+        第五节 剖析分布式查询及相关性算分
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/6ES_Sort_query/" class="md-nav__link">
+        第六节 排序及Doc Values&Fielddata
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/7ES_Pages_Traverse/" class="md-nav__link">
+        第七节 分页与遍历 – From，Size，Search After & Scroll API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/8ES_Concurrent_process/" class="md-nav__link">
+        第八节 处理并发读写操作
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          六、深入聚合分析
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          六、深入聚合分析
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/1chap6_bucket_metrics/" class="md-nav__link">
+        第一节 Bucket & Metric 聚合分析及嵌套聚合
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/2chap6_pipeline_metrics/" class="md-nav__link">
+        第二节 Pipeline 聚合分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/3chap6_aggragate_scope_order/" class="md-nav__link">
+        第三节 聚合的作⽤范围及排序
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/4chap6_accurate_aggragate/" class="md-nav__link">
+        第四节 聚合的精准度问题
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+          七、数据建模
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          七、数据建模
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/1chap7_nested_obj/" class="md-nav__link">
+        第一节 对象及 Nested 对象
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/2chap7_parent_child/" class="md-nav__link">
+        第二节 文档的父子关系
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/3chap7_updateindex_reindex/" class="md-nav__link">
+        第三节 Update By Query & Reindex API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/4chap7_ingest_painless/" class="md-nav__link">
+        第四节 Ingest Pipeline 与 Painless Script
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/5chap7_es_model/" class="md-nav__link">
+        第五节 Elasticsearch 数据建模实例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/6chap7_es_model_pra/" class="md-nav__link">
+        第六节 Elasticsearch 数据建模最佳实践
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/7chap7_es_sum2/" class="md-nav__link">
+        第七节 第二部分总结回顾
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+          八、数据保护
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          八、数据保护
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/1ES_cluster_IAM/" class="md-nav__link">
+        第一节 集群身份认证与用户鉴权
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/2ES_cluster_enc_transit/" class="md-nav__link">
+        第二节 集群内部间的安全通信
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/3ES_cluster_out_sec/" class="md-nav__link">
+        第三节 集群与外部间的安全通信
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          九、水平扩展Elasticsearch集群
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          九、水平扩展Elasticsearch集群
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/1ES_cluster_deploy/" class="md-nav__link">
+        第一节 常见的集群部署方式
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/2ES_hot_warm/" class="md-nav__link">
+        第二节 Hot & Warm 架构与 Shard Filtering
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/3ES_shard_settings/" class="md-nav__link">
+        第三节 分片设定及管理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/4ES_cluster_plan/" class="md-nav__link">
+        第四节 如何对集群进行容量规划
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/5ES_Cloud/" class="md-nav__link">
+        第五节 云上管理 Elasticsearch 的一些方法
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          十、使用 Kubernets 安装 EFK 集群
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_11">
+          <span class="md-nav__icon md-icon"></span>
+          十、使用 Kubernets 安装 EFK 集群
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/1log_architecture/" class="md-nav__link">
+        第一节 kubernetes 日志架构
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/2EFK_log/" class="md-nav__link">
+        第二节 在 K8S 上搭建 EFK 日志收集系统
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/16EFK_log_adv/" class="md-nav__link">
+        第三节 在 Kubernetes 安装 EFK 日志收集系统[更新]
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/17EFK_log_Ana/" class="md-nav__link">
+        第四节 EFK kibana 日志分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/18EFK_log_alert/" class="md-nav__link">
+        第五节 基于EKF日志的报警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/3ECK_operator/" class="md-nav__link">
+        第六节 使用Operator快速部署Elasticsearch集群
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/7EFKLK_log_aggregator/" class="md-nav__link">
+        第七节 使用 EFKLK 搭建 Kubernetes 日志收集工具栈 (Kafka/Logstash)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/19Fluentd/" class="md-nav__link">
+        第八节 日志收集工具 Fluentd 使用教程
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
+          十一、使用 Elastic Stack 构建 Kubernetes 全栈监控
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_12">
+          <span class="md-nav__icon md-icon"></span>
+          十一、使用 Elastic Stack 构建 Kubernetes 全栈监控
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/20Elastic_Stack_Monitoring1/" class="md-nav__link">
+        第一节 ElasticSearch 的集群安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/21Elastic_Stack_Monitoring2/" class="md-nav__link">
+        第二节 使用 Elastic Stack — Metricbeat 监控安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/22Elastic_Stack_Monitoring3/" class="md-nav__link">
+        第三节 使用 Elastic Stack - Filebeat 日志数据收集安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/23Elastic_Stack_Monitoring4/" class="md-nav__link">
+        第四节 使用 Elastic Stack — Elastic APM 应用性能监控的工具安装
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="0">
+          十二、生产环境中的集群运维
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_13">
+          <span class="md-nav__icon md-icon"></span>
+          十二、生产环境中的集群运维
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/1chap12_ES_prod/" class="md-nav__link">
+        第一节 生产环境常用配置和上线清单
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/2chap12_mon_es/" class="md-nav__link">
+        第二节 监控Elasticsearch集群
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/3chap12_es_diag/" class="md-nav__link">
+        第三节 诊断集群的潜在问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/4chap12_es_red_yellow/" class="md-nav__link">
+        第四节 解决集群 Yellow 与 Red 的问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/5chap12_es_cluster_perf/" class="md-nav__link">
+        第五节 集群写性能优化
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/6chap12_es_pre_test/" class="md-nav__link">
+        第六节 集群压力测试
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/7chap12_es_segment_merge/" class="md-nav__link">
+        第七节 段合并优化及注意事项
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/8chap12_Circuit_Breaker/" class="md-nav__link">
+        第八节 缓存及使用 Circuit Breaker 限制内存使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/9chap12_es_ops/" class="md-nav__link">
+        第九节 一些运维相关的建议
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_14" id="__nav_14_label" tabindex="0">
+          十三、索引生命周期管理
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_14">
+          <span class="md-nav__icon md-icon"></span>
+          十三、索引生命周期管理
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/1chap13_es_shrink_rolloverapi/" class="md-nav__link">
+        第一节 使用 Shrink 与 Rollover API 管理索引
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/2chap13_index_lms/" class="md-nav__link">
+        第二节 索引全生命周期管理及工具介绍
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_15" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_15" id="__nav_15_label" tabindex="0">
+          十四、用Logstash和Beats构建数据管道
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_15_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_15">
+          <span class="md-nav__icon md-icon"></span>
+          十四、用Logstash和Beats构建数据管道
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap14/1logstash_introduce/" class="md-nav__link">
+        第一节 Logstash 入门及架构介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap14/2JDBC_logstash_ES/" class="md-nav__link">
+        第二节 利用 JDBC 插件导入数据到 Elasticsearch
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap14/3Beats/" class="md-nav__link">
+        第三节 Beats 介绍
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_16" id="__nav_16_label" tabindex="0">
+          十五、用Kibana进行数据可视化分析
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_16">
+          <span class="md-nav__icon md-icon"></span>
+          十五、用Kibana进行数据可视化分析
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap15/1chap15_index_pattern/" class="md-nav__link">
+        第一节 使用 Index Pattern 配置数据
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap15/2chap15_kibana/" class="md-nav__link">
+        第二节 Kibana 使用的技巧
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_17" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_17" id="__nav_17_label" tabindex="0">
+          十六、探索X-Pack套件
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_17_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_17">
+          <span class="md-nav__icon md-icon"></span>
+          十六、探索X-Pack套件
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/1ES_monitor_alert_xpack/" class="md-nav__link">
+        第一节 用Monitoring和Alerting监控Elasticsearch集群
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/2Xpack_APM/" class="md-nav__link">
+        第二节 用 APM 进行程序性能监控
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/3Xpack_ML/" class="md-nav__link">
+        第三节 用机器学习实现异常检测
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/4ELK_Filebeat/" class="md-nav__link">
+        第四节 用 Elastic Stack 进行日志管理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/5xpack_canvas/" class="md-nav__link">
+        第五节 用 Canvas 进行数据的实时展示
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_18" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_18" id="__nav_18_label" tabindex="0">
+          十七、ELK 实战 Workshop
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_18_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_18">
+          <span class="md-nav__icon md-icon"></span>
+          十七、ELK 实战 Workshop
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap17/1ES_WS_movie/" class="md-nav__link">
+        第一节 电影搜索服务
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap17/2ES_WS_stackoverflow/" class="md-nav__link">
+        第二节 Stackoverflow用户调查问卷分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap17/3EFK_jfrog/" class="md-nav__link">
+        第三节 通过EFK对Artifactory进行日志分析
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_19" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_19" id="__nav_19_label" tabindex="0">
+          十八、Elastic认证, 开发与备份
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_19_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_19">
+          <span class="md-nav__icon md-icon"></span>
+          十八、Elastic认证, 开发与备份
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/1ES_Certified_test/" class="md-nav__link">
+        第一节 Elastic 认证考试
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/2ES_backup_restore/" class="md-nav__link">
+        第二节 集群 Backup & Restore
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/3ES_Java/" class="md-nav__link">
+        第三节 基于 Java 和 Elasticsearch 开发应用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/4ES_migration/" class="md-nav__link">
+        第四节 3种 Elasticsearch 数据离线迁移方案
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_20" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_20" id="__nav_20_label" tabindex="0">
+          十九、Elastic 操作总结篇
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_20_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_20">
+          <span class="md-nav__icon md-icon"></span>
+          十九、Elastic 操作总结篇
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum1_search_api/" class="md-nav__link">
+        ElasticSearch URI 常用语句总结篇
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum2_search_dep/" class="md-nav__link">
+        Elasticsearch 深入搜索总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum3_cross_search/" class="md-nav__link">
+        ElasticSearch 分布式搜索
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum4_agg_search/" class="md-nav__link">
+        ElasticSearch 深入聚合分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum5_datamodel/" class="md-nav__link">
+        ElasticSearch 数据建模
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum6_Opt_Mgt/" class="md-nav__link">
+        ElasticSearch Operation and Management
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum7_test/" class="md-nav__link">
+        期末考试
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum8_int/" class="md-nav__link">
+        ElasticSearch 面试
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_21" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_21" id="__nav_21_label" tabindex="0">
+          Splunk8 Admin Mgt
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_21_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_21">
+          <span class="md-nav__icon md-icon"></span>
+          Splunk8 Admin Mgt
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1spl_role_ad/" class="md-nav__link">
+        1 Splunk Managing Users and Authentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2config_indexes/" class="md-nav__link">
+        2 Working with Configuration Files and Indexes
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3datamgt_forwarder/" class="md-nav__link">
+        3 Managing Data and Forwarders
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4config_ds/" class="md-nav__link">
+        4 Splunk Configuring Distributed Search
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5Mon_create_inputs/" class="md-nav__link">
+        5 Splunk Monitoring and Creating Inputs
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          6 Splunk Parsing and Manipulating Data
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        6 Splunk Parsing and Manipulating Data
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-splunk-enterprise-administration-parsing-and-manipulating-data" class="md-nav__link">
+    1 Splunk Enterprise Administration: Parsing and Manipulating Data
+  </a>
+  
+    <nav class="md-nav" aria-label="1 Splunk Enterprise Administration: Parsing and Manipulating Data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-1-event-processing-in-splunk-enterprise" class="md-nav__link">
+    1-1 Event Processing in Splunk Enterprise
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-2-demo-setting-up-the-test-environment" class="md-nav__link">
+    1-2 Demo: Setting up the Test Environment
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-configuring-event-line-breaking" class="md-nav__link">
+    2 Configuring Event Line-breaking
+  </a>
+  
+    <nav class="md-nav" aria-label="2 Configuring Event Line-breaking">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2-1-configuring-line-breaks-in-splunk-enterprise" class="md-nav__link">
+    2-1 Configuring Line-breaks in Splunk Enterprise
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-2-demo-configuring-line-breaking-using-a-regex" class="md-nav__link">
+    2-2 Demo: Configuring Line-breaking Using a Regex
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-3-demo-breaking-multi-line-events-and-line-merging" class="md-nav__link">
+    2-3 Demo: Breaking Multi-line Events and Line-merging
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-4-demo-configuring-line-breaking-with-line-breaker-attribute" class="md-nav__link">
+    2-4 Demo: Configuring Line-breaking with Line Breaker Attribute
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-identifying-and-parsing-timestamps" class="md-nav__link">
+    3 Identifying and Parsing Timestamps
+  </a>
+  
+    <nav class="md-nav" aria-label="3 Identifying and Parsing Timestamps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3-1-configuring-timestamp-recognition-in-splunk-enterprise" class="md-nav__link">
+    3-1 Configuring Timestamp Recognition in Splunk Enterprise
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-2-demo-translating-time-zones" class="md-nav__link">
+    3-2 Demo: Translating Time Zones
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-3-demo-using-splunk-web-for-timestamp-recognition-and-extraction" class="md-nav__link">
+    3-3 Demo: Using Splunk Web for Timestamp Recognition and Extraction
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-4-demo-overriding-timestamps" class="md-nav__link">
+    3-4 Demo: Overriding Timestamps
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-overriding-default-fields-and-custom-fields-extraction" class="md-nav__link">
+    4 Overriding Default Fields and Custom Fields Extraction
+  </a>
+  
+    <nav class="md-nav" aria-label="4 Overriding Default Fields and Custom Fields Extraction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#4-1-overriding-default-fields" class="md-nav__link">
+    4-1 Overriding Default Fields
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-2-overriding-sourcetype" class="md-nav__link">
+    4-2 Overriding Sourcetype
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-3-creating-custom-fields-at-index-time" class="md-nav__link">
+    4-3 Creating Custom Fields at Index-time
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-4-demo-creating-custom-fields-at-index-time" class="md-nav__link">
+    4-4 Demo: Creating Custom Fields at Index-time
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-routing-and-filtering-events" class="md-nav__link">
+    5 Routing and Filtering Events
+  </a>
+  
+    <nav class="md-nav" aria-label="5 Routing and Filtering Events">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#5-1-routing-event-data" class="md-nav__link">
+    5-1 Routing Event Data
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-2-demo-routing-event-data" class="md-nav__link">
+    5-2 Demo: Routing Event Data
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-manipulating-raw-data" class="md-nav__link">
+    6 Manipulating Raw Data
+  </a>
+  
+    <nav class="md-nav" aria-label="6 Manipulating Raw Data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#6-1-manipulating-raw-data-in-splunk-enterprise" class="md-nav__link">
+    6-1 Manipulating Raw Data in Splunk Enterprise
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-2-manipulating-events-using-sedcmd" class="md-nav__link">
+    6-2 Manipulating Events Using SEDCMD
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-3-demo-manipulating-events-using-sedcmd" class="md-nav__link">
+    6-3 Demo: Manipulating Events Using SEDCMD
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-4-manipulating-events-using-regex-transform" class="md-nav__link">
+    6-4 Manipulating Events Using Regex Transform
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-5-demo-manipulating-events-using-regex-transform" class="md-nav__link">
+    6-5 Demo: Manipulating Events Using Regex Transform
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7splunk_search/" class="md-nav__link">
+        7 Performing Basic Splunk Searches
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../8spl_exam/" class="md-nav__link">
+        8 Splunk ADMIN Exam
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-splunk-enterprise-administration-parsing-and-manipulating-data" class="md-nav__link">
+    1 Splunk Enterprise Administration: Parsing and Manipulating Data
+  </a>
+  
+    <nav class="md-nav" aria-label="1 Splunk Enterprise Administration: Parsing and Manipulating Data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-1-event-processing-in-splunk-enterprise" class="md-nav__link">
+    1-1 Event Processing in Splunk Enterprise
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-2-demo-setting-up-the-test-environment" class="md-nav__link">
+    1-2 Demo: Setting up the Test Environment
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-configuring-event-line-breaking" class="md-nav__link">
+    2 Configuring Event Line-breaking
+  </a>
+  
+    <nav class="md-nav" aria-label="2 Configuring Event Line-breaking">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2-1-configuring-line-breaks-in-splunk-enterprise" class="md-nav__link">
+    2-1 Configuring Line-breaks in Splunk Enterprise
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-2-demo-configuring-line-breaking-using-a-regex" class="md-nav__link">
+    2-2 Demo: Configuring Line-breaking Using a Regex
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-3-demo-breaking-multi-line-events-and-line-merging" class="md-nav__link">
+    2-3 Demo: Breaking Multi-line Events and Line-merging
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-4-demo-configuring-line-breaking-with-line-breaker-attribute" class="md-nav__link">
+    2-4 Demo: Configuring Line-breaking with Line Breaker Attribute
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-identifying-and-parsing-timestamps" class="md-nav__link">
+    3 Identifying and Parsing Timestamps
+  </a>
+  
+    <nav class="md-nav" aria-label="3 Identifying and Parsing Timestamps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3-1-configuring-timestamp-recognition-in-splunk-enterprise" class="md-nav__link">
+    3-1 Configuring Timestamp Recognition in Splunk Enterprise
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-2-demo-translating-time-zones" class="md-nav__link">
+    3-2 Demo: Translating Time Zones
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-3-demo-using-splunk-web-for-timestamp-recognition-and-extraction" class="md-nav__link">
+    3-3 Demo: Using Splunk Web for Timestamp Recognition and Extraction
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-4-demo-overriding-timestamps" class="md-nav__link">
+    3-4 Demo: Overriding Timestamps
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-overriding-default-fields-and-custom-fields-extraction" class="md-nav__link">
+    4 Overriding Default Fields and Custom Fields Extraction
+  </a>
+  
+    <nav class="md-nav" aria-label="4 Overriding Default Fields and Custom Fields Extraction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#4-1-overriding-default-fields" class="md-nav__link">
+    4-1 Overriding Default Fields
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-2-overriding-sourcetype" class="md-nav__link">
+    4-2 Overriding Sourcetype
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-3-creating-custom-fields-at-index-time" class="md-nav__link">
+    4-3 Creating Custom Fields at Index-time
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-4-demo-creating-custom-fields-at-index-time" class="md-nav__link">
+    4-4 Demo: Creating Custom Fields at Index-time
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-routing-and-filtering-events" class="md-nav__link">
+    5 Routing and Filtering Events
+  </a>
+  
+    <nav class="md-nav" aria-label="5 Routing and Filtering Events">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#5-1-routing-event-data" class="md-nav__link">
+    5-1 Routing Event Data
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-2-demo-routing-event-data" class="md-nav__link">
+    5-2 Demo: Routing Event Data
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-manipulating-raw-data" class="md-nav__link">
+    6 Manipulating Raw Data
+  </a>
+  
+    <nav class="md-nav" aria-label="6 Manipulating Raw Data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#6-1-manipulating-raw-data-in-splunk-enterprise" class="md-nav__link">
+    6-1 Manipulating Raw Data in Splunk Enterprise
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-2-manipulating-events-using-sedcmd" class="md-nav__link">
+    6-2 Manipulating Events Using SEDCMD
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-3-demo-manipulating-events-using-sedcmd" class="md-nav__link">
+    6-3 Demo: Manipulating Events Using SEDCMD
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-4-manipulating-events-using-regex-transform" class="md-nav__link">
+    6-4 Manipulating Events Using Regex Transform
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-5-demo-manipulating-events-using-regex-transform" class="md-nav__link">
+    6-5 Demo: Manipulating Events Using Regex Transform
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="6-splunk-administration-parsing-and-manipulating-data"><strong>6 Splunk Administration: Parsing and Manipulating Data</strong></h1>
+<h2 id="1-splunk-enterprise-administration-parsing-and-manipulating-data">1 Splunk Enterprise Administration: Parsing and Manipulating Data</h2>
+<p><strong>Overview</strong></p>
+<ul>
+<li>Event processing in Splunk Enterprise</li>
+<li>Role of configuration files<ul>
+<li><code>props.conf</code></li>
+<li><code>transforms.conf</code></li>
+</ul>
+</li>
+<li>Introduction to the course</li>
+<li>Demo: Setting up the test environment</li>
+</ul>
+<h3 id="1-1-event-processing-in-splunk-enterprise"><strong>1-1 Event Processing in Splunk Enterprise</strong></h3>
+<p><strong>Data Pipeline in Splunk Enterprise</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_1.png" title="Body image" /></p>
+<p><strong><code>props.conf</code></strong></p>
+<ul>
+<li><strong>Configuring pre-processing properties</strong></li>
+<li>Attribute/value pairs</li>
+<li>Observe order of precedence<ul>
+<li>System local directory – highest</li>
+<li>App local directory</li>
+<li>App default directory</li>
+<li>System default directory – lowest</li>
+</ul>
+</li>
+</ul>
+<p><strong>Restart required</strong></p>
+<p><strong><code>Transforms.conf</code></strong></p>
+<ul>
+<li>Settings to configure data transformations</li>
+<li>Covers the “how” part of things</li>
+<li>Requires corresponding setting in <code>props.conf</code></li>
+<li>Unique stanza name<ul>
+<li>REGEX</li>
+<li><code>WRITE_META</code></li>
+<li><code>DEST_KEY</code></li>
+<li>FORMAT</li>
+</ul>
+</li>
+</ul>
+<p><strong>Data Input Methods</strong></p>
+<ul>
+<li>
+<p><strong>Event Line-breaking</strong></p>
+<ul>
+<li>Identifying and configuring line-breaks</li>
+</ul>
+</li>
+<li>
+<p><strong>Parsing Timestamps</strong></p>
+<ul>
+<li>Recognizing and parsing timestamps</li>
+</ul>
+</li>
+<li>
+<p><strong>Field Extractions</strong></p>
+<ul>
+<li>Custom and default field extractions and overriding</li>
+</ul>
+</li>
+<li>
+<p><strong>Routing and Filtering</strong></p>
+<ul>
+<li>Filtering and sending events to selective and multiple indexers</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-2-demo-setting-up-the-test-environment"><strong>1-2 Demo: Setting up the Test Environment</strong></h3>
+<ul>
+<li>Understand topology of test environment</li>
+<li>Setup test environment<ul>
+<li>Configure forwarding and receiving</li>
+<li>Install EventGen and the demo app</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_2.png" title="Body image" /></p>
+<p><strong>add <code>New Receiving Port</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_3.png" title="Body image" /></p>
+<p><strong><code>Forward data</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_4.png" title="Body image" /></p>
+<p><code>172.17.11.29:9997</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_5.png" title="Body image" /></p>
+<pre><code>root@splunk_hf:/opt/splunk/etc/system/local# vi outputs.conf
+
+[tcpout]
+defaultGroup = default-autolb-group
+
+[tcpout: default-autolb-group]
+server = 172.17.11.29:9997
+
+[tcpout-server://172.17.11.29:99971
+</code></pre>
+<pre><code>root@splunk_hf:/opt/splunk/etc/system/local# /opt/splunk/bin/./splunk list forward-server
+
+root@splunk_hf:/opt/splunk/etc/apps/psdemo/default# vi inputs.conf
+</code></pre>
+<pre><code>sourcetype = customers
+[
+script://./bin/lineBreaking.py]
+disabled = 0
+interval = 60
+index = main
+source = linebreaking_script
+sourcetype = linebreaking
+
+[script://./bin/lineMerging.py]
+disabled = 0
+interval = 60
+index = main
+source = linemerging_script
+sourcetype = linemerging
+
+[script://./bin/configureLineBreaker.py]
+disabled = 0
+interval = 60
+index = main
+source = configurelinebreaker_script
+sourcetype = configlinebreaker
+
+[script://./bin/timestampoverride.py]
+disabled = 0
+interval = 60
+index = main
+source = timestamp_override_script
+sourcetype = timestamp_override
+</code></pre>
+<p><strong><code>index=main | stats count by sourcetype</code></strong></p>
+<h2 id="2-configuring-event-line-breaking">2 Configuring Event Line-breaking</h2>
+<ul>
+<li>Event line-breaking</li>
+<li>Demo: Breaking simple events</li>
+<li>Demo: Breaking multiline events</li>
+<li>Demo: Breaking events using line breaker</li>
+</ul>
+<h3 id="2-1-configuring-line-breaks-in-splunk-enterprise">2-1 Configuring Line-breaks in Splunk Enterprise</h3>
+<p><strong>Line breaking</strong></p>
+<ul>
+<li><code>SHOULD_LINEMERGE=false</code></li>
+<li>Uses LINE_BREAKER regex that by default is: <code>([\r\n]+)</code></li>
+</ul>
+<p><strong>Line merging</strong></p>
+<ul>
+<li>Explicitly provide line break setting using attributes like <code>BREAK_ONLY_BEFORE</code> or <code>MUST_BREAK_AFTER</code> etc</li>
+<li><code>SHOULD_LINEMERGE=true</code></li>
+</ul>
+<p><strong>Configuring Multi-line Event Boundaries</strong></p>
+<ul>
+<li>Break and re-assemble data stream </li>
+<li>Add a stanza in <code>props.conf</code></li>
+<li>Set <code>SHOULD_LINEMERGE = true</code></li>
+<li><strong><em>Set the line merging attributes</em></strong><ul>
+<li><code>BREAK_ONLY_BEFORE</code></li>
+<li><code>BREAK_ONLY_BEFORE_DATE</code></li>
+<li><code>MUST_BREAK_AFTER</code></li>
+<li><code>MAX_EVENTS</code></li>
+</ul>
+</li>
+</ul>
+<p><strong>Breaking Data Stream into Real Events</strong></p>
+<ul>
+<li>More efficient but hard to work with</li>
+<li>Add a stanza in <code>props.conf</code></li>
+<li>Set <code>SHOULD_LINEMERGE = false</code></li>
+<li>Set <code>LINE_BREAKER</code> attribute<ul>
+<li>Default is <code>([\r\n]+)</code></li>
+<li>Set to regex matching event boundary</li>
+<li>Restart Splunk</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-2-demo-configuring-line-breaking-using-a-regex">2-2 Demo: Configuring Line-breaking Using a Regex</h3>
+<ul>
+<li>Configuring simple line breaking</li>
+<li>Based on regex pattern</li>
+<li>Configurations in props.conf<ul>
+<li><code>SHOULD_LINEMERGE = true</code></li>
+<li><code>MUST_BREAK_AFTER = &lt;regex&gt;</code></li>
+</ul>
+</li>
+<li>Restart Splunk</li>
+</ul>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo# vi default/inputs.conf
+
+[script://./bin/getPerformance.py]
+disabled= 0
+index = main
+source = perfmon_script
+sourcetype = performance
+
+[script://./bin/custGen.py]
+disabled = 0
+interval = 300
+index = main
+source = custgen_script
+sourcetype = customers
+
+
+[script://./bin/lineBreaking.py]
+disabled = 0
+interval = 60
+index = main
+source = linebreaking_script
+sourcetype = linebreaking
+</code></pre>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo# vi bin/lineBreaking.py
+
+import random as r
+
+for i in range(1,10) :
+    print (&quot;This is an event with id&quot; + str(r.randrange(111,999)))+ &quot;\n&quot;
+</code></pre>
+<p><strong><code>index=main sourcetype=linebreaking</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_6.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_7.png" title="Body image" /></p>
+<pre><code>vi bin/lineBreaking.py
+
+vi local/props.conf
+
+SHOULD_LINEMERGE = true
+MUST_BREAK_AFTER = \d{3}
+</code></pre>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo#/opt/splunk/bin/splunk restart
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_8.png" title="Body image" /></p>
+<h3 id="2-3-demo-breaking-multi-line-events-and-line-merging">2-3 Demo: Breaking Multi-line Events and Line-merging</h3>
+<ul>
+<li><strong>Line breaking in multiline events</strong><ul>
+<li><code>BREAK_ONLY_BEFORE_DATE</code></li>
+</ul>
+</li>
+<li><strong>Based on regex pattern</strong></li>
+<li><strong>Configurations in props.conf</strong><ul>
+<li><code>SHOULD_LINEMERGE = true</code></li>
+<li><code>BREAK_ONLY_BEFORE= &lt;regex&gt;</code></li>
+</ul>
+</li>
+<li><strong>Restart Splunk</strong></li>
+</ul>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo# vi default/inputs.conf
+
+[script://./bin/getPerformance.py]
+disabled = 0
+index = main
+source = perfmon_script
+sourcetype = performance
+
+
+[script://./bin/custGen.py]
+disabled = 0
+interval = 300
+index = main
+source = custgen_script
+sourcetype = customers
+
+[script://./bin/lineBreaking.py]
+disabled = 0
+interval = 60
+index = main
+source = linebreaking_script
+sourcetype = linebreaking
+
+[script://./bin/lineMerging.py]
+disabled = 0
+interval = 60
+index = main
+source = linemerging_script
+sourcetype = linemerging
+</code></pre>
+<p><code>"bin/lineMerging.py"</code></p>
+<pre><code>from datetime import datetime as dt
+
+def getTimestamp():
+    return dt.now().strftime(&quot;%Y-%m-%d %H:%M&quot;)
+
+for i in range(1,10):
+    print (&quot;&lt;soe&gt; The temperature received from the sensors was NORMAL. Temperature recorded at: &quot;)
+    print (getTimestamp()+&quot; was 38 degrees celcius. This is the end of event&quot;)
+</code></pre>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo# /opt/splunk/bin/pythonbin/lineMerging.py
+
+&lt;soe&gt; The temperature received from the sensors was NORMAL. Temperature recorded at:
+2020-09-05 13:07 was 38 degrees celcius. This is the end of event
+&lt;soe&gt; The temperature received from the sensors was NORMAL. Temperature
+&lt;soe&gt; The temperature received from the sensors was NORMAL. Temperature recorded at
+2020-09-05 13:07 was 38 degrees celcius. This is the end of event
+</code></pre>
+<p><strong><code>index=main sourcetype=linemerging</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_9.png" title="Body image" /></p>
+<p><strong><code>"local/props.conf"</code></strong></p>
+<pre><code>[linebreaking]
+SHOULD_LINEMERGE = true
+MUST_BREAK_AFTER = \{3}
+
+[linemerging]
+SHOULD_LINEMERGE = true
+BRFAK_ONLY_BEFORE = \&lt;soe&gt;\
+</code></pre>
+<p><code>/opt/splunk/bin/splunk restart</code></p>
+<p><strong><code>index=main sourcetype=linemerging</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_10.png" title="Body image" /></p>
+<h3 id="2-4-demo-configuring-line-breaking-with-line-breaker-attribute">2-4 Demo: Configuring Line-breaking with Line Breaker Attribute</h3>
+<ul>
+<li>Configuring simple line breaking</li>
+<li>More efficient method</li>
+<li>Configurations in props.conf<ul>
+<li><code>SHOULD_LINEMERGE = false</code></li>
+<li><code>LINE_BREAKER = &lt;regex&gt;</code></li>
+</ul>
+</li>
+<li>Restart Splunk</li>
+</ul>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo# vi default/inputs.conf
+
+sourcetype = performance
+
+[script://./bin/custGen.py]
+disabled = 0
+interval = 300
+index = main
+source = custgen_script
+sourcetype = customers
+
+[script://./bin/lineBreaking.py]
+disabled = 0
+interval = 60
+index = main
+source = linebreaking_script
+sourcetype = linebreaking
+
+[script://./bin/lineMerging.py]
+disabled = 0
+interval = 60
+index = main
+source = linemerging_script
+sourcetype = linemerging
+
+[script://./bin/configureLineBreaker.py]
+disabled = 0
+interval = 60
+index = main
+source = configurelinebreaker_script
+sourcetype = configlinebreaker
+</code></pre>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo# vi default/inputs.conf
+
+&quot;bin/configureLineBreaker.py&quot;
+
+for i in range(1,10) :
+    print('&lt;This is line number: &quot;+str(i)+&quot; of event&gt;&quot;)
+</code></pre>
+<p><strong><code>index=main sourcetype = configlinebreaker</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_11.png" title="Body image" /></p>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo#/opt/splunk/bin/python bin/configureLineBreaker.py
+
+&lt;This is line number: 1 of event&gt;
+&lt;This is line number: 2 of event&gt;
+&lt;This is line number: 3 of event&gt;
+&lt;This is line number: 4 of event&gt;
+&lt;This is line number: 5 of event&gt;
+&lt;This is line number: 6 of event&gt;
+&lt;This is line number: 7 of event&gt;
+&lt;This is line number: 8 of event&gt;
+&lt;This is line number: 9 of event&gt;
+</code></pre>
+<pre><code>vi local/props.conf
+
+/opt/splunk/bin/splunk restart
+</code></pre>
+<p><strong><code>index=main sourcetype = configlinebreaker</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_12.png" title="Body image" /></p>
+<pre><code>[linebreaking]
+SHOULD_LINEMERGE = true
+MUST_BREAK_AFTER = \d{3}
+
+[linemerging]
+SHOULD_LINEMERGE = true
+BREAK_ONLY_BEFORE = \&lt;soe\&gt;
+
+[configlinebreaker]
+SHOULD_LINEMERGE = false
+LINE_BREAKER = (\&gt;)
+</code></pre>
+<pre><code>/opt/splunk/bin/splunk restart
+</code></pre>
+<p><code>index=main sourcetype="confielinebreaker"</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_13.png" title="Body image" /></p>
+<h2 id="3-identifying-and-parsing-timestamps">3 Identifying and Parsing Timestamps</h2>
+<ul>
+<li>Timestamp properties in Splunk </li>
+<li>Timestamp attributes</li>
+<li>Timestamp formats</li>
+<li>Demo: Time-zone recognition</li>
+<li>Demo: Timestamp attributes in Splunk Web</li>
+<li>Demo: Timestamp overriding</li>
+</ul>
+<h3 id="3-1-configuring-timestamp-recognition-in-splunk-enterprise">3-1 Configuring Timestamp Recognition in Splunk Enterprise</h3>
+<ul>
+<li>
+<p><strong>Nothing without a timestamp</strong></p>
+<ul>
+<li>All events must have a timestamp. If not, Splunk assigns one</li>
+</ul>
+</li>
+<li>
+<p>Edit <code>props.conf</code></p>
+<ul>
+<li>To configure or modify timestamps we edit <code>props.conf</code></li>
+</ul>
+</li>
+<li>
+<p>Timestamp recognition</p>
+<ul>
+<li>Splunk recognizes most of the timestamp formats out-of-the box</li>
+</ul>
+</li>
+<li>
+<p>Enhanced strptime() support</p>
+<ul>
+<li>Keep the text to three lines or fewer</li>
+</ul>
+</li>
+<li>
+<p>Timestamp validity attributes</p>
+<ul>
+<li>For accepting or rejecting the timestamp in the events</li>
+</ul>
+</li>
+</ul>
+<p><strong>Editing Timestamp Properties</strong></p>
+<ul>
+<li>Timestamp configurations are done on heavy forwarders or indexers</li>
+<li>Configuration applied to <code>&lt;sourcetype&gt;, source::&lt;source&gt;</code> or <code>host::&lt;host&gt;</code></li>
+<li>Identifying correct format of the timestamp is the key</li>
+<li>Select the correct timestamp if multiple timestamps are present</li>
+<li>Account for correct time-zones</li>
+</ul>
+<p><strong>Timestamp Attributes</strong></p>
+<ul>
+<li>
+<p><strong><code>DATETIME_CONFIG</code></strong></p>
+<ul>
+<li><strong>Provide a file that contains timestamp formats</strong>. 
+NONE to disable &amp; CURRENT <strong>for current ts</strong></li>
+<li><code>$SPLUNK_HOME/etc/datetime.xml</code></li>
+</ul>
+</li>
+<li>
+<p><strong><code>TIME_PREFIX</code></strong></p>
+<ul>
+<li><strong>Regex pattern found before each timestamp</strong></li>
+<li>Empty string</li>
+</ul>
+</li>
+<li>
+<p><strong><code>MAX_TIMESTAMP_LOOKAHEAD</code></strong></p>
+<ul>
+<li><strong>Number of characters from start of event</strong></li>
+<li>128 characters</li>
+</ul>
+</li>
+<li>
+<p><code>TIME_FORMAT</code></p>
+<ul>
+<li><strong>Unix</strong> <code>strptime()</code> format <strong>string</strong></li>
+<li>Empty string</li>
+</ul>
+</li>
+<li>
+<p><strong>TZ</strong></p>
+<ul>
+<li>Time-zone like UTC or +10:00 for Australia/Brisbane etc</li>
+<li>Empty string</li>
+</ul>
+</li>
+<li>
+<p><code>MAX_DAYS_AGO</code></p>
+<ul>
+<li><strong>Ignore events older than this value. <code>MAX_DAYS_AGO=10</code> will ignore events over 10 
+days old</strong></li>
+<li>2000 days</li>
+</ul>
+</li>
+<li>
+<p><code>MAX_DAYS_HENCE</code></p>
+<ul>
+<li><strong>Ignore events more than this values in future. 
+<code>MAX_DAYS_HENCE=3</code> will ignore events over 3 
+days in future</strong></li>
+<li>2 days</li>
+</ul>
+</li>
+</ul>
+<p><strong>Timestamp Format</strong></p>
+<ul>
+<li><code>%d, %m, %Y</code> <strong>Number of day, month and year (four digit). <code>%y</code> for two digits</strong></li>
+<li><code>%b, %B</code>: Abbreviated month (Jan, Jun), Full name (January, June)</li>
+<li><code>%H, %I, %p, %M, %S</code>:  Hour (24 hours) %I (12 hours) with <code>%p</code> as locale’s equivalent of AM or PM. %M minutes and <code>%S</code> seconds</li>
+<li><code>%Z</code> Time zone abbreviations like GMT</li>
+<li><code>%z, %:z, %::z</code>:  <strong>Time zone offset +1000, +10:00 and +10:00:00</strong></li>
+<li><code>%s</code> <strong>Epoch time (10 digits)</strong></li>
+<li><code>%N</code> <strong>For GNU date-time nanoseconds. Sub-seconds %3N, %6N</strong></li>
+<li><code>%+</code> <strong>For standard Unix date format timestamps</strong></li>
+</ul>
+<h3 id="3-2-demo-translating-time-zones">3-2 Demo: Translating Time Zones</h3>
+<p><strong>Configuring Time-zone</strong></p>
+<ul>
+<li>Sample events in UTC time</li>
+<li>Adding configuration to props.conf</li>
+<li>Converting to local time before indexing</li>
+</ul>
+<pre><code>root@splunk_hf:~# cd /opt/splunk/etc/apps/psdemo/ 
+root@splunk_hf:/opt/splunk/etc/apps/psdemo# ll bin
+...
+utcTimestamp.py
+...
+
+vi bin/utcTimestamp.py
+
+from time import strftime, gmtime
+for i in range(0,5) :
+    print(strftime(&quot;%Y-%m-%d %H:%M&quot; ,gmtime())+&quot; This event is originally in UTC time with id: &quot; + str(i))
+
+
+root@splunk_hf:/opt/splunk/etc/apps/psdemo# /opt/splunk/bin/splunk cmd python bin/utcTimestamp.py
+
+2020-09-19 01:50 This event is originally in UTC time with id: 0
+2020-09-19 01:50 This event is originally in UTC time with id: 1
+2020-09-19 01:50 This event is originally in UTC time with id: 2
+2020-09-19 01:50 This event is originally in UTC time with id: 3
+2020-09-19 01:50 This event is originally in UTC time with id: 4
+</code></pre>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo# date
+Sat Sep 19 11:50:16 AEST 2020
+</code></pre>
+<pre><code>[script://./bin/utcTimestamp.py]
+disabled = 0
+index = main
+source = utcts_script
+sourcetype = utc_timestamp
+
+[script://./bin/getPerformance.py]
+disabled = 0
+index = main
+source = perfmon_script
+sourcetype = performance
+
+[script://./bin/custGen.py]
+disabled = O
+interval = 300
+index = main
+source = custgen_script
+sourcetype= customers
+
+[script://./bin/lineBreaking.py]
+disabled = 0
+interval = 60
+index = main
+source = linebreaking_script
+sourcetype = linebreaking
+
+[script://./bin/lineMerging.py]
+disabled =0
+interval = 60
+index = main
+sourcetype = linemerging
+</code></pre>
+<p><strong><code>index=main sourcetype=utc_timestamp</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_14.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_15.png" title="Body image" /></p>
+<ul>
+<li>
+<p>Timestamp format: <code>%d%b-%Y:%H:%M:%S</code></p>
+</li>
+<li>
+<p>Timestamp prefix <code>\</code></p>
+</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_16.png" title="Body image" /></p>
+<p><code>"local/props.conf"</code></p>
+<pre><code>[utc_timestamp]
+TZ = UTC
+</code></pre>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo# vi local/props.conf
+root@splunk_hf:/opt/splunk/etc/apps/psdemo# /opt/splunk/bin/splunk restart
+</code></pre>
+<p><strong><code>index=main sourcetype=utc_timestamp</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_17.png" title="Body image" /></p>
+<h3 id="3-3-demo-using-splunk-web-for-timestamp-recognition-and-extraction">3-3 Demo: Using Splunk Web for Timestamp Recognition and Extraction</h3>
+<p>Configure timestamp through Splunk Web</p>
+<ul>
+<li>Events with non-standard timestamp</li>
+<li>Very old events</li>
+<li>Timestamp prefix value</li>
+<li>Timestamp recognition &amp; line breaking</li>
+<li>Stanza in props.conf</li>
+</ul>
+<pre><code>root@splunk_hf:~# cd /opt/splunk/etc/apps/psdemo/
+root@splunk_hf:/opt/splunk/etc/apps/psdemo# vi data/web_old.log
+
+61.130.186.27 -- [30Mar-1998:14:03:13] &quot;GET /cart.do?action=addtocart&amp;itemId-HYD-29&amp;JSESSIONID-CA9MO3AZIUSANA34656 HTTP 1.1&quot; 503 694 &quot;http://www.salesonline.com/category.screen?categoryId-BLUE_GIZMOS&quot; &quot;Mozilla/5.0 (Windows; U;
+Windows NT 5.1; en-GB; rv:1.8.1.6) Gecko/20070725 Firefox/2.0.0.6&quot; 444
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_18.png" title="Body image" /></p>
+<p><code>%d%b-%Y:%H:%M:%S</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_19.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_20.png" title="Body image" /></p>
+<p><code>index=main sourcetype=old_weblogs</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_21.png" title="Body image" /></p>
+<pre><code>[utc_timestamp]
+TZ = UTC
+
+[old_weblogs]
+DATETIME_CONFIG =
+LINE_BREAKER = ([\r\n]+)
+MAX_DAYS_AGO = 9000
+NO_BINARY_CHECK = true
+TIME_FORMAT = %d%b-%Y:%H:%M:%S
+TIME_PREFIX = \[
+category = Custom
+description = Very old web server logs with weird date format
+pulldown_type = true
+</code></pre>
+<h3 id="3-4-demo-overriding-timestamps">3-4 Demo: Overriding Timestamps</h3>
+<p>Overriding event timestamp</p>
+<ul>
+<li>Events with multiple timestamps</li>
+<li>Custom timestamp</li>
+<li>Configuration in <code>props.conf</code></li>
+</ul>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo# vi bin/timestampoverride.py
+
+import datetime, time
+for i in range(0,5):
+    print (datetime.datetime.now().strftime(&quot;%d/%m/%Y %H:%M:%S&quot;) + &quot;. is the timestamp on this event number: &quot; 
+str(i) + &quot;. But I want timestamp=&quot; + (datetime.datetime.now()- datetime.timedelta(minutes=90)).strftime(&quot;%Y, %B %d at %H:%M:%S&quot;))
+    time.sleep(5)
+</code></pre>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo# /opt/splunk/bin/splunk cmd pythonbin/timestampOverride.py
+
+20/09/2020 17:38:45 is the timestamp on this event number: O. But I want timestamp=2020. September 20 at 16:08:45
+20/09/2020 17:38:50 is the timestamp on this event number: 1. But I want timestamp=2020. September 20 at 16:08:50
+</code></pre>
+<p><strong><code>index=main sourcetype=timestamp_override</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_22.png" title="Body image" /></p>
+<p><code>"local/props.conf"</code></p>
+<pre><code>[utc_timestamp]
+TZ = UTC
+
+[old _weblogs]
+DATETIME_CONFIG= 
+LINE_BREAKER = ([\r\n]+)
+MAX_DAYS_AGO = 9000
+NO_BINARY_CHECK = true
+TIME FORMAT = %d%b-%Y:%H:%M:%S
+TIME_PREFIX = \[
+category = Custom
+description = Very old web server logs with weird date format
+pulldown_type = true
+
+[timestamp_override]
+TIME_PREFIX = timestamp=
+TIME_FORMAT = %Y, %B %d at %H:%M:%S
+MAX_TIMESTAMP_LOOKAHEAD = 200
+DATETIME_CONFIG=
+</code></pre>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo#/opt/splunk/bin/splunk restart
+</code></pre>
+<p><code>index=main sourcetype=timestamp_override</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_23.png" title="Body image" /></p>
+<ul>
+<li>Timestamp recognition in Splunk</li>
+<li>Timestamp attributes</li>
+<li>Translating time-zones</li>
+<li>Using Splunk web for timestamp handling</li>
+<li>Overriding timestamp</li>
+</ul>
+<h2 id="4-overriding-default-fields-and-custom-fields-extraction">4 Overriding Default Fields and Custom Fields Extraction</h2>
+<ul>
+<li>Defaults fields in Splunk Enterprise</li>
+<li>Process of overriding default fields</li>
+<li>Demo: Overriding default fields</li>
+<li>Index-time field extraction</li>
+<li>Demo: Custom fields extraction</li>
+</ul>
+<h3 id="4-1-overriding-default-fields"><strong>4-1 Overriding Default Fields</strong></h3>
+<p>Default Fields</p>
+<ul>
+<li>Tagged and added automatically to event data at index time</li>
+<li><strong>Each default field holds information about the data it is tagged to</strong></li>
+<li>Three types of default fields: <strong>Internal, basic and datetime</strong></li>
+<li>Overridden when default behavior needs to be changed</li>
+<li>
+<p>Change does not apply to previously indexed events</p>
+</li>
+<li>
+<p><strong>Internal</strong></p>
+<ul>
+<li><code>_raw</code>, <code>_time</code>, <code>_indextime</code>, <code>_cd</code></li>
+</ul>
+</li>
+</ul>
+<p><strong>Default Field Override – Scenarios</strong></p>
+<p>Default fields that we often need to override</p>
+<ul>
+<li>host</li>
+<li>source</li>
+<li>sourcetype</li>
+</ul>
+<p><strong>Some examples:</strong></p>
+<ul>
+<li>Host is replaced when events originate from log server and host value exists in the event</li>
+<li><strong>Source is overridden when file name is replaced with more suitable text</strong></li>
+<li><strong>Sourcetype is changed based on existence of some text or specific pattern in the event</strong></li>
+</ul>
+<p><strong>Overriding Default Fields at Input Creation Time</strong></p>
+<ul>
+<li>Through Splunk Web</li>
+<li>In configuration files</li>
+<li>Provide values for relevant attribute<ul>
+<li>host</li>
+<li>source</li>
+<li>sourcetype</li>
+<li>index</li>
+</ul>
+</li>
+</ul>
+<p><strong>datetime</strong></p>
+<ul>
+<li><code>date_hour</code>, <code>date_minute</code>,</li>
+<li><code>date_year</code>, <code>date_zone</code>,</li>
+<li><code>date_mday</code>, <code>date_month</code>,</li>
+<li><code>date_second</code>, <code>date_wday</code></li>
+</ul>
+<p>Splunk Enterprise Administration: Monitoring and Creating Inputs</p>
+<p><strong>Overriding Default Fields in Existing Inputs</strong></p>
+<ul>
+<li>Define suitable value to assign<ul>
+<li><strong>Static value</strong></li>
+<li><strong>Regular expression</strong></li>
+</ul>
+</li>
+<li>Identify events to apply change<ul>
+<li>Regex based</li>
+</ul>
+</li>
+<li>Write stanzas in configuration files<ul>
+<li>transforms.conf</li>
+<li>props.conf</li>
+</ul>
+</li>
+<li>Restart Splunk</li>
+</ul>
+<p><strong>Overriding “host” Field</strong></p>
+<p>Configuration to override the host field</p>
+<p><code>transforms.conf</code></p>
+<pre><code>[my_field_override_stanza_name]
+
+REGEX = \w+\s\d+\s\d+:\d+:\d+\s(router\d+)\s
+FORMAT = host::$1
+DEST_KEY = MetaData:Host
+</code></pre>
+<pre><code>Apr 11 10:32:22 router1 mgd[3606]: UI_DBASE_LOGOUT_EVENT: User ‘smith' exiting configuration mode
+
+Apr 11 11:36:15 switch2 mgd[3606]: UI_COMMIT: User 'root' performed commit: no comment
+
+Apr 11 11:46:37 router5 mib2d[2905]: SNMP_TRAP_LINK_DOWN: ifIndex 82, ifAdminStatus up(1), ifOperStatus
+down(2), ifName at-1/0/0
+</code></pre>
+<p><strong>Overriding “host” Field</strong></p>
+<p>Configuration to override the host field</p>
+<p><code>props.conf</code></p>
+<pre><code>[mysourcetype|source::my_source|host::my_host]
+
+TRANSFORMS-override_host = my_field_override_stanza_name
+</code></pre>
+<pre><code>Apr 11 10:32:22 router1 mgd[3606]: UI_DBASE_LOGOUT_EVENT: User ‘smith' exiting configuration mode
+
+Apr 11 11:36:15 switch2 mgd[3606]: UI_COMMIT: User 'root' performed commit: no comment
+
+Apr 11 11:46:37 router5 mib2d[2905]: SNMP_TRAP_LINK_DOWN: ifIndex 82, ifAdminStatus up(1), ifOperStatus
+down(2), ifName at-1/0/0
+</code></pre>
+<ul>
+<li><code>host = router1</code></li>
+<li><code>host = old_value</code></li>
+<li><code>host = router5</code></li>
+</ul>
+<h3 id="4-2-overriding-sourcetype"><strong>4-2 Overriding Sourcetype</strong></h3>
+<ul>
+<li>Use-case scenario</li>
+<li>Creating regular expression</li>
+<li>Setting up configuration files</li>
+<li>Testing Results</li>
+</ul>
+<p>Overriding Sourcetype: Use-Case Scenario</p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_28.png" title="Body image" /></p>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo/default# /opt/splunk/bin/python ../bin/getPerformance.py
+
+2020-07-08 11:57:33 src=srv_pssepm01, cpu=59, ram=81, disk=37
+2020-07-08 11:57:33 src=srv_psmai101, cpu=56, ram=85, disk=32
+2020-07-08 11:57:33 sr=srv_psmailo2, cpu=58, ram=82, disk=35
+2020-07-08 11:57:33 src=srv_psdc01, cpu=80, ram=82, disk=37
+2020-07-08 11:57:33 sc=srv_psdhcp01, cpu=79, ram=93, disk=32
+</code></pre>
+<p><code>index=main source=perfmon_script</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_24.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_25.png" title="Body image" /></p>
+<ul>
+<li><code>sourcetype=performance:srv</code></li>
+<li><code>sourcetype=performance:ws</code></li>
+</ul>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo/default# cd ../local
+</code></pre>
+<p><strong><code>transforms.conf</code></strong></p>
+<pre><code>[source::perfmon_script]
+TRANSFORMS-changesourcetype = performance_sourcetype_override
+</code></pre>
+<p><strong><code>props.conf</code></strong></p>
+<pre><code>[performance_sourcetype_override]
+REGEX = src\=(ws|srv)\_
+FORMAT = sourcetype::performance:$1
+DEST_KEY = MetaData:Sourcetype
+</code></pre>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo/local#/opt/splunk/bin/./splunk restart
+</code></pre>
+<p><code>index=main source=perfmon_script</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_26.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_27.png" title="Body image" /></p>
+<h3 id="4-3-creating-custom-fields-at-index-time"><strong>4-3 Creating Custom Fields at Index-time</strong></h3>
+<p><strong>Index-time Field Extractions</strong></p>
+<ul>
+<li>Fields extracted and written to metadata</li>
+<li>Similar to default fields overriding process<ul>
+<li>transforms.conf</li>
+<li>props.conf</li>
+<li>fields.conf</li>
+</ul>
+</li>
+<li>Restart Splunk after changes</li>
+</ul>
+<p><code>transforms.conf</code></p>
+<pre><code>REGEX = &lt;suitable regular exp&gt;
+
+FORMAT = &lt;key&gt;::&lt;val&gt;
+
+WRITE_META = true
+</code></pre>
+<ul>
+<li>Changes to transforms.conf</li>
+<li>Regular expression that identifies events to apply changes as well as captures groups to assign values to extracted fields</li>
+<li><code>key1::$1</code> <code>key2::“some string”</code> <code>$2::$3</code> <ul>
+<li>Default value is <code>&lt;stanza_name&gt;::$1</code> </li>
+<li>Not required if you are using namecapturing groups for example: </li>
+<li><code>(?&lt;_KEY_1&gt;[^\=]*)\=(?&lt;_VAL_1&gt;[^\,]*)\, 
+_KEY_&lt;string&gt; &amp; _VAL_&lt;string&gt;</code> is special 
+capturing group</li>
+<li>Only valid for index time extractions. It 
+writes REGEX to metadata 
+automatically. Default value is false</li>
+</ul>
+</li>
+</ul>
+<pre><code>DEFAULT_VALUE = &lt;value&gt;
+SOURCE_KEY = &lt;key&gt;
+
+REPEAT_MATCH = true|false
+LOOKAHEAD = &lt;integer&gt;
+</code></pre>
+<ul>
+<li>What would be the default value if regex fails?</li>
+<li>The key to which the value of the regex would apply to. It should be present at the time of this extraction. 
+Default is <code>_raw</code>.</li>
+<li>Regex is applied multiple times to <code>SOURCE_KEY</code> after finding first match</li>
+<li>How far to look ahead in an event for the regex match. Default 4096</li>
+</ul>
+<p><strong><code>props.conf</code></strong></p>
+<pre><code>TRANSFORMS-&lt;name&gt; = &lt;stanza_name&gt;
+</code></pre>
+<p>Reference the transform created previously from <code>props.conf</code> using TRANSFORMS- keyword for index 
+time extractions. </p>
+<p>You’ll use <code>EXTRACT-</code> in the case of search time extractions</p>
+<p><strong><code>fields.conf</code></strong></p>
+<pre><code>[field_name]
+
+INDEXED = true
+</code></pre>
+<ul>
+<li>Reference the transform created previously from props.conf</li>
+<li>Tells Splunk to extract and store the field in metadata at index time. <ul>
+<li>If not set to true, the field will not be extracted at index time. </li>
+<li>Default is false. Check for index &amp; search time extraction conflicts</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-4-demo-creating-custom-fields-at-index-time"><strong>4-4 Demo: Creating Custom Fields at Index-time</strong></h3>
+<ul>
+<li>Identifying custom fields</li>
+<li>Changes in configuration files</li>
+<li>Check results in Spunk Enterprise</li>
+</ul>
+<p><code>index=main sourcetype=netflow</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_30.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_29.png" title="Body image" /></p>
+<pre><code>root@spunk_hf:~# cd /opt/splunk/etc/apps/psdemo/local/
+
+root@splunk_hf:/opt/splunk/etc/apps/psdemo/local# vi transforms.conf 
+
+[performance_sourcetype_override]
+REGEX = src\=(ws|srv)\
+FORMAT = sourcetype::performance:$1
+DEST_KEY = MetaData:Sourcetype
+
+[netflow_custom_fields]
+REGEX = (tcpludp|icmp)\.(.*?)\s
+FORMAT = protocol::$1 protocol_detail::$2
+WRITE_META = true
+</code></pre>
+<p><strong><code>props.conf</code></strong></p>
+<pre><code>[source: :perfmon_script]
+TRANSFORMS-changesourcetype = performance_sourcetype_override
+
+[netflow]
+TRANSFORMS-netflow = netflow_custom_fields
+</code></pre>
+<p><code>fields.conf</code></p>
+<pre><code>[protocoll
+INDEXED=true
+
+[protocol_detail]
+</code></pre>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo/local# /opt/splunk/bin/./splunk restart
+</code></pre>
+<p><code>index=main sourcetype=netflow</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_31.png" title="Body image" /></p>
+<ul>
+<li>Default fields in Splunk Enterprise</li>
+<li>Overriding default fields – why and how</li>
+<li>Demo: Overriding default fields</li>
+<li>Index time extractions – why and how</li>
+<li>Demo: Extracting custom fields</li>
+</ul>
+<h2 id="5-routing-and-filtering-events"><strong>5 Routing and Filtering Events</strong></h2>
+<ul>
+<li>Routing event data<ul>
+<li>Route all or specific events</li>
+<li>Indexer groups</li>
+<li>Default routing</li>
+</ul>
+</li>
+<li>Filtering events<ul>
+<li>Filtering queues</li>
+<li>Filtering in/out events</li>
+</ul>
+</li>
+<li>Demo: Routing and filtering events</li>
+</ul>
+<h3 id="5-1-routing-event-data"><strong>5-1 Routing Event Data</strong></h3>
+<ul>
+<li><strong>Based on host, source, source type or a pattern in events</strong></li>
+<li><strong>Pattern based routing can only be done on a full Splunk instance</strong></li>
+<li><strong>Universal Forwarders route data based on host, source or sourcetype</strong></li>
+<li><strong>Can forward to multiple target indexer groups</strong></li>
+<li><strong>Can be routed to third party systems</strong></li>
+</ul>
+<p>Routing Event Data</p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_32.png" title="Body image" /></p>
+<p><code>index=main source=WinEventLog:Security</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_33.png" title="Body image" /></p>
+<p><strong>Configuring Event Routing</strong></p>
+<p>A sample stanza that routes events to target groups.</p>
+<p><strong><code>transforms.conf</code></strong></p>
+<pre><code>[myRoutingStanza]
+REGEX = action=\&quot;blocked\&quot; OR .
+DEST_KEY = _TCP_ROUTING|_SYSLOG_ROUTING
+FORMAT = indexerGroup1,indexerGroup2
+</code></pre>
+<ul>
+<li>A regular expression that captures all the events to be routed. (.) or just a '.' refers to all events.By default all events routed to default indexer</li>
+<li><code>DEST_KEY</code>attribute tells Splunk what we need to do with the event captured in the previous step</li>
+<li><strong>FORMAT attribute</strong> will hold the values of indexer group or groups where these events will be routed</li>
+</ul>
+<p><strong><code>props.conf</code></strong></p>
+<pre><code>[sourcetype|source|host]
+TRANSFORMS-routing = stanza1, stanza2
+</code></pre>
+<ul>
+<li>Reference thestanza created in transfroms.conf from props.conf</li>
+</ul>
+<p><strong><code>outputs.conf</code></strong></p>
+<pre><code>[tcpout:myFirstIndexerGroup]
+server = 172.1.1.10:9997,172.1.1.11:9997
+
+[tcpout:mySecondIndexerGroup]
+server = indexer3:9997,indexer4:9997
+
+[tcpout]
+defaultGroup = myFirstIndexerGroup
+</code></pre>
+<ul>
+<li>Groups are defined with suitable names and list of 
+server ip/dns name:port</li>
+<li>Default group is selected</li>
+</ul>
+<h3 id="5-2-demo-routing-event-data"><strong>5-2 Demo: Routing Event Data</strong></h3>
+<ul>
+<li>Part I<ul>
+<li>Identify subset of event to rout</li>
+<li>Understanding current topology</li>
+<li>Route the subset of events</li>
+</ul>
+</li>
+<li>Part II<ul>
+<li>Route same events to multiple indexers</li>
+<li>Overriding default indexer group</li>
+</ul>
+</li>
+</ul>
+<p>Overriding Sourcetype: Use-Case Scenario</p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_34.png" title="Body image" /></p>
+<p>Routing Events</p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_35.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_36.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_37.png" title="Body image" /></p>
+<pre><code>index=main source=WinEventLog:Security EventCode=4625
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_38.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_39.png" title="Body image" /></p>
+<pre><code>root@splunk_hf:/# cd /opt/splunk/bin/
+root@splunk_hf:/opt/splunk/bin# ./splunk list forward-server
+
+Active forwards:
+172.17.11.29:9997
+Configured but inactive forwards:
+None
+
+root@splunk_hf:/opt/splunk/bin# cd ../etc/system/local/
+root@splunkhf:/opt/splunk/etc/system/local# vi outputs.conf
+
+[tcpout]
+defaultGroup=psdemo_indexers
+
+[tcpout:psdemo_indexers]
+server=172.17.11.29:9997
+
+[tcpout:filtered_indexers]
+server=172.17.11.17:9997
+
+
+root@splunk_hf:/opt/splunk/etc/system/local# /opt/splunk/bin/./splunk restart
+
+root@splunk_hf:/opt/splunk/etc/system/local# /opt/splunk/bin/./splunk list forward-server
+
+Active forwards:
+    172.17.11.17:9997
+    172.17.11.29:9997
+Configured but inactive forwards:
+    None
+
+root@splunk_hf:/opt/splunk/etc/apps/psdemo/local#
+
+vi transforms.conf
+
+[loginFailedRouting]
+REGEX = EventCode= 4625
+DEST_KEY = _TCP_ROUTING
+FORMAT = filtered_indexer
+
+vi props.conf
+
+[source::WinEventLog:Security]
+TRANSFORMS-routing=loginFailedRouting
+
+root@splunk_hf:/opt/splunk/etc/apps/psdemo/local# /opt/splunk/bin/./splunk restart
+</code></pre>
+<p><code>index=main source=WinEventLog:Security EventCode=4625</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_40.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_41.png" title="Body image" /></p>
+<p><code>vi transforms.conf</code></p>
+<pre><code>[loginFailedRouting]
+REGEX = EventCode=4625
+DEST_KEY = _TCP_ROUTING
+FORMAT = filtered_indexers, psdemo_indexers
+</code></pre>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo/local# /opt/splunk/bin/./splunk restart
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_42.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_43.png" title="Body image" /></p>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo/local# vi transforms.conf
+
+[allWinSecurityEventsRouting]
+REGEX = (.)
+DEST_KEY = _TCP_ROUTING
+FORMAT = psdemo_indexers
+
+
+[loginFailedRouting]
+REGEX = EventCode=4625
+DEST_KEY = _TCP_ROUTING
+FORMAT = filtered_indexers, psdemo_indexers
+</code></pre>
+<p><code>props.conf</code></p>
+<pre><code>[source::WinEventLog:Security]
+TRANSFORMS-routing=allWinSecurityEventsRouting,loginFailedRouting
+</code></pre>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo/local#/opt/splunk/bin/./splunk restart
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_44.png" title="Body image" /></p>
+<h2 id="6-manipulating-raw-data">6 Manipulating Raw Data</h2>
+<ul>
+<li><strong>Anonymize, mask or modify event data</strong></li>
+<li>SEDCMD<ul>
+<li>Configuration and working</li>
+<li>Demo</li>
+</ul>
+</li>
+<li><strong>Regex transform</strong><ul>
+<li>Configuration and working</li>
+<li>Demo</li>
+</ul>
+</li>
+</ul>
+<h3 id="6-1-manipulating-raw-data-in-splunk-enterprise"><strong>6-1 Manipulating Raw Data in Splunk Enterprise</strong></h3>
+<p><strong>Manipulating Raw Data in Splunk</strong></p>
+<ul>
+<li>Anonymize, mask or delete sensitive or unwanted information</li>
+<li>Configure heavy forwarders or indexers to manipulate arriving data</li>
+<li>Splunk cloud customers use a heavy forwarder</li>
+<li>Two methods: <strong>SEDCMD like sed script or regex transform</strong></li>
+<li>Use stanza based on <strong>host, source, sourcetype</strong> to select events</li>
+</ul>
+<h3 id="6-2-manipulating-events-using-sedcmd"><strong>6-2 Manipulating Events Using SEDCMD</strong></h3>
+<p><strong>SEDCMD</strong></p>
+<ul>
+<li>Configured through props.conf</li>
+<li>
+<p>Anonymize with sed script</p>
+<ul>
+<li><code>SEDCMD-&lt;class&gt;</code></li>
+<li><code>s/&lt;regex&gt;/&lt;replace&gt;/flags</code></li>
+<li><code>flags: g – global or a number</code></li>
+<li><code>Applied to _raw only</code></li>
+</ul>
+</li>
+<li>
+<p>Replace characters with sed script</p>
+<ul>
+<li><code>SEDCMD-&lt;class&gt; = y/&lt;string1&gt;/string2/</code></li>
+<li><code>y/abc/ABC/</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="6-3-demo-manipulating-events-using-sedcmd"><strong>6-3 Demo: Manipulating Events Using SEDCMD</strong></h3>
+<ul>
+<li>Part I<ul>
+<li>Masking data using SEDCMD script</li>
+<li>1234-4567-7890-0123</li>
+<li>XXXX-XXXX-XXXX-0123</li>
+</ul>
+</li>
+<li>Part II<ul>
+<li>Replacing data with SEDCMD script</li>
+<li>+61 412 234 456</li>
+<li>(+61) (412 234 456)</li>
+</ul>
+</li>
+</ul>
+<p><strong><code>index=main source=WineventLog:Security</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_45.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_46.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_47.png" title="Body image" /></p>
+<pre><code>root@splunk_hf:~# cd /opt/splunk/etc/apps/psdemo/local/
+root@splunk_hf:/opt/splunk/etc/apps/psdemo/local# ll
+
+fields.conf
+props.conf
+transforms.conf
+</code></pre>
+<p><code>transforms.conf</code></p>
+<pre><code>[allwinSecurityEventsRouting]
+REGEX = (.)
+DEST_KEY = _TCP_ROUTING
+FORMAT = psdemo_indexers
+
+[loginFailedRouting]
+REGEX = EventCode=4625
+DEST_KEY = _TCP_ROUTING
+FORMAT = filtered_indexers, psdemo_indexers
+
+[setNul1]
+REGEX = EventCode=(4624|4634)
+DEST_KEY = queue
+FORMAT = nullQueue
+</code></pre>
+<p><code>props.conf</code></p>
+<pre><code>[source::WinEventLog:Security]
+TRANSFORMS-routing = allwinSecurityEventsRouting, loginFailedRouting
+TRANSFORMS-null = setNull
+</code></pre>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo/local# /opt/splunk/bin/./splunk restart
+</code></pre>
+<p><code>index=main source=WineventLog:Security</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_48.png" title="Body image" /></p>
+<p>Filtering and Routing Events</p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_50.png" title="Body image" /></p>
+<p><code>transforms.conf</code></p>
+<pre><code>[allwinSecurityEventsRouting]
+REGEX = (.)
+DEST_KEY = _TCP_ROUTING
+FORMAT = psdemo_indexers
+
+[loginFailedRouting]
+REGEX = EventCode=4625
+DEST_KEY = _TCP_ROUTING
+FORMAT = filtered_indexers, psdemo_indexers
+
+[setNul1]
+REGEX = .
+DEST_KEY = queue
+FORMAT = nul1Queue
+
+[setParsing]
+REGEX = EventCode=(4624|4625)
+DEST_KEY = queue
+FORMAT = indexOueue
+</code></pre>
+<p><code>props.conf</code></p>
+<pre><code>[source::WinEventLog:Security]
+TRANSFORMS-routing =allwinSecurityEventsRouting,loginFailedRouting
+TRANSFORMS-null = setNu1l,setParsing
+</code></pre>
+<pre><code>/opt/splunk/bin/./splunk restart
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_51.png" title="Body image" /></p>
+<p><code>index=main source=WineventLog:Security</code></p>
+<pre><code>root@splunk_hf:~# cd /opt/splunk/etc/apps/psdemo/
+root@splunk_hf:/opt/splunk/etc/apps/psdemo# vi default/inputs.conf
+</code></pre>
+<pre><code>&quot;bin/custGen.py&quot;
+
+
+import random
+from datetime import datetime
+
+def getCreditCardNum():
+    creditCardNum=str(random.randint(2222,9999))
+    for _ in range(3):
+        creditCardNum += &quot;-&quot; + str(random. randint(2222,9999))
+    return creditCardNum
+
+def getMobileNum():
+    mobileNum = &quot;+61 42&quot;+str(random.randint(0,9))
+    for _ in range(2):
+    mobileNum += &quot; &quot;+ str (random.randint(111.999))
+    return mobileNum
+
+def getTimeStamp() :
+    return datetime.now().strftime(&quot;%Y-%m-%d%H:%M:%S&quot;)
+
+firstNames = [&quot;&quot;]   
+lastNames = [&quot;&quot;]    
+
+for firstName in firstNames:
+    record = getTimeStamp() + ' CustomerName=&quot; ' + firstName + ' ' +random.choice(lastNames)+'&quot;, ' + 'CreditCard=&quot; '+getCreditCardNum()+&quot; ， MobileNumber=&quot;'+getMobileNum() + '&quot;'
+print (record)  
+</code></pre>
+<p><code>index=main sourcetype=customers</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_52.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_53.png" title="Body image" /></p>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo# vi local/props.conf
+
+
+[customers]
+SEDCMD-cc = S/(1d{4})\-){33}/XXXX-XXXX-XXXX-/g
+
+root@splunk_hf:/opt/splunk/etc/apps/psdemo# /opt/splunk/bin/./splunk restart
+</code></pre>
+<p><code>index=main sourcetype=customers</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_54.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_55.png" title="Body image" /></p>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo# vi local/props.conf
+
+[customers]
+SEDCMD-CC = S/(\d{4}\-) {3}/XXXX-XXXX-XXXX-/g
+SEDCMD-mn = s/MobileNumber\=\&quot;(\+61)\s([^\&quot;]*)/MobileNumber=&quot;0\2/g
+</code></pre>
+<p><code>vi local/props.conf</code></p>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo# /opt/splunk/bin/./splunk restart
+</code></pre>
+<p><code>index=main sourcetype=customers</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_56.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_57.png" title="Body image" /></p>
+<pre><code>[customers]
+SEDCMD-cust = S/(\d{4}\-) {3}/XXXX-XXXX-XXXX-/g s/MobileNumber\=\&quot;(\+61)\s([^\&quot;]*)/MobileNumber=&quot;0\2/g
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_58.png" title="Body image" /></p>
+<h3 id="6-4-manipulating-events-using-regex-transform"><strong>6-4 Manipulating Events Using Regex Transform</strong></h3>
+<p><strong>REGEX Transform</strong></p>
+<ul>
+<li>Configured through props and transforms</li>
+<li>
+<p><strong>transforms.conf</strong>   </p>
+<ul>
+<li>REGEX – a PERC regex</li>
+<li>FORMAT – arrange event post change</li>
+<li><code>DEST_KEY</code> – applied to field e. g raw</li>
+</ul>
+</li>
+<li>
+<p><strong>props.conf</strong></p>
+<ul>
+<li><code>TRANSFORM-&lt;class&gt;</code></li>
+<li>Comma separated list of transforms</li>
+</ul>
+</li>
+</ul>
+<h3 id="6-5-demo-manipulating-events-using-regex-transform"><strong>6-5 Demo: Manipulating Events Using Regex Transform</strong></h3>
+<p>Anonymizing data with regex transform</p>
+<ul>
+<li>Masking credit card number</li>
+<li>1234-4567-7890-0123</li>
+<li>XXXX-XXXX-XXXX-0123</li>
+<li>Creating a suitable regex</li>
+<li>Configuring transforms and props.conf</li>
+<li>Verifying results</li>
+</ul>
+<p><code>props. conf</code></p>
+<pre><code>[customers]
+SEDCMD-cust = S/(\d{4}\-) {3}/XXXX-XXXX-XXXX-/g s/MobileNumber\=\&quot;(\+61)\s([^\&quot;]*)/MobileNumber=&quot;0\2/g
+</code></pre>
+<p><strong><code>index=main sourcetype=customers</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_59.png" title="Body image" /></p>
+<p><code>regex101.com</code></p>
+<pre><code>root@splunk_hf:~# cd /opt/splunk/etc/apps/psdemo/local/
+root@splunk_hf:/opt/splunk/etc/apps/psdemo/local# vi transforms.conf
+
+[maskcc]
+REGEX = ^(.*)CreditCard\=\&quot;(\d+\-){3}(.*)$
+FORMAT = $1CreditCard- &quot;XXXX-XXXX-XXXX-$3&quot;
+_DEST_KEY = _raw
+
+props.conf
+
+[customers]
+TRANSFORMS-maskcreditcard = maskCC
+</code></pre>
+<p><code>index=main sourcetype=customers</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_60.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_6_61.png" title="Body image" /></p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2020-9999 Jacob Xi
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.b4d07000.min.js"></script>
+      
+    
+  </body>
+</html>

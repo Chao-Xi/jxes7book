@@ -1,0 +1,4177 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Jacob's Elasticsearch7 技术与实战教程">
+      
+      
+        <meta name="author" content="Jacob Xi">
+      
+      
+      
+        <link rel="prev" href="../1spl_role_ad/">
+      
+      
+        <link rel="next" href="../3datamgt_forwarder/">
+      
+      <link rel="icon" href="../../images/logo.png">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.15">
+    
+    
+      
+        <title>2 Working with Configuration Files and Indexes - Jacob ElasticSearch7 Book</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.26e3688c.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ecc896b0.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#2-working-with-configuration-files-and-indexes" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Jacob ElasticSearch7 Book" class="md-header__button md-logo" aria-label="Jacob ElasticSearch7 Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Jacob ElasticSearch7 Book
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              2 Working with Configuration Files and Indexes
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Chao-Xi/jxes7book.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxes7book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Jacob ElasticSearch7 Book" class="md-nav__button md-logo" aria-label="Jacob ElasticSearch7 Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    Jacob ElasticSearch7 Book
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Chao-Xi/jxes7book.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxes7book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Welcome
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          一、Elasticsearch 概述
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          一、Elasticsearch 概述
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/1Es_intro/" class="md-nav__link">
+        第一节 ElasticSearch 概述
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          二、Elasticsearch 安装手册
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          二、Elasticsearch 安装手册
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/1ES_vm_install/" class="md-nav__link">
+        第一节 Elasticsearch的安装与简单配置
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/2KB_vm_install/" class="md-nav__link">
+        第二节 Kibana的安装与界面快速预览
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/3ES_KB_docker/" class="md-nav__link">
+        第三节 在Docker容器中运行Elasticsearch Kibana和Cerebro
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/4LogStash_vm_install/" class="md-nav__link">
+        第四节 Logstash安装与导入数据
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          三、Elasticsearch 入门查询
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          三、Elasticsearch 入门查询
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/1ES_intro/" class="md-nav__link">
+        第一节 ElasticSearch 基本概念
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/2ES_CRUD/" class="md-nav__link">
+        第二节 文档的基本CRUD与批量操作 & 读取＆Bulk API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/3ES_ReverseIndex/" class="md-nav__link">
+        第三节 倒排索引
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/4ES_Analyzer/" class="md-nav__link">
+        第四节 使用分析器进行分词
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/5ES_Search/" class="md-nav__link">
+        第五节 ElasticSearch Search语句
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/6ES_Mapping/" class="md-nav__link">
+        第六节 ElasticSearch Mapping 介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/7ES_Index/" class="md-nav__link">
+        第七节 Index Template和Dynamic Template
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/8ES_Aggr/" class="md-nav__link">
+        第八节 Elasticsearch Aggregations聚合分析简介
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/9ES_SUM/" class="md-nav__link">
+        第九节 Elasticsearch 入门总结 & 测试
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          四、Elasticsearch 深入搜索
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          四、Elasticsearch 深入搜索
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/1ES_search/" class="md-nav__link">
+        第一节 基于词项和基于全文的搜索
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/2ES_search_str_score/" class="md-nav__link">
+        第二节 结构化搜索以及搜索的相关性算分
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/3ES_query_filter/" class="md-nav__link">
+        第三节 Query & Filtering与多字符串多字段查询
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/4ES_sin_mul_search/" class="md-nav__link">
+        第四节 单字符串多字段查询
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/5ES_multi_lag_ana/" class="md-nav__link">
+        第五节 多语言及中文分词与检索
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/6ES_pra_tmdb/" class="md-nav__link">
+        第六节 Space Jam，一次全文搜索的实例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/7ES_ST_IA/" class="md-nav__link">
+        第七节 使⽤ Search Template 和 Index Alias
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/8ES_FUNC_SCORE/" class="md-nav__link">
+        第八节 综合排序:Function Score Query 优化算分
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/9ES_suggester/" class="md-nav__link">
+        第九节 Term & Phrase Suggester
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/10ES_Autocomplete/" class="md-nav__link">
+        第十节 ⾃动补全与基于上下文的提示
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/11ES_CrossSearch/" class="md-nav__link">
+        第十一节 跨集群搜索
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          五、分布式特性及分布式搜索的机制
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          五、分布式特性及分布式搜索的机制
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/1ES_cluster/" class="md-nav__link">
+        第一节 集群分布式模型及选主与脑裂问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/2ES_shard/" class="md-nav__link">
+        第二节 分⽚与集群的故障转移
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/3ES_doc_shard/" class="md-nav__link">
+        第三节 ⽂档分布式存储
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/4ES_shared_lifecycle/" class="md-nav__link">
+        第四节 分⽚及其生命周期
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/5ES_SE_Score/" class="md-nav__link">
+        第五节 剖析分布式查询及相关性算分
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/6ES_Sort_query/" class="md-nav__link">
+        第六节 排序及Doc Values&Fielddata
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/7ES_Pages_Traverse/" class="md-nav__link">
+        第七节 分页与遍历 – From，Size，Search After & Scroll API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/8ES_Concurrent_process/" class="md-nav__link">
+        第八节 处理并发读写操作
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          六、深入聚合分析
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          六、深入聚合分析
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/1chap6_bucket_metrics/" class="md-nav__link">
+        第一节 Bucket & Metric 聚合分析及嵌套聚合
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/2chap6_pipeline_metrics/" class="md-nav__link">
+        第二节 Pipeline 聚合分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/3chap6_aggragate_scope_order/" class="md-nav__link">
+        第三节 聚合的作⽤范围及排序
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/4chap6_accurate_aggragate/" class="md-nav__link">
+        第四节 聚合的精准度问题
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+          七、数据建模
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          七、数据建模
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/1chap7_nested_obj/" class="md-nav__link">
+        第一节 对象及 Nested 对象
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/2chap7_parent_child/" class="md-nav__link">
+        第二节 文档的父子关系
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/3chap7_updateindex_reindex/" class="md-nav__link">
+        第三节 Update By Query & Reindex API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/4chap7_ingest_painless/" class="md-nav__link">
+        第四节 Ingest Pipeline 与 Painless Script
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/5chap7_es_model/" class="md-nav__link">
+        第五节 Elasticsearch 数据建模实例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/6chap7_es_model_pra/" class="md-nav__link">
+        第六节 Elasticsearch 数据建模最佳实践
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/7chap7_es_sum2/" class="md-nav__link">
+        第七节 第二部分总结回顾
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+          八、数据保护
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          八、数据保护
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/1ES_cluster_IAM/" class="md-nav__link">
+        第一节 集群身份认证与用户鉴权
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/2ES_cluster_enc_transit/" class="md-nav__link">
+        第二节 集群内部间的安全通信
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/3ES_cluster_out_sec/" class="md-nav__link">
+        第三节 集群与外部间的安全通信
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          九、水平扩展Elasticsearch集群
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          九、水平扩展Elasticsearch集群
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/1ES_cluster_deploy/" class="md-nav__link">
+        第一节 常见的集群部署方式
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/2ES_hot_warm/" class="md-nav__link">
+        第二节 Hot & Warm 架构与 Shard Filtering
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/3ES_shard_settings/" class="md-nav__link">
+        第三节 分片设定及管理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/4ES_cluster_plan/" class="md-nav__link">
+        第四节 如何对集群进行容量规划
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/5ES_Cloud/" class="md-nav__link">
+        第五节 云上管理 Elasticsearch 的一些方法
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          十、使用 Kubernets 安装 EFK 集群
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_11">
+          <span class="md-nav__icon md-icon"></span>
+          十、使用 Kubernets 安装 EFK 集群
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/1log_architecture/" class="md-nav__link">
+        第一节 kubernetes 日志架构
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/2EFK_log/" class="md-nav__link">
+        第二节 在 K8S 上搭建 EFK 日志收集系统
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/16EFK_log_adv/" class="md-nav__link">
+        第三节 在 Kubernetes 安装 EFK 日志收集系统[更新]
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/17EFK_log_Ana/" class="md-nav__link">
+        第四节 EFK kibana 日志分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/18EFK_log_alert/" class="md-nav__link">
+        第五节 基于EKF日志的报警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/3ECK_operator/" class="md-nav__link">
+        第六节 使用Operator快速部署Elasticsearch集群
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/7EFKLK_log_aggregator/" class="md-nav__link">
+        第七节 使用 EFKLK 搭建 Kubernetes 日志收集工具栈 (Kafka/Logstash)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/19Fluentd/" class="md-nav__link">
+        第八节 日志收集工具 Fluentd 使用教程
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
+          十一、使用 Elastic Stack 构建 Kubernetes 全栈监控
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_12">
+          <span class="md-nav__icon md-icon"></span>
+          十一、使用 Elastic Stack 构建 Kubernetes 全栈监控
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/20Elastic_Stack_Monitoring1/" class="md-nav__link">
+        第一节 ElasticSearch 的集群安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/21Elastic_Stack_Monitoring2/" class="md-nav__link">
+        第二节 使用 Elastic Stack — Metricbeat 监控安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/22Elastic_Stack_Monitoring3/" class="md-nav__link">
+        第三节 使用 Elastic Stack - Filebeat 日志数据收集安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/23Elastic_Stack_Monitoring4/" class="md-nav__link">
+        第四节 使用 Elastic Stack — Elastic APM 应用性能监控的工具安装
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="0">
+          十二、生产环境中的集群运维
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_13">
+          <span class="md-nav__icon md-icon"></span>
+          十二、生产环境中的集群运维
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/1chap12_ES_prod/" class="md-nav__link">
+        第一节 生产环境常用配置和上线清单
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/2chap12_mon_es/" class="md-nav__link">
+        第二节 监控Elasticsearch集群
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/3chap12_es_diag/" class="md-nav__link">
+        第三节 诊断集群的潜在问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/4chap12_es_red_yellow/" class="md-nav__link">
+        第四节 解决集群 Yellow 与 Red 的问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/5chap12_es_cluster_perf/" class="md-nav__link">
+        第五节 集群写性能优化
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/6chap12_es_pre_test/" class="md-nav__link">
+        第六节 集群压力测试
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/7chap12_es_segment_merge/" class="md-nav__link">
+        第七节 段合并优化及注意事项
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/8chap12_Circuit_Breaker/" class="md-nav__link">
+        第八节 缓存及使用 Circuit Breaker 限制内存使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/9chap12_es_ops/" class="md-nav__link">
+        第九节 一些运维相关的建议
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_14" id="__nav_14_label" tabindex="0">
+          十三、索引生命周期管理
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_14">
+          <span class="md-nav__icon md-icon"></span>
+          十三、索引生命周期管理
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/1chap13_es_shrink_rolloverapi/" class="md-nav__link">
+        第一节 使用 Shrink 与 Rollover API 管理索引
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/2chap13_index_lms/" class="md-nav__link">
+        第二节 索引全生命周期管理及工具介绍
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_15" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_15" id="__nav_15_label" tabindex="0">
+          十四、用Logstash和Beats构建数据管道
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_15_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_15">
+          <span class="md-nav__icon md-icon"></span>
+          十四、用Logstash和Beats构建数据管道
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap14/1logstash_introduce/" class="md-nav__link">
+        第一节 Logstash 入门及架构介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap14/2JDBC_logstash_ES/" class="md-nav__link">
+        第二节 利用 JDBC 插件导入数据到 Elasticsearch
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap14/3Beats/" class="md-nav__link">
+        第三节 Beats 介绍
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_16" id="__nav_16_label" tabindex="0">
+          十五、用Kibana进行数据可视化分析
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_16">
+          <span class="md-nav__icon md-icon"></span>
+          十五、用Kibana进行数据可视化分析
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap15/1chap15_index_pattern/" class="md-nav__link">
+        第一节 使用 Index Pattern 配置数据
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap15/2chap15_kibana/" class="md-nav__link">
+        第二节 Kibana 使用的技巧
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_17" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_17" id="__nav_17_label" tabindex="0">
+          十六、探索X-Pack套件
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_17_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_17">
+          <span class="md-nav__icon md-icon"></span>
+          十六、探索X-Pack套件
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/1ES_monitor_alert_xpack/" class="md-nav__link">
+        第一节 用Monitoring和Alerting监控Elasticsearch集群
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/2Xpack_APM/" class="md-nav__link">
+        第二节 用 APM 进行程序性能监控
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/3Xpack_ML/" class="md-nav__link">
+        第三节 用机器学习实现异常检测
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/4ELK_Filebeat/" class="md-nav__link">
+        第四节 用 Elastic Stack 进行日志管理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/5xpack_canvas/" class="md-nav__link">
+        第五节 用 Canvas 进行数据的实时展示
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_18" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_18" id="__nav_18_label" tabindex="0">
+          十七、ELK 实战 Workshop
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_18_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_18">
+          <span class="md-nav__icon md-icon"></span>
+          十七、ELK 实战 Workshop
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap17/1ES_WS_movie/" class="md-nav__link">
+        第一节 电影搜索服务
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap17/2ES_WS_stackoverflow/" class="md-nav__link">
+        第二节 Stackoverflow用户调查问卷分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap17/3EFK_jfrog/" class="md-nav__link">
+        第三节 通过EFK对Artifactory进行日志分析
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_19" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_19" id="__nav_19_label" tabindex="0">
+          十八、Elastic认证, 开发与备份
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_19_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_19">
+          <span class="md-nav__icon md-icon"></span>
+          十八、Elastic认证, 开发与备份
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/1ES_Certified_test/" class="md-nav__link">
+        第一节 Elastic 认证考试
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/2ES_backup_restore/" class="md-nav__link">
+        第二节 集群 Backup & Restore
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/3ES_Java/" class="md-nav__link">
+        第三节 基于 Java 和 Elasticsearch 开发应用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/4ES_migration/" class="md-nav__link">
+        第四节 3种 Elasticsearch 数据离线迁移方案
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_20" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_20" id="__nav_20_label" tabindex="0">
+          十九、Elastic 操作总结篇
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_20_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_20">
+          <span class="md-nav__icon md-icon"></span>
+          十九、Elastic 操作总结篇
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum1_search_api/" class="md-nav__link">
+        ElasticSearch URI 常用语句总结篇
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum2_search_dep/" class="md-nav__link">
+        Elasticsearch 深入搜索总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum3_cross_search/" class="md-nav__link">
+        ElasticSearch 分布式搜索
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum4_agg_search/" class="md-nav__link">
+        ElasticSearch 深入聚合分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum5_datamodel/" class="md-nav__link">
+        ElasticSearch 数据建模
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum6_Opt_Mgt/" class="md-nav__link">
+        ElasticSearch Operation and Management
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum7_test/" class="md-nav__link">
+        期末考试
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum8_int/" class="md-nav__link">
+        ElasticSearch 面试
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_21" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_21" id="__nav_21_label" tabindex="0">
+          Splunk8 Admin Mgt
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_21_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_21">
+          <span class="md-nav__icon md-icon"></span>
+          Splunk8 Admin Mgt
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1spl_role_ad/" class="md-nav__link">
+        1 Splunk Managing Users and Authentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          2 Working with Configuration Files and Indexes
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        2 Working with Configuration Files and Indexes
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-understanding-splunk-admin-basics-and-license-management" class="md-nav__link">
+    1 Understanding Splunk Admin Basics and License Management
+  </a>
+  
+    <nav class="md-nav" aria-label="1 Understanding Splunk Admin Basics and License Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-1-a-day-in-splunk-enterprise-administrators-life" class="md-nav__link">
+    1-1 A Day in Splunk Enterprise Administrator’s Life
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-2-splunk-enterprise-components" class="md-nav__link">
+    1-2 Splunk Enterprise Components
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-3-splunk-licensing-options" class="md-nav__link">
+    1-3 Splunk Licensing Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-4-managing-license-violations" class="md-nav__link">
+    1-4 Managing License Violations
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo" class="md-nav__link">
+    Demo
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-working-with-splunk-configuration-files" class="md-nav__link">
+    2 Working with Splunk Configuration Files
+  </a>
+  
+    <nav class="md-nav" aria-label="2 Working with Splunk Configuration Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2-1-understanding-splunk-configuration-files" class="md-nav__link">
+    2-1 Understanding Splunk Configuration Files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-2-layering-splunk-configuration-files" class="md-nav__link">
+    2-2 Layering Splunk Configuration Files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-3-mastering-splunk-configuration-files-precedence" class="md-nav__link">
+    2-3 Mastering Splunk Configuration Files Precedence
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-4-using-btool-to-work-with-splunk-configuration-files" class="md-nav__link">
+    2-4 Using btool to Work with Splunk Configuration Files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-5-more-examples-of-using-btool" class="md-nav__link">
+    2-5 More Examples of Using Btool
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-understanding-splunk-index" class="md-nav__link">
+    3 Understanding Splunk Index
+  </a>
+  
+    <nav class="md-nav" aria-label="3 Understanding Splunk Index">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3-1-how-splunk-organizes-data" class="md-nav__link">
+    3-1 How Splunk Organizes Data
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-2-splunk-data-buckets" class="md-nav__link">
+    3-2 Splunk Data Buckets
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-3-creating-splunk-indexes" class="md-nav__link">
+    3-3 Creating Splunk Indexes
+  </a>
+  
+    <nav class="md-nav" aria-label="3-3 Creating Splunk Indexes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3-4-demo" class="md-nav__link">
+    3-4 Demo
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-configuring-indexes" class="md-nav__link">
+    4 Configuring Indexes
+  </a>
+  
+    <nav class="md-nav" aria-label="4 Configuring Indexes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#4-1-splunk-index-configuration-file" class="md-nav__link">
+    4-1 Splunk Index Configuration File
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-2-understanding-fishbucket" class="md-nav__link">
+    4-2 Understanding Fishbucket
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-3-applying-a-data-retention-policy" class="md-nav__link">
+    4-3 Applying a Data Retention Policy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-4-managing-splunk-indexes" class="md-nav__link">
+    4-4 Managing Splunk Indexes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-5-demo" class="md-nav__link">
+    4-5 Demo
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#course-summary" class="md-nav__link">
+    Course Summary
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3datamgt_forwarder/" class="md-nav__link">
+        3 Managing Data and Forwarders
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4config_ds/" class="md-nav__link">
+        4 Splunk Configuring Distributed Search
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5Mon_create_inputs/" class="md-nav__link">
+        5 Splunk Monitoring and Creating Inputs
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6par_man/" class="md-nav__link">
+        6 Splunk Parsing and Manipulating Data
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7splunk_search/" class="md-nav__link">
+        7 Performing Basic Splunk Searches
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../8spl_exam/" class="md-nav__link">
+        8 Splunk ADMIN Exam
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-understanding-splunk-admin-basics-and-license-management" class="md-nav__link">
+    1 Understanding Splunk Admin Basics and License Management
+  </a>
+  
+    <nav class="md-nav" aria-label="1 Understanding Splunk Admin Basics and License Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-1-a-day-in-splunk-enterprise-administrators-life" class="md-nav__link">
+    1-1 A Day in Splunk Enterprise Administrator’s Life
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-2-splunk-enterprise-components" class="md-nav__link">
+    1-2 Splunk Enterprise Components
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-3-splunk-licensing-options" class="md-nav__link">
+    1-3 Splunk Licensing Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-4-managing-license-violations" class="md-nav__link">
+    1-4 Managing License Violations
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo" class="md-nav__link">
+    Demo
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-working-with-splunk-configuration-files" class="md-nav__link">
+    2 Working with Splunk Configuration Files
+  </a>
+  
+    <nav class="md-nav" aria-label="2 Working with Splunk Configuration Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2-1-understanding-splunk-configuration-files" class="md-nav__link">
+    2-1 Understanding Splunk Configuration Files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-2-layering-splunk-configuration-files" class="md-nav__link">
+    2-2 Layering Splunk Configuration Files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-3-mastering-splunk-configuration-files-precedence" class="md-nav__link">
+    2-3 Mastering Splunk Configuration Files Precedence
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-4-using-btool-to-work-with-splunk-configuration-files" class="md-nav__link">
+    2-4 Using btool to Work with Splunk Configuration Files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-5-more-examples-of-using-btool" class="md-nav__link">
+    2-5 More Examples of Using Btool
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-understanding-splunk-index" class="md-nav__link">
+    3 Understanding Splunk Index
+  </a>
+  
+    <nav class="md-nav" aria-label="3 Understanding Splunk Index">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3-1-how-splunk-organizes-data" class="md-nav__link">
+    3-1 How Splunk Organizes Data
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-2-splunk-data-buckets" class="md-nav__link">
+    3-2 Splunk Data Buckets
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-3-creating-splunk-indexes" class="md-nav__link">
+    3-3 Creating Splunk Indexes
+  </a>
+  
+    <nav class="md-nav" aria-label="3-3 Creating Splunk Indexes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3-4-demo" class="md-nav__link">
+    3-4 Demo
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-configuring-indexes" class="md-nav__link">
+    4 Configuring Indexes
+  </a>
+  
+    <nav class="md-nav" aria-label="4 Configuring Indexes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#4-1-splunk-index-configuration-file" class="md-nav__link">
+    4-1 Splunk Index Configuration File
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-2-understanding-fishbucket" class="md-nav__link">
+    4-2 Understanding Fishbucket
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-3-applying-a-data-retention-policy" class="md-nav__link">
+    4-3 Applying a Data Retention Policy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-4-managing-splunk-indexes" class="md-nav__link">
+    4-4 Managing Splunk Indexes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-5-demo" class="md-nav__link">
+    4-5 Demo
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#course-summary" class="md-nav__link">
+    Course Summary
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="2-working-with-configuration-files-and-indexes">2 Working with Configuration Files and Indexes</h1>
+<h2 id="1-understanding-splunk-admin-basics-and-license-management">1 Understanding Splunk Admin Basics and License Management</h2>
+<h3 id="1-1-a-day-in-splunk-enterprise-administrators-life">1-1 A Day in Splunk Enterprise Administrator’s Life</h3>
+<p>Splunk Enterprise Systems Administrators and Data Administrators have different responsibilities</p>
+<p><strong>Splunk Enterprise Systems Administrator Tasks</strong></p>
+<ul>
+<li>Install Splunk Software</li>
+<li>Create and Manage Indexes</li>
+<li>Manage Splunk Licenses</li>
+<li>Configure Security</li>
+<li>Monitor Splunk and respond to Monitoring Console Alerts</li>
+</ul>
+<p><strong>Splunk Enterprise Data Administrator Tasks</strong></p>
+<ul>
+<li>Create and manage inputs</li>
+<li>Manage parsing of data including line-breaking and timestamp extraction</li>
+<li>Design and establish new ingestion pipelines</li>
+<li>Manage Splunk configuration files</li>
+<li>Collaborate with users on data on-boarding</li>
+</ul>
+<h3 id="1-2-splunk-enterprise-components">1-2 Splunk Enterprise Components</h3>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_1.png" title="Body image" /></p>
+<ul>
+<li><strong>On the left side, you have machine data sources</strong>. These are servers, containers or even network devices. They generate mission data. </li>
+<li>The mission data from those systems are collected and indexed in Splunk platform. </li>
+<li>The users interact with Splunk platform to search, report, and analyze. </li>
+</ul>
+<p><strong>Three Core Components</strong></p>
+<ul>
+<li><strong>Indexer</strong><ul>
+<li>Receive, parse and store machine data in files. Serve search requests</li>
+<li>it is important to know that the s<strong>ame splunkd daemon does both writing and reading the files from the disk</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>Search Head</strong> </p>
+<ul>
+<li>Web interface for the users. Dispatch searches to Indexers</li>
+</ul>
+</li>
+<li>
+<p><strong>Universal Forwarder</strong></p>
+<ul>
+<li>Collects data from the clients and forwards for Indexing</li>
+</ul>
+</li>
+</ul>
+<p><strong>how Splunk works</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_2.png" title="Body image" /></p>
+<p><strong>Client System:</strong></p>
+<p>Left side, you have the client system. The applications write logs to log files. </p>
+<p>Splunk universal forwarder, which is a Splunk process, reads those log files and sends them to the indexer via TCP. </p>
+<p><strong>Indexers:</strong></p>
+<p>The indexers receive the data, parses them, organizes them in index files. </p>
+<p><strong>Search head process</strong></p>
+<p>The search head process, which is again another splunkd process, is used as a web interface for the user. The search head is responsible for dispatching searches to the indexers, collect the data, and make it available for the user.</p>
+<p><strong>Other Splunk Components</strong></p>
+<ul>
+<li>License Master</li>
+<li>Deployment Server</li>
+<li>Cluster Master</li>
+<li>Search Head Deployer</li>
+<li>Monitoring Console</li>
+<li>Heavy Forwarder</li>
+</ul>
+<p><strong>License master</strong></p>
+<ul>
+<li>The License Master manages Splunk licenses</li>
+<li>Other Splunk Components(such as indexer and searches) are License Slaves </li>
+<li>Can be a co-located with other components such as Monitoring Console</li>
+<li>Licenses can be managed through Splunk Web</li>
+</ul>
+<p><strong>deployment server</strong></p>
+<ul>
+<li>Manages the Configuration files on the Deployment Clients</li>
+<li>Maintains configuration in <code>serverclass.conf</code><ul>
+<li>Deployment clients typically mean the servers on which universal forwarders are installed.</li>
+</ul>
+</li>
+<li>Alternative solutions such as ansible/puppet can be used</li>
+<li>Configuration files are packaged as apps<ul>
+<li>An app is a Splunk terminology. <strong>App simply means a set of configuration files organized in order.</strong></li>
+</ul>
+</li>
+<li>Deployment clients periodically poll Deployment Server<ul>
+<li>Deployment clients periodically poll deployment server and then download files that are designated for them, so it is rather a pull mechanism and not a push mechanism.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Cluster Master</strong></p>
+<ul>
+<li>Cluster Master manages the <strong>Indexer Cluster</strong></li>
+<li>There is only one Cluster Master<ul>
+<li>There is no high availability for the cluster master.</li>
+<li>You can have a passive standby, but it cannot be active.</li>
+</ul>
+</li>
+<li>Maintains data bucket status and handles replication</li>
+<li>Distributes configuration files and apps to Cluster members</li>
+</ul>
+<p><strong>Search Head</strong></p>
+<ul>
+<li>Search Head Deployer distributes apps and configuration files to Search Head Cluster Members</li>
+<li>Keeps the files in <code>$SPLUNK_HOME/etc/shd-apps</code></li>
+<li>Cannot run on the same instance as a cluster member</li>
+</ul>
+<p><strong>Monitoring Console</strong></p>
+<ul>
+<li>Monitoring Console is a Web App that helps to monitor the system health</li>
+<li>Rich set of charts and statistics</li>
+<li>One-stop-shop to monitor everything </li>
+<li>Only Administrators have access</li>
+</ul>
+<p><strong>Heavy forwarders</strong></p>
+<ul>
+<li>Heavy forwarders can parse data before forwarding to indexer</li>
+<li>Full Splunk Enterprise binary with distributed search disabled</li>
+<li>Can also index data locally</li>
+<li>Smaller footprint compared to indexer</li>
+</ul>
+<h3 id="1-3-splunk-licensing-options">1-3 Splunk Licensing Options</h3>
+<p><strong>Splunk is not free. Splunk Licensing is based on the amount of data indexed</strong></p>
+<p>A critical thing to note because it does not depend on the number of clients, as some of the licensing model works.</p>
+<p>It does not depend on how many processes connect to Splunk indexers. </p>
+<p><strong>It is the amount of data that is received and indexed into Splunk platform.</strong></p>
+<p><strong>Types of Splunk Licenses</strong></p>
+<ul>
+<li>Enterprise License</li>
+<li>Industrial IoT License</li>
+<li>Free License</li>
+<li>Forwarder License</li>
+<li>Trial License</li>
+<li>Dev/Test License</li>
+</ul>
+<p><strong>Enterprise License</strong></p>
+<ul>
+<li>The Enterprise License can be bought for any indexing volume</li>
+<li>Enables all Splunk <strong>features including clustering and distributed search</strong></li>
+<li>No-enforcement. Users can still search after a License violation</li>
+<li>Licenses can be stacked</li>
+</ul>
+<p>You can purchase a license for any indexing volume from Splunk.</p>
+<p><strong>Free License</strong></p>
+<ul>
+<li><strong>The Free license includes 500MB/day indexing, for life</strong></li>
+<li>Disabled features<ul>
+<li>Clustering</li>
+<li>Authentication</li>
+<li>Distributed Search</li>
+<li>Alerting</li>
+<li>Deployment management</li>
+</ul>
+</li>
+</ul>
+<p><strong>Trial License</strong></p>
+<ul>
+<li>The Trial License provides full Splunk features for 60 days</li>
+<li>After 60 days, it automatically becomes Free License</li>
+<li>Maximum 500 MB daily volume</li>
+<li>Sales Trial license can provided for customized limits</li>
+</ul>
+<p><strong>Industrial IoT License</strong></p>
+<ul>
+<li>Splunk for Industrial IoT License</li>
+<li>Not stackable</li>
+<li>Access to Splunk Enterprise and a select premium Splunk Apps</li>
+</ul>
+<p><strong>Forwarder License</strong></p>
+<ul>
+<li>Forwarder License allows forwarding of unlimited data</li>
+<li>Cannot be used for indexing</li>
+<li>No need to purchase them separately</li>
+<li>Universal Forwarders automatically apply Forwarder License</li>
+<li>Heavy Forwarders must be converted to Forwarder License group</li>
+</ul>
+<p><strong>Dev/Test License</strong></p>
+<ul>
+<li>Dev/Test license for running Splunk in Non Prod environments</li>
+<li>Cannot be used in distributed environment</li>
+<li>Not stackable</li>
+<li>Can be used for Splunk App development</li>
+</ul>
+<p><strong>What counts towards daily License quota?</strong></p>
+<ul>
+<li>
+<p><strong>Full size of data flowing through the parsing pipeline</strong></p>
+<ul>
+<li>Whatever gets into the parsing queue is what gets charged.</li>
+</ul>
+</li>
+<li>
+<p><strong>Not the disk storage</strong></p>
+<ul>
+<li>It is not the ultimate final disk storage because <strong>the data gets compressed and also added with the metadata and other indexing data in the disk</strong>.</li>
+</ul>
+</li>
+<li><strong>Does not include</strong><ul>
+<li>What is being charged is the data that flows through the parsing pipeline before it gets written to the disk</li>
+</ul>
+</li>
+<li>Replicated Data<ul>
+<li>The data does not include replicated data.</li>
+</ul>
+</li>
+<li>Summary indexes</li>
+<li>Internal Logs<ul>
+<li>Splunk Splunks itself. There's tons of logs that Splunk generates, and they all are indexed in <strong><code>_internal</code> index</strong>. </li>
+</ul>
+</li>
+<li>Metadata</li>
+</ul>
+<p><strong>Licensing in Distributed Environment</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_3.png" title="Body image" /></p>
+<p>The license master is the only server that has the enterprise license stack installed. </p>
+<p>All other components in your environment act as license slaves, and they simply connect to the license master. </p>
+<p><strong>It is configured in <code>server.conf</code> on the licensed slaves</strong>.</p>
+<h3 id="1-4-managing-license-violations">1-4 Managing License Violations</h3>
+<p><strong>License Warnings and Violations</strong></p>
+<ul>
+<li>Exceeding daily volume quota results in a Warning</li>
+<li>5 or more warnings in a 30 day rolling period is a Violation</li>
+<li><strong>Searching is NOT disabled in violation period</strong></li>
+<li>Alert logged in Messages on any Splunk Web pages</li>
+</ul>
+<p><strong>Monitoring License Warnings</strong></p>
+<ul>
+<li><strong>Monitoring Console</strong>: Enable the license monitoring alerts</li>
+<li><strong>Licensing Page in Splunk Web</strong>: Current and permanent violations</li>
+<li><strong>Usage Report in Splunk Web</strong>: Current and previous 
+30 days usage</li>
+</ul>
+<p><strong>Handling License Violations</strong></p>
+<ul>
+<li>Review heavy hitters (Usage Report) and adjust intake</li>
+<li>The daily limit resets at midnight</li>
+<li>Buy more license</li>
+</ul>
+<h3 id="demo">Demo</h3>
+<ul>
+<li>Licensing page in Splunk Web</li>
+<li>Review Warnings and Violations</li>
+<li>Usage Report<ul>
+<li>Current</li>
+<li>Past 30 days</li>
+</ul>
+</li>
+<li>Enable Monitoring Console License Alerts</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_4.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_5.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_6.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_7.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_8.png" title="Body image" /></p>
+<h2 id="2-working-with-splunk-configuration-files"><strong>2 Working with Splunk Configuration Files</strong></h2>
+<ul>
+<li>Understanding Splunk configuration files</li>
+<li>Structure of Splunk configuration files</li>
+<li>Layering the configuration files<ul>
+<li>Index-time</li>
+<li>Search-time</li>
+</ul>
+</li>
+<li>Precedence of configuration files</li>
+<li>Using btool to troubleshoot</li>
+</ul>
+<h3 id="2-1-understanding-splunk-configuration-files"><strong>2-1 Understanding Splunk Configuration Files</strong></h3>
+<p><strong>Splunk platform is configured using set of text-based configuration files</strong></p>
+<p><strong>Splunk Configuration Files</strong></p>
+<ul>
+<li>Text files located in <code>SPLUNK_HOME/etc/…</code></li>
+<li><code>.conf</code> extension (Examples: <code>server.conf</code>, <code>deploymentclient.conf</code>)</li>
+</ul>
+<blockquote>
+<p>Typically, it's /opt/splunk in UNIX‑based systems. </p>
+</blockquote>
+<ul>
+<li>Changes made via Splunk Web update configuration files</li>
+<li>Contain stanzas and key value pairs</li>
+<li>Govern a Splunk functionality</li>
+</ul>
+<blockquote>
+<p>For example, <strong>props.conf governs how data is parsed</strong>.</p>
+<p><strong>Server.conf governs the system‑level parameter of the splunkd process</strong>.</p>
+</blockquote>
+<p>There are only two Splunk software packages: <strong>Splunk 
+Enterprise and Splunk Universal Forwarder</strong></p>
+<p><strong>Splunk Software Packages</strong></p>
+<p>Splunk Enterprise</p>
+<ul>
+<li>Indexer</li>
+<li>Search Head</li>
+<li>License Master</li>
+<li>Deployment Server</li>
+<li>Cluster Master</li>
+<li>Search Head Deployer</li>
+<li>Monitoring Console</li>
+<li>Heavy Forwarder</li>
+</ul>
+<p>Splunk Universal Forwarder</p>
+<ul>
+<li>Deployment Client</li>
+</ul>
+<p><strong>Splunk Platform Directory Structure</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_9.png" title="Body image" /></p>
+<ul>
+<li>On top, we have <code>SPLUNK_HOME</code>. In general, it is <code>/opt/splunk</code> in Linux‑based systems, but it is any directory that you chose to install Splunk. </li>
+<li>
+<p>bin directory under <code>SPLUNK_HOME</code>that contains Splunk commands, for example, the <code>./splunk</code> command that we typically use to restart a Splunk process is located under <code>SPLUNK_HOME</code> bin. </p>
+</li>
+<li>
+<p>etc. It has three major directories. </p>
+<ul>
+<li>The first is apps. Under apps, we have configuration files packaged as apps. We will see that apps is one of the core ways Splunk manages configuration files. </li>
+<li>users directory, under which we have user‑specific configuration files. <ul>
+<li>For example, <strong>if a user logs onto Splunk Web and then creates an alert, the alert configuration goes inside the users directory</strong>. </li>
+</ul>
+</li>
+<li>System. Here is where system‑wide configuration files are stored. </li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>If the user shares the alert, the configuration is
+moved to the apps directory</p>
+</blockquote>
+<ul>
+<li>var directory under <code>SPLUNK_HOME</code> that contains two major directories.<ul>
+<li>log in which we have Splunk platform's log files. <ul>
+<li>The index in which the logs are stored is <code>_internal</code>. </li>
+</ul>
+</li>
+<li>Then we have <strong>lib</strong> directory, under which the indexes live. <strong>Index is where the mission data is stored</strong>. </li>
+</ul>
+</li>
+</ul>
+<p><strong>Structure of Splunk Configuration File</strong></p>
+<p>Configuration Files Are Made of Stanzas and Key-value Pairs </p>
+<p><strong><code>indexes.conf</code></strong></p>
+<pre><code>[default]
+maxTotalDataSizeMB = 650000
+maxGlobalRawDataSizeMB = 0
+
+# idx1 index settings
+[idx1]
+homePath = volume:hot1/idx1
+coldPath = volume:cold2/idx1
+</code></pre>
+<p><strong><code>inputs.conf</code> </strong></p>
+<pre><code>[monitor:///var/log/httpd]
+sourcetype = access_common
+ignoreOlderThan = 7d
+index = web
+</code></pre>
+<p><strong>Two Ways to Learn Splunk Configuration Files</strong></p>
+<ul>
+<li><strong>README files</strong></li>
+</ul>
+<p><code>$SPLUNK_HOME/etc/system/README</code> directory contains 
+example and spec files</p>
+<ul>
+<li>Spec files at docs.splunk.com 
+<a href="https://docs.splunk.com/Documentation/Splunk">https://docs.splunk.com/Documentation/Splunk</a></li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_10.png" title="Body image" /></p>
+<p><code>PLUNK HOME/etc/system/README</code></p>
+<h3 id="2-2-layering-splunk-configuration-files"><strong>2-2 Layering Splunk Configuration Files</strong></h3>
+<p><strong>Splunk App</strong></p>
+<ul>
+<li>Splunk's way of organizing configuration files</li>
+<li>A directory under <code>SPLUNK_HOME/etc/apps</code></li>
+<li>Contains Splunk configuration files</li>
+<li>Can also contain scripts and other necessary artifacts</li>
+<li>An add-on is an app that usually does not contain GUI</li>
+</ul>
+<p><strong>Search &amp; Reporting app</strong></p>
+<ul>
+<li><strong>Splunk ships with Search &amp; Reporting app which is a prebuilt general-purpose app</strong>.</li>
+<li>The configuration is stored under SPLUNK_HOME/etc/apps/search</li>
+</ul>
+<p><strong>Splunk App Directory Structure</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_11.png" title="Body image" /></p>
+<p>We have another special folder called metadata that contains default.meta and/or local.meta that defines the permissions for this app</p>
+<p><strong>Default vs. Local Directories</strong></p>
+<ul>
+<li>
+<p><strong>Default</strong></p>
+<ul>
+<li>Shipped with Splunk</li>
+<li>Will be overwritten upon Splunk upgrade</li>
+<li><strong>Files should not be updated</strong></li>
+<li>Contains default settings</li>
+<li><strong>Does not override local</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>Local</strong></p>
+<ul>
+<li>User created</li>
+<li><strong>Will be preserved upon Splunk upgrade</strong></li>
+<li><strong>Recommended place to modify files</strong></li>
+<li><strong>User-specific configuration changes</strong></li>
+<li>Always overrides default</li>
+</ul>
+</li>
+</ul>
+<p><strong>All the Configuration File Locations</strong></p>
+<ul>
+<li><code>etc/system/default</code></li>
+<li><code>etc/system/local</code></li>
+<li><code>etc/apps/search/default</code></li>
+<li><code>etc/apps/search/local</code></li>
+<li><code>etc/apps/&lt;app&gt;/default</code></li>
+<li><code>etc/apps/&lt;app&gt;/local</code></li>
+<li><code>etc/users/&lt;user&gt;/&lt;app&gt;/local</code>  <br />
+<strong>Do not update files in etc/system/default</strong></li>
+</ul>
+<p>Never update files in <code>etc/system/default</code>. It is the default system where the configuration, and it is bound to be updated or overwritten whenever you upgrade Splunk platform. </p>
+<h3 id="2-3-mastering-splunk-configuration-files-precedence"><strong>2-3 Mastering Splunk Configuration Files Precedence</strong></h3>
+<p><strong>Index-time and Search-time</strong></p>
+<ul>
+<li><strong>Index-time</strong>: Global context, such as input/parsing configuration</li>
+</ul>
+<blockquote>
+<p>configuration with a global context such as inputs.conf</p>
+</blockquote>
+<ul>
+<li><strong>Search-time</strong>: App/User scoped, such as a user’s knowledge objects</li>
+</ul>
+<blockquote>
+<p>would be saved to searches.conf in which a user can have scheduled reports and even alerts</p>
+</blockquote>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_12.png" title="Body image" /></p>
+<p><strong>Index-time Precedence</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_13.png" title="Body image" /></p>
+<ol>
+<li><code>etc/system/local</code>. Any configuration here will override configuration in any other location. This is the gold standard, <strong>the mother of all configuration files, etc/system/local</strong>.</li>
+<li><code>etc/apps/search/local</code>. Search is a special pre‑built app that comes with Splunk. </li>
+<li><code>etc/apps</code>, any custom app, in this case, app1/local.</li>
+<li><code>etc/apps/search/default</code>. </li>
+<li><code>etc/apps</code>, any app, in this case, app1, default.</li>
+<li><code>etc/system/default</code>. That gets the lowest precedence in any case, etc/system/default. </li>
+</ol>
+<p>if there are two or more apps that have conflicting settings, app directory name with the highest ASCII order wins. </p>
+<p><strong>Search-time Precedence</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_14.png" title="Body image" /></p>
+<ol>
+<li><code>etc/users</code>, username, and then the particular app he is working on, /local. You can see that <code>etc/system/local</code> does not get the top precedence. </li>
+<li><code>etc/apps</code>, the app in which the user is working on right now, /local. </li>
+<li><code>etc/apps</code>, app name, default. </li>
+<li><code>etc/apps/search/local</code>. </li>
+<li><code>etc/apps/search/default</code>. </li>
+<li><code>etc/system/local</code>. You can see that during index time, <code>etc/system/local</code> is the most important directory, whereas during search time, it is almost the last.</li>
+<li><code>etc/system/default</code>. </li>
+</ol>
+<p><strong>How Splunk merges configuration files.</strong> </p>
+<ul>
+<li>Upon startup, Splunk merges configuration files for each type, very important point. </li>
+</ul>
+<blockquote>
+<p>For example, if there are multiple <code>limits.conf</code> spread across various applications, or apps rather, upon startup, <strong>Splunk will merge all the configurations into one single <code>limits.conf</code></strong>. </p>
+</blockquote>
+<ul>
+<li>
+<p>The resulting file combines settings from various directory locations. </p>
+<ul>
+<li>It is a union of all settings for the same configuration file that is available across different directories. </li>
+</ul>
+</li>
+<li>
+<p>Only one file per file type will be used at runtime. </p>
+</li>
+</ul>
+<p><strong>It does not matter how many <code>inputs.conf</code> are out there or how many <code>props.conf</code> are out there.</strong></p>
+<p>For a given type, there is only one configuration file at runtime. If there is a conflict, precedence is applied. </p>
+<ul>
+<li><strong>If there is a conflict, precedence is applied</strong></li>
+<li><strong>Local takes precedence over default</strong></li>
+</ul>
+<p><strong>How layering and precedence works.</strong></p>
+<p>consider props.conf. And in this section of <code>props.conf</code>, it happens to be processed during index time. </p>
+<p>Configuration File Merging Example 1</p>
+<p><strong><code>etc/apps/karun_app_props/local/props.conf</code></strong></p>
+<pre><code>[web:log]
+SHOULD_LINEMERGE = false
+LINE_BREAKER = ([\r\n]+)\d{4}-
+</code></pre>
+<p><strong><code>etc/apps/joe_app_props/local/props.conf</code></strong></p>
+<pre><code>[app:log]
+TIME_FORMAT = %Y-%m-%d %H:%M:%S%Z
+TIME_PREFIX = ^
+</code></pre>
+<p><strong><code>etc/apps/jack_app_props/local/props.conf</code></strong></p>
+<pre><code>[db:log]
+BREAK_ONLY_BEFORE_DATE = true
+SHOULD_LINEMERGE=true
+
+[web:log]
+category = web
+</code></pre>
+<p><strong>Effective props.conf at runtime</strong></p>
+<pre><code>[web:log]
+SHOULD_LINEMERGE = false
+LINE_BREAKER = ([\r\n]+)\d{4}-
+category = web
+
+[app:log]
+TIME_FORMAT = %Y-%m-%d %H:%M:%S%Z
+TIME_PREFIX = ^
+
+[db:log]
+BREAK_ONLY_BEFORE_DATE = true
+SHOULD_LINEMERGE=true
+</code></pre>
+<p><strong>Configuration File Merging Example 2</strong></p>
+<pre><code>etc/system/default/limits.conf
+[inputproc]
+file_tracking_db_threshold_mb = 500
+learned_sourcetypes_limit = 1000
+
+
+etc/apps/karun_limits_app/local/limits.conf
+[inputproc]
+max_fd = 500
+
+etc/system/local/limits.conf
+[inputproc]
+max_fd = 300
+</code></pre>
+<p>Effective limits.conf at runtime</p>
+<pre><code>[inputproc]
+file_tracking_db_threshold_mb = 500
+learned_sourcetypes_limit = 1000
+max_fd = 300
+</code></pre>
+<ul>
+<li><code>file_tracking_db_threshold_mb</code>： The first parameter defines the maximum size of fishbucket database，after which a new database file will be created. Fishbucket database is used to keep track of monitoring the input files and its progress. </li>
+<li><code>Learned_sourcetypes_limit</code> limits the maximum number of automatically created source types. </li>
+</ul>
+<p><strong>When overriding configuration with a local file, do not copy the entire file from default. Just add the overriding configuration.</strong></p>
+<p><strong>Overriding the Default Configurations</strong></p>
+<p>Correct Way to Override Defaults</p>
+<p><code>etc/system/default/props.conf</code></p>
+<pre><code>[default]
+CHARSET = UTF-8
+LINE_BREAKER_LOOKBEHIND = 100
+TRUNCATE = 10000
+DATETIME_CONFIG = /etc/datetime.xml
+ADD_EXTRA_TIME_FIELDS = True
+ANNOTATE_PUNCT = True
+</code></pre>
+<p>TRUNCATE: defines the maximum number of lines after which an event will be truncated. So by default, it is 10000. </p>
+<p>Now in order to override this, all you need to do is to simply redefine TRUNCATE with the value that you want in <code>etc/system/local/props.conf</code>. </p>
+<p><strong>Again, do not copy the entire props.conf from default. Simply override it with etc/system/local/props.conf.</strong></p>
+<p><strong><code>etc/system/local/props.conf</code></strong></p>
+<pre><code>[default]
+TRUNCATE = 50000
+</code></pre>
+<p>Note that <code>etc/system/local/props.conf</code> is the mother of all configuration files. </p>
+<p><strong>As an added tip, the two locations where default configurations are stored out of the box is etc/system/default and etc/apps/search/default.</strong></p>
+<h3 id="2-4-using-btool-to-work-with-splunk-configuration-files"><strong>2-4 Using btool to Work with Splunk Configuration Files</strong></h3>
+<ul>
+<li>A Splunk command</li>
+<li>Located in <code>SPLUNK_HOME/bin</code></li>
+<li>Retrieves the on-disk configuration of a Splunk configuration file</li>
+<li>Syntax: <code>splunk btool &lt;conf file name&gt; list [options]</code></li>
+<li><code>--debug</code> option shows the exact <code>.conf</code> file location</li>
+</ul>
+<p><strong>Btool Example</strong></p>
+<pre><code>/opt/splunk/bin# ./splunk btool inputs list monitor:///var/log
+
+[monitor:///var/log]
+_rcvbuf = 1572864
+disabled = false
+host = Karun-Mac-Container
+index = main
+
+
+/opt/splunk/bin# ./splunk btool inputs list monitor:///var/log --debug
+/opt/splunk/etc/apps/search/local/inputs.conf [monitor:///var/log]
+/opt/splunk/etc/system/default/inputs.conf _rcvbuf = 1572864
+/opt/splunk/etc/apps/search/local/inputs.conf disabled = false
+/opt/splunk/etc/apps/search/local/inputs.conf host = Karun-Mac-Container
+/opt/splunk/etc/apps/search/local/inputs.conf index = main
+</code></pre>
+<p><strong>retrieving the contents of inputs</strong></p>
+<p>As you can see, there are two inputs.conf in play here. One comes from <code>etc/apps/search/local</code>, and the other one comes from <code>etc/system/default.inputs.conf</code>. </p>
+<pre><code>/opt/splunk/bin$ ./splunk status
+
+/opt/splunk/bin$ ps -ef | grep splunk
+
+splunk -p 8089 start
+
+cd system/default
+/opt/splunk/etc/system/default$ ls
+alert_actions.conf ....
+app.conf
+
+$ vi props. conf
+# This file specifies how to parse a given log file
+</code></pre>
+<p><strong>Add new data inputs</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_15.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_16.png" title="Body image" /></p>
+<p><strong>Start searching</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_17.png" title="Body image" /></p>
+<p><strong><code>source="/var/log/*" host="Karun-Mac"</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_18.png" title="Body image" /></p>
+<p><strong>New input file created</strong></p>
+<pre><code>/opt/splunk/etc/apps/search/local: 1s -lrt
+
+inputs.conf
+
+[splunktep://9997]
+connection_host = ip
+
+[monitor:///var/log]
+disabled = false
+host = Karun-Mac
+index = main
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_18.png" title="Body image" /></p>
+<pre><code>/opt/splunk/bin$ ./splunk btool inputs list
+
+
+/opt/splunk/bin$ ./splunk tool inputs lis monitor
+
+[monitor:///opt/splunk/etc/splunk.version]
+...
+[monitor:///opt/splunk/var/loq/introspection]
+</code></pre>
+<pre><code>./splunk btool inputs list monitor --debug
+...
+/opt/splunk/etc/apps/search/local/inputs.conf   [monitor:///var/log]  
+/opt/splunk/etc/system/default/inputs.conf      _revbuf = 1572864
+/opt/splunk/etc/apps/search/local/inputs.conf   disabled = false
+/opt/splunk/etc/apps/search/local/inputs.conf   host = Karun-Mac
+/opt/splunk/etc/apps/search/local/inputs.conf   index = main
+</code></pre>
+<pre><code>/opt/splunk/bin$./splunk btool inputs list monitor:///var/log
+
+[monitor:///var/log]
+_revbuf = 1572864
+disabled = false
+host = Karun-Mac
+index = main
+</code></pre>
+<h3 id="2-5-more-examples-of-using-btool"><strong>2-5 More Examples of Using Btool</strong></h3>
+<ul>
+<li>Review a Splunk configuration file</li>
+<li>Locate the btool command</li>
+<li>Use btool to retrieve configuration</li>
+<li>Use btool to analyze conflicts</li>
+<li>Using REST API to retrieve configuration</li>
+</ul>
+<p><strong>dpkg source type</strong></p>
+<p>Now I know that I did not manually create this sourcetype. Splunk uses sourcetype to parse the data, so I need to find out where the source type dpkg is defined.</p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_19.png" title="Body image" /></p>
+<pre><code>./splunk btool props list dpkg
+
+/opt/splunk/etc/apps/learned/local/props.conf [dpkg]
+</code></pre>
+<p><strong>install Splunk <code>*NIX TA</code>, the Splunk UNIX TA</strong></p>
+<p>The *NIX TA can be obtained from <code>splunkbase.solunk.com</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_20.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_21.png" title="Body image" /></p>
+<pre><code>/opt/splunk/etc/apps$ ls-lrt
+...
+Splunk_TA_nix
+
+
+cd opt/splunk/etc/apps/Splunk_TA_nix/local$ ls -lrt
+
+vi inputs.conf
+</code></pre>
+<p><strong>Default is disable, enable all the input</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_22.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_23.png" title="Body image" /></p>
+<pre><code>./splunk btool inputs list script://./bin/top.sh --debug
+</code></pre>
+<p><strong>How we can access Splunk configuration via rest API</strong></p>
+<pre><code>| rest services/properties
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_24.png" title="Body image" /></p>
+<pre><code>| rest services/properties/props 
+</code></pre>
+<pre><code>| rest services/properties/props/dpkg/MAX_EVENTS
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_25.png" title="Body image" /></p>
+<h2 id="3-understanding-splunk-index">3 Understanding Splunk Index</h2>
+<p>Overview</p>
+<ul>
+<li>How Splunk organizes data</li>
+<li>Index buckets<ul>
+<li>Hot</li>
+<li>Warm</li>
+<li>Cold</li>
+<li>Frozen</li>
+<li>Thawed</li>
+</ul>
+</li>
+<li>
+<p>Creating an index</p>
+<ul>
+<li>Using Splunk Web</li>
+<li>Using configuration files</li>
+<li>One index vs multiple indexes</li>
+</ul>
+</li>
+<li>
+<p>Index data integrity</p>
+</li>
+</ul>
+<h3 id="3-1-how-splunk-organizes-data">3-1 How Splunk Organizes Data</h3>
+<p>Splunk stores data in indexes, <strong>which are organized in directories and files in disk</strong></p>
+<p><strong>Splunk Indexes</strong></p>
+<ul>
+<li>Indexes are stored in <code>SPLUNK_HOME/var/lib/splunk</code></li>
+<li>The directory location is customizable for each index</li>
+<li>Indexes contain raw data and index files</li>
+<li>Indexes can be created by an Administrator</li>
+<li>Many prebuilt indexes<ul>
+<li><code>_internal</code></li>
+<li><code>_audit</code></li>
+<li>main</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_26.png" title="Body image" /></p>
+<p><strong>Another useful internal index is <code>_introspection</code>which stores Spunk platform's performance metrics</strong></p>
+<p><strong>Inside a Splunk Index</strong></p>
+<ul>
+<li><mark><strong>Raw data</strong>: Raw data is stored in compressed format</mark></li>
+<li><mark><strong>Tsidx files</strong>: Time series index files that point to the raw data</mark></li>
+<li><mark><strong>metadata</strong>: Metadata files such as <strong>Sources.data, SourceTypes.data and Hosts.data</strong></mark></li>
+</ul>
+<h3 id="3-2-splunk-data-buckets">3-2 <strong>Splunk Data Buckets</strong></h3>
+<p><strong>Buckets</strong></p>
+<ul>
+<li><strong>Indexes store data in buckets</strong></li>
+<li>Buckets are set of directories organized by age</li>
+<li><strong>Contain raw data, tsidx files and metadata</strong></li>
+<li><strong>As the index grows, number of buckets grows as well</strong></li>
+</ul>
+<p><strong>Types of Buckets</strong></p>
+<ul>
+<li>Hot</li>
+<li>Warm</li>
+<li>Cold</li>
+<li>Frozen</li>
+<li>Thawed</li>
+</ul>
+<p><strong>Hot</strong></p>
+<ul>
+<li>Hot buckets contain the newest data</li>
+<li><strong>They are open for both read and write</strong></li>
+<li><strong>There can be more then one hot bucket in an index</strong></li>
+<li>Searchable</li>
+<li>Roll to warm bucket when buckets reach certain size, or upon Splunk restart</li>
+</ul>
+<p><strong><code>maxHotBuckets</code> in <code>indexes.conf</code> can beconfigured (default 3)</strong></p>
+<p><strong>Warm</strong></p>
+<ul>
+<li>Warm buckets are created when hot buckets roll</li>
+<li><strong>Not open for writing, but searchable</strong></li>
+<li>They reside in the same directory as hot buckets but renamed</li>
+<li>Roll to cold buckets when exceeding maximum warm buckets setting</li>
+</ul>
+<blockquote>
+<p>maxWarmDBCount in indexes.conf can be configured (default 300)</p>
+</blockquote>
+<p><strong>Cold</strong></p>
+<ul>
+<li><strong>Starting from oldest bucket (based on time), warm buckets roll to cold</strong></li>
+<li>Reside in different directory from hot and warm</li>
+<li><strong>Searchable</strong></li>
+<li>The directory location can be configured</li>
+<li><strong>Possible to save cost by using cheaper storage</strong></li>
+</ul>
+<p><strong>Frozen</strong></p>
+<ul>
+<li>After cold buckets age out based on retention policy, they roll to frozen</li>
+<li>The default action is to delete; can be configured to archive</li>
+<li><strong>coldToFrozenDir</strong> or <strong>coldToFrozenScript</strong> in <code>indexes.conf</code> configures archiving</li>
+<li><strong>Archived frozen buckets are not searchable</strong></li>
+</ul>
+<blockquote>
+<p>All events in a cold bucket must be eligible
+to be frozen</p>
+</blockquote>
+<p><strong>Thawed</strong></p>
+<ul>
+<li>Frozen buckets can be thawed</li>
+<li><strong>Thawed buckets are rebuilt into the index and searchable</strong></li>
+<li><strong>Location of thawed buckets can be configured in indexes.conf</strong></li>
+<li>No age restriction for thawed buckets</li>
+<li><strong>Use <code>splunk rebuild</code> command to rebuild</strong></li>
+</ul>
+<p><strong>Bucket Locations</strong></p>
+<ul>
+<li><code>SPLUNK_HOME/var/lib/splunk/myfirstindex/db/</code></li>
+<li><code>SPLUNK_HOME/var/lib/splunk/myfirstindex/db/</code></li>
+<li><code>SPLUNK_HOME/var/lib/splunk/myfirstindex/colddb/</code></li>
+<li>Frozen buckets are deleted by default. Can be optionally archived.</li>
+<li><code>SPLUNK_HOME/var/lib/splunk/myfirstindex/thaweddb/</code></li>
+</ul>
+<p><strong>Bucket Naming</strong></p>
+<p><strong>Hot</strong></p>
+<ul>
+<li><code>hot_v1_&lt;local id&gt;</code></li>
+<li><code>hot_v1_5</code></li>
+</ul>
+<p><strong>Warm</strong></p>
+<ul>
+<li><code>db_&lt;newest time&gt;_&lt;oldest_time&gt;_&lt;local id&gt;</code></li>
+<li>
+<p><code>db_1559676230_1559676181_0</code></p>
+</li>
+<li>
+<p>Local id is the ID of the bucket</p>
+</li>
+<li>Newest and oldest time are in UTC epoch time in seconds</li>
+<li>During a search, Splunk uses the time range in the bucket name before opening it</li>
+</ul>
+<p><strong>Index Directory Structure</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_27.png" title="Body image" /></p>
+<h3 id="3-3-creating-splunk-indexes"><strong>3-3 Creating Splunk Indexes</strong></h3>
+<p><strong>Why Create Multiple Indexes?</strong></p>
+<ul>
+<li><strong>Security</strong>： Restrict access to index by Splunk role</li>
+<li><strong>Retention</strong>： Retention policies are applied at index level</li>
+</ul>
+<p><strong><code>authorize.conf</code></strong></p>
+<p>Security is defined in authorize.conf</p>
+<pre><code>[role_myrole]      # Definition for myrole
+importRoles = user   # Inherit user role’s capabilities
+srchIndexesAllowed = os,idx1   #Allowed indexes are os and idx1
+srchIndexesDefault = idx1  # Default index is idx1
+
+[role_mysuperuserrole]
+importRoles = user
+srchIndexesAllowed = os,idx1,idx2  # Allowed indexes are os,idx1,idx2
+srchIndexesDefault = idx2   # Default index is idx2
+</code></pre>
+<p><strong><code>indexes.conf</code></strong></p>
+<p>Indexes are configured in indexes.conf</p>
+<pre><code>[myfirstindex]   # Definition for myfirstindex
+coldPath =  $SPLUNK_DB/myfirstindex/colddb   # Location for cold buckets
+enableDataIntegrityControl = 0  # Disable Data Integrity Control
+enableTsidxReduction = 0        # Disable TSIDX reduction
+
+homePath = $SPLUNK_DB/myfirstindex/db   # Location for hot and warm buckets
+
+maxTotalDataSizeMB = 512000   # Maximum size of the index
+frozenTimePeriodInSecs = 1209600  # Number of seconds after which bucket roles to frozen (every event in a bucket must be older than this limit)
+
+thawedPath = $SPLUNK_DB/myfirstindex/thaweddb # Location for thawed buckets
+</code></pre>
+<p><strong>Creating Splunk Index</strong></p>
+<ul>
+<li>
+<p><strong>Using Splunk Web</strong></p>
+<ul>
+<li>Settings -&gt; Indexes -&gt; New Index</li>
+</ul>
+</li>
+<li>
+<p><strong>Using configuration files</strong></p>
+<ul>
+<li>Copy existing stanza in <code>indexes.conf</code> and update. </li>
+<li>Restart of Splunk required</li>
+</ul>
+</li>
+</ul>
+<p><strong>Creating Index Using Splunk Web</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_28.png" title="Body image" /></p>
+<p><strong>Index Data Integrity</strong></p>
+<ul>
+<li><code>enableDataIntegrityControl=true</code> in <code>indexes.conf</code>.<ul>
+<li><strong>Check integrity:</strong></li>
+</ul>
+</li>
+</ul>
+<p><strong><code>./splunk check-integrity -index [ index name ]</code></strong></p>
+<ul>
+<li>Allows to ensure indexed data has not been tampered with.<ul>
+<li><strong>Regenerate hash:</strong> </li>
+</ul>
+</li>
+</ul>
+<p><strong><code>./splunk generate-hash-files -index [ index name ]</code></strong></p>
+<ul>
+<li>Creates hash files (using SHA 256) as the data is indexed.<ul>
+<li>Hash files are stored in <strong>rawdata</strong> directory within the index.</li>
+</ul>
+</li>
+</ul>
+<p><strong>One Index vs. Multiple Indexes</strong></p>
+<ul>
+<li><strong>Security</strong>: Create separate indexes if you want to allow access selectively</li>
+<li><strong>Retention</strong>: Create separate indexes if you want varying data retention periods</li>
+<li><strong>Management</strong>: Easier management for chargeback processes</li>
+</ul>
+<h4 id="3-4-demo">3-4 Demo</h4>
+<ul>
+<li>Create a Splunk index using Splunk Web</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_29.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_30.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_31.png" title="Body image" /></p>
+<ul>
+<li>Upload data</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_32.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_33.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_34.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_35.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_36.png" title="Body image" /></p>
+<ul>
+<li>Review the indexes.conf</li>
+</ul>
+<pre><code>cd var/lib/splunk/
+cd oslogs
+
+/opt/splunk/var/lib/splunk/oslogs$ ls -lrt
+thaweddb
+datamodel_summary
+
+/opt/splunk/var/lib/splunk/oslogs/db$ ls -lrt
+CreationTime
+hot_v1_1
+hot_v1_0
+
+cd hot_v1_0
+1577042620-1577042619-577230494255484
+$ ls -lrt
+bucket_info.csv
+Strings.data
+Sources.data
+SourceTypes.data
+Hosts. data
+1559676212-1559676181-5772278361002267635.tsidx
+splunk-autogen-params.dat
+1559676230-1559676212-5772318639205556589.tsidx
+rawdata
+
+/opt/splunk/var/lib/splunk/oslos/db/db_1559676230_1559676181_1/rawdata$ ls
+journal.az
+12Hash_1_2013DDA2-630D-4FFE-BD9E-7EC7E2D8C74B.dat
+slicesv2.dat
+</code></pre>
+<ul>
+<li>
+<p>Review the index directory structure</p>
+<ul>
+<li>buckets</li>
+<li>tsidx files</li>
+<li>raw data</li>
+</ul>
+</li>
+<li>
+<p>Check data integrity</p>
+</li>
+</ul>
+<pre><code>./slunk btool indexes list oslogs --debug
+
+/opt/splunk/bin$./splunkcheck-integrity
+
+WatchdogActionsManager reload started
+Starting WatchdogThread for process pid=11068. Threads monitoring is enabled with response timeout set to 8000 ms
+Operating on: id=oslogs bucket='/opt/splunk/var/lib/splunk/oslogs/db/db_1577042620_1577042619_0
+Operating on: id=oslogs bucket='/opt/splunk/var/lib/splunk/oslogs/db/db_1559676230_1559676181_1'
+Total buckets checked=2, succeeded=2, failed=0
+</code></pre>
+<h2 id="4-configuring-indexes"><strong>4 Configuring Indexes</strong></h2>
+<ul>
+<li>Learning to tune indexes.conf</li>
+<li>Understanding fishbucket</li>
+<li>Applying a data retention policy</li>
+<li>Managing Splunk index<ul>
+<li>Backup</li>
+<li>Backup</li>
+<li>Cleaning out</li>
+</ul>
+</li>
+<li>Using monitoring-console to understand index configuration</li>
+</ul>
+<h3 id="4-1-splunk-index-configuration-file"><strong>4-1 Splunk Index Configuration File</strong></h3>
+<p>Indexes.conf file is used to configure Splunk indexes and their properties</p>
+<p><strong><code>Location of indexes.conf</code></strong></p>
+<ul>
+<li>There is a default <code>indexes.conf</code> in <code>SPLUNK_HOME/etc/system/default</code> directory.</li>
+<li><strong>DO NOT edit this file</strong>.</li>
+<li>Create a new indexes.conf in <code>SPLUNK_HOME/etc/system/local</code> directory and add specific customization there.</li>
+</ul>
+<p>You can also place <code>indexes.conf</code> as part of an app under <code>SPLUNK_HOME/etc/apps/&lt;app name&gt;/local</code>.</p>
+<p>Restart of splunkd required for any configuration changes</p>
+<p><strong>Structure of <code>indexes.conf</code></strong></p>
+<p>The file can have a 'default' stanza for defining global properties</p>
+<p>If a property is defined outside of any stanza, <strong>at the top of the file, it is considered a global property</strong>.</p>
+<p>If a property is <strong>defined at both global level and in a specific stanza, value in the stanza takes precedence.</strong></p>
+<p>If there are multiple definitions of the same settings in a stanza, <strong>last setting wins</strong>.</p>
+<ul>
+<li><code>Indexes.conf</code></li>
+</ul>
+<pre><code># A basic index definition
+
+[weblogs]
+
+homePath = $SPLUNK_DB/weblogs/db
+coldPath = $SPLUNK_DB/weblogs/colddb
+thawedPath = $SPLUNK_DB/weblogs/thaweddb
+
+tstatsHomePath = $SPLUNK_DB/weblogs/datamodel_summary
+
+frozenTimePeriodInSecs = 5184000
+</code></pre>
+<pre><code>homePath = $SPLUNK_DB/weblogs/db  # Directory for hot and warm buckets
+
+coldPath = $SPLUNK_DB/weblogs/colddb # Directory for cold buckets
+thawedPath = $SPLUNK_DB/weblogs/thaweddb  # Directory for thawed buckets
+tstatsHomePath = $SPLUNK_DB/weblogs/datamodel_summary  # Directory for accelerated data model summary tsidx files
+
+frozenTimePeriodInSecs = 5184000 # Freeze data older than this many seconds
+
+maxHotBuckets = 3  # Maximum number of hot buckets
+
+maxDataSize = auto  # Maximum size of hot buckets (default 750MB)
+
+maxTotalDataSizeMB = 400000  # Maximum size of an index
+
+maxWarmDBCount = 300   # Maximum number of warm buckets
+</code></pre>
+<h3 id="4-2-understanding-fishbucket"><strong>4-2 Understanding Fishbucket</strong></h3>
+<p><strong>Splunk Fishbucket</strong></p>
+<p>fishbucket is a special Splunk internal index that is automatically created.</p>
+<p><strong>Checkpoint</strong></p>
+<p>Fishbucket keeps track of the ingestion progress of monitored files and directories</p>
+<p><strong>Location</strong></p>
+<p>It is located in <code>SPLUNK_HOME/var/lib/splunk/fishbucket</code>.</p>
+<p><strong>Use</strong></p>
+<p>Upon restart, using fishbucket, Splunk can start ingesting from where it left off</p>
+<p><strong>Using Fishbucket</strong></p>
+<p><strong>To re-index a particular file</strong></p>
+<pre><code># Use btprobe command
+./splunk cmd btprobe -d SPLUNK_HOME/var/lib/splunk/fishbucket/splunk_private_db --file &lt;file name&gt; --reset
+</code></pre>
+<p><strong>To re-index all monitored file</strong></p>
+<pre><code># Remove the entire fishbucket directory
+
+rm -rf /opt/splunk/var/lib/splunk/fishbucket
+
+You must restart Splunk Forwarder
+</code></pre>
+<h3 id="4-3-applying-a-data-retention-policy"><strong>4-3 Applying a Data Retention Policy</strong></h3>
+<p><strong>Data Retention in Splunk</strong></p>
+<ul>
+<li>you must define a retention policy for the data indexed</li>
+<li>Retention policy is applied at <strong>index level</strong></li>
+<li>Set <strong>maxTotalDataSizeMB</strong> and/or <strong>frozenTimePeriodInSecs</strong></li>
+<li><strong>maxTotalDataSizeMB</strong> overrides <strong>frozenTimePeriodInSecs</strong></li>
+<li><strong>indexes.conf</strong> is used to configure retention ploicy</li>
+</ul>
+<p><strong>Configuring Data Retention</strong></p>
+<ul>
+<li>
+<p><strong>maxTotalDataSizeMB</strong></p>
+<ul>
+<li>Maximum size of the index in Mega Bytes. <strong>Oldest data is frozen after this limit. Default is 500GB</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>frozenTimePeriodInSecs</strong></p>
+<ul>
+<li><strong>Time period in seconds after which the data rolls to frozen</strong>. Default is 6 years</li>
+</ul>
+</li>
+</ul>
+<p><strong>What Happens to the Expired Data</strong></p>
+<ul>
+<li>When the bucket rolls from cold to frozen, by default the data is deleted</li>
+<li>If <strong>coldToFrozenScript is configured, the script is executed</strong> </li>
+<li>If coldToFrozenDir is configured, <strong>Splunk moves the expired buckets to this directory</strong></li>
+<li>To restore expired data, copy the archived buckets to thaweddb location and rebuild<ul>
+<li><code>./splunk rebuild SPLUNK_HOME/var/lib/splunk/&lt;index name&gt;/thaweddb/&lt;bucket name&gt;</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="4-4-managing-splunk-indexes"><strong>4-4 Managing Splunk Indexes</strong></h3>
+<p><strong>Backing up Splunk</strong></p>
+<ul>
+<li>You must regularly backup Splunk. Daily incremental backups recommended.</li>
+<li><strong>Objects to backup</strong>: Warm and cold buckets; Entire etc directory.</li>
+<li><strong>Hot buckets can't be backed up without stopping Splunk</strong>.</li>
+</ul>
+<blockquote>
+<p>In a clustered environment, you may not need to backup data buckets as data is replicated.</p>
+<p><strong>In distributed environments, ensure you backup search heads and heavy forwarders</strong>.</p>
+</blockquote>
+<p><strong>Deleting Events in a Splunk Index</strong></p>
+<p>Best way is to let the data expire instead of deleting</p>
+<p><strong>You can only do a virtual delete (i.e data is not removed from disk)</strong></p>
+<p><strong>Even admins can't delete data by default</strong></p>
+<ul>
+<li>Create a user with <code>can_delete</code> capability.</li>
+<li>Run a search to list the desired events to be deleted.</li>
+<li><strong>Pipe the delete command</strong>.</li>
+</ul>
+<p><strong>Cleaning out a Splunk Index</strong></p>
+<ul>
+<li>Extremely dangerous command in production</li>
+<li>Destroys index data from disk</li>
+<li>syntax:<ul>
+<li><code>splunk clean all -index &lt;index name&gt;</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="4-5-demo">4-5 Demo</h3>
+<ul>
+<li>Review indexes.conf<ul>
+<li>Data retention policy</li>
+</ul>
+</li>
+</ul>
+<pre><code>cd ../etc/system/default/
+vi indexes.conf
+</code></pre>
+<pre><code>cd /opt/splunk/etc/apps/search/locals
+vi indexes.conf
+
+[myfirstindex]
+coldPath= $SPLUNK_DB/myfirstindex/colddb
+enableDataIntegrityControl=1
+enableTsidxReduction=0
+homePath=$SPLUNK_DB/myfirstindex/db
+maxTotalDataSizeMB=512000
+thawedPath=$SPLUNK_DB/myfirstindex/thaweddb
+archiver.enableDataArchive=0
+bucketRebuildMemoryHint=0
+compressRawdata = 1
+enable0nlineBucketRepair = 1
+minHotIdleSecsBeforeForceRoll=0
+rtRouterQueueSize =
+rtRouterThreads =
+selfStorageThreads =
+suspendHotRollByDeleteQuery=0
+syncMeta = 1
+tsidxWritingLevel =
+
+
+[oslogs]
+coldPath=$SPLUNK_DB/oslogs/colddb
+enableDataIntegrityControl=1
+enableTsidxReduction=0
+homePath=$SPLUNK_DB/oslogs/db
+maxTotalDataSizeMB=512000
+thawedPath=$SPLUNK_DB/oslogs/thaweddb
+</code></pre>
+<pre><code>cd /opt/splunk/bin
+./splunk btool indexes list oslogs --debug | grep frozen
+
+/opt/splunk/etc/system/default/indexes.conf  frozenTimePeriodInSecs = 188697600
+</code></pre>
+<ul>
+<li>Review location and contents of fishbucket</li>
+</ul>
+<pre><code>cd fishbucket/
+/opt/splunk/var/lib/splunk/fishbucket/splunk_private_db/
+
+$ ls -lrt
+snapshot
+btree_index.dat
+btree_records.dat
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_36.png" title="Body image" /></p>
+<ul>
+<li>Reset fishbucket to re-index data</li>
+</ul>
+<pre><code>index=oslogs source=&quot;/var/log/apt/history.log&quot; &quot;Commandline: apt-get install -y --no-install-recommends python-pip&quot;
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_37.png" title="Body image" /></p>
+<pre><code>index=slogs source=&quot;/var/log/apt/history.log&quot; &quot;Commandline: apt-get install -y --no-install-recommends python-pip&quot; | convert ctime
+(_indextime) AS Indextime | table Indextime,_time,_raw
+</code></pre>
+<pre><code>index=oslogs source=&quot;/var/log/apt/history.log&quot; &quot;Commandline: apt-get install -y --no-install-recommends python-pip&quot; | convert ctime
+(_indextime) AS Indextime | search Indextime = &quot;12/31/2019 12:21:57&quot;
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_38.png" title="Body image" /></p>
+<pre><code>$rm -rf fishbucket/
+cd /opt/splunk/bin
+
+opt/splunk/bins./splunk restart
+</code></pre>
+<ul>
+<li>Deleting events from an Index</li>
+</ul>
+<p><strong>The user must have can_delete capability
+to execute the delete command</strong></p>
+<pre><code>index=oslogs source=&quot;/var/log/apt/history.log&quot; &quot;Commandline: apt-get install -y --no-install-recommends python-pip&quot; | convert ctime
+(_indextime) AS Indextime | search Indextime = &quot;12/31/2019 12:21:57&quot;  | delete
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_39.png" title="Body image" /></p>
+<ul>
+<li>Use monitoring console to monitor indexes</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/sp1_2_40.png" title="Body image" /></p>
+<h2 id="course-summary">Course Summary</h2>
+<ul>
+<li>Licensing options and handling license violations</li>
+<li>Configuration files layering and precedence</li>
+<li>Using btool to troubleshoot</li>
+<li><strong>Creating and tuning Splunk indexes</strong></li>
+<li>Various Splunk data buckets</li>
+<li>Configuring a data retention policy</li>
+<li>Managing Splunk indexes</li>
+</ul>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2020-9999 Jacob Xi
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.b4d07000.min.js"></script>
+      
+    
+  </body>
+</html>

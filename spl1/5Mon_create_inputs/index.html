@@ -1,0 +1,4603 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Jacob's Elasticsearch7 技术与实战教程">
+      
+      
+        <meta name="author" content="Jacob Xi">
+      
+      
+      
+        <link rel="prev" href="../4config_ds/">
+      
+      
+        <link rel="next" href="../6par_man/">
+      
+      <link rel="icon" href="../../images/logo.png">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.15">
+    
+    
+      
+        <title>5 Splunk Monitoring and Creating Inputs - Jacob ElasticSearch7 Book</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.26e3688c.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ecc896b0.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#5-splunk-administration-monitoring-and-creating-inputs" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Jacob ElasticSearch7 Book" class="md-header__button md-logo" aria-label="Jacob ElasticSearch7 Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Jacob ElasticSearch7 Book
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              5 Splunk Monitoring and Creating Inputs
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Chao-Xi/jxes7book.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxes7book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Jacob ElasticSearch7 Book" class="md-nav__button md-logo" aria-label="Jacob ElasticSearch7 Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    Jacob ElasticSearch7 Book
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Chao-Xi/jxes7book.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxes7book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Welcome
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          一、Elasticsearch 概述
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          一、Elasticsearch 概述
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/1Es_intro/" class="md-nav__link">
+        第一节 ElasticSearch 概述
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          二、Elasticsearch 安装手册
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          二、Elasticsearch 安装手册
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/1ES_vm_install/" class="md-nav__link">
+        第一节 Elasticsearch的安装与简单配置
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/2KB_vm_install/" class="md-nav__link">
+        第二节 Kibana的安装与界面快速预览
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/3ES_KB_docker/" class="md-nav__link">
+        第三节 在Docker容器中运行Elasticsearch Kibana和Cerebro
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/4LogStash_vm_install/" class="md-nav__link">
+        第四节 Logstash安装与导入数据
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          三、Elasticsearch 入门查询
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          三、Elasticsearch 入门查询
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/1ES_intro/" class="md-nav__link">
+        第一节 ElasticSearch 基本概念
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/2ES_CRUD/" class="md-nav__link">
+        第二节 文档的基本CRUD与批量操作 & 读取＆Bulk API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/3ES_ReverseIndex/" class="md-nav__link">
+        第三节 倒排索引
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/4ES_Analyzer/" class="md-nav__link">
+        第四节 使用分析器进行分词
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/5ES_Search/" class="md-nav__link">
+        第五节 ElasticSearch Search语句
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/6ES_Mapping/" class="md-nav__link">
+        第六节 ElasticSearch Mapping 介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/7ES_Index/" class="md-nav__link">
+        第七节 Index Template和Dynamic Template
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/8ES_Aggr/" class="md-nav__link">
+        第八节 Elasticsearch Aggregations聚合分析简介
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/9ES_SUM/" class="md-nav__link">
+        第九节 Elasticsearch 入门总结 & 测试
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          四、Elasticsearch 深入搜索
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          四、Elasticsearch 深入搜索
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/1ES_search/" class="md-nav__link">
+        第一节 基于词项和基于全文的搜索
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/2ES_search_str_score/" class="md-nav__link">
+        第二节 结构化搜索以及搜索的相关性算分
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/3ES_query_filter/" class="md-nav__link">
+        第三节 Query & Filtering与多字符串多字段查询
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/4ES_sin_mul_search/" class="md-nav__link">
+        第四节 单字符串多字段查询
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/5ES_multi_lag_ana/" class="md-nav__link">
+        第五节 多语言及中文分词与检索
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/6ES_pra_tmdb/" class="md-nav__link">
+        第六节 Space Jam，一次全文搜索的实例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/7ES_ST_IA/" class="md-nav__link">
+        第七节 使⽤ Search Template 和 Index Alias
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/8ES_FUNC_SCORE/" class="md-nav__link">
+        第八节 综合排序:Function Score Query 优化算分
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/9ES_suggester/" class="md-nav__link">
+        第九节 Term & Phrase Suggester
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/10ES_Autocomplete/" class="md-nav__link">
+        第十节 ⾃动补全与基于上下文的提示
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/11ES_CrossSearch/" class="md-nav__link">
+        第十一节 跨集群搜索
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          五、分布式特性及分布式搜索的机制
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          五、分布式特性及分布式搜索的机制
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/1ES_cluster/" class="md-nav__link">
+        第一节 集群分布式模型及选主与脑裂问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/2ES_shard/" class="md-nav__link">
+        第二节 分⽚与集群的故障转移
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/3ES_doc_shard/" class="md-nav__link">
+        第三节 ⽂档分布式存储
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/4ES_shared_lifecycle/" class="md-nav__link">
+        第四节 分⽚及其生命周期
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/5ES_SE_Score/" class="md-nav__link">
+        第五节 剖析分布式查询及相关性算分
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/6ES_Sort_query/" class="md-nav__link">
+        第六节 排序及Doc Values&Fielddata
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/7ES_Pages_Traverse/" class="md-nav__link">
+        第七节 分页与遍历 – From，Size，Search After & Scroll API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/8ES_Concurrent_process/" class="md-nav__link">
+        第八节 处理并发读写操作
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          六、深入聚合分析
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          六、深入聚合分析
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/1chap6_bucket_metrics/" class="md-nav__link">
+        第一节 Bucket & Metric 聚合分析及嵌套聚合
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/2chap6_pipeline_metrics/" class="md-nav__link">
+        第二节 Pipeline 聚合分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/3chap6_aggragate_scope_order/" class="md-nav__link">
+        第三节 聚合的作⽤范围及排序
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/4chap6_accurate_aggragate/" class="md-nav__link">
+        第四节 聚合的精准度问题
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+          七、数据建模
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          七、数据建模
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/1chap7_nested_obj/" class="md-nav__link">
+        第一节 对象及 Nested 对象
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/2chap7_parent_child/" class="md-nav__link">
+        第二节 文档的父子关系
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/3chap7_updateindex_reindex/" class="md-nav__link">
+        第三节 Update By Query & Reindex API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/4chap7_ingest_painless/" class="md-nav__link">
+        第四节 Ingest Pipeline 与 Painless Script
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/5chap7_es_model/" class="md-nav__link">
+        第五节 Elasticsearch 数据建模实例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/6chap7_es_model_pra/" class="md-nav__link">
+        第六节 Elasticsearch 数据建模最佳实践
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/7chap7_es_sum2/" class="md-nav__link">
+        第七节 第二部分总结回顾
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+          八、数据保护
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          八、数据保护
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/1ES_cluster_IAM/" class="md-nav__link">
+        第一节 集群身份认证与用户鉴权
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/2ES_cluster_enc_transit/" class="md-nav__link">
+        第二节 集群内部间的安全通信
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/3ES_cluster_out_sec/" class="md-nav__link">
+        第三节 集群与外部间的安全通信
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          九、水平扩展Elasticsearch集群
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          九、水平扩展Elasticsearch集群
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/1ES_cluster_deploy/" class="md-nav__link">
+        第一节 常见的集群部署方式
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/2ES_hot_warm/" class="md-nav__link">
+        第二节 Hot & Warm 架构与 Shard Filtering
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/3ES_shard_settings/" class="md-nav__link">
+        第三节 分片设定及管理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/4ES_cluster_plan/" class="md-nav__link">
+        第四节 如何对集群进行容量规划
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/5ES_Cloud/" class="md-nav__link">
+        第五节 云上管理 Elasticsearch 的一些方法
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          十、使用 Kubernets 安装 EFK 集群
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_11">
+          <span class="md-nav__icon md-icon"></span>
+          十、使用 Kubernets 安装 EFK 集群
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/1log_architecture/" class="md-nav__link">
+        第一节 kubernetes 日志架构
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/2EFK_log/" class="md-nav__link">
+        第二节 在 K8S 上搭建 EFK 日志收集系统
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/16EFK_log_adv/" class="md-nav__link">
+        第三节 在 Kubernetes 安装 EFK 日志收集系统[更新]
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/17EFK_log_Ana/" class="md-nav__link">
+        第四节 EFK kibana 日志分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/18EFK_log_alert/" class="md-nav__link">
+        第五节 基于EKF日志的报警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/3ECK_operator/" class="md-nav__link">
+        第六节 使用Operator快速部署Elasticsearch集群
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/7EFKLK_log_aggregator/" class="md-nav__link">
+        第七节 使用 EFKLK 搭建 Kubernetes 日志收集工具栈 (Kafka/Logstash)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/19Fluentd/" class="md-nav__link">
+        第八节 日志收集工具 Fluentd 使用教程
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
+          十一、使用 Elastic Stack 构建 Kubernetes 全栈监控
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_12">
+          <span class="md-nav__icon md-icon"></span>
+          十一、使用 Elastic Stack 构建 Kubernetes 全栈监控
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/20Elastic_Stack_Monitoring1/" class="md-nav__link">
+        第一节 ElasticSearch 的集群安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/21Elastic_Stack_Monitoring2/" class="md-nav__link">
+        第二节 使用 Elastic Stack — Metricbeat 监控安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/22Elastic_Stack_Monitoring3/" class="md-nav__link">
+        第三节 使用 Elastic Stack - Filebeat 日志数据收集安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/23Elastic_Stack_Monitoring4/" class="md-nav__link">
+        第四节 使用 Elastic Stack — Elastic APM 应用性能监控的工具安装
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="0">
+          十二、生产环境中的集群运维
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_13">
+          <span class="md-nav__icon md-icon"></span>
+          十二、生产环境中的集群运维
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/1chap12_ES_prod/" class="md-nav__link">
+        第一节 生产环境常用配置和上线清单
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/2chap12_mon_es/" class="md-nav__link">
+        第二节 监控Elasticsearch集群
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/3chap12_es_diag/" class="md-nav__link">
+        第三节 诊断集群的潜在问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/4chap12_es_red_yellow/" class="md-nav__link">
+        第四节 解决集群 Yellow 与 Red 的问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/5chap12_es_cluster_perf/" class="md-nav__link">
+        第五节 集群写性能优化
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/6chap12_es_pre_test/" class="md-nav__link">
+        第六节 集群压力测试
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/7chap12_es_segment_merge/" class="md-nav__link">
+        第七节 段合并优化及注意事项
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/8chap12_Circuit_Breaker/" class="md-nav__link">
+        第八节 缓存及使用 Circuit Breaker 限制内存使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/9chap12_es_ops/" class="md-nav__link">
+        第九节 一些运维相关的建议
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_14" id="__nav_14_label" tabindex="0">
+          十三、索引生命周期管理
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_14">
+          <span class="md-nav__icon md-icon"></span>
+          十三、索引生命周期管理
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/1chap13_es_shrink_rolloverapi/" class="md-nav__link">
+        第一节 使用 Shrink 与 Rollover API 管理索引
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/2chap13_index_lms/" class="md-nav__link">
+        第二节 索引全生命周期管理及工具介绍
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_15" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_15" id="__nav_15_label" tabindex="0">
+          十四、用Logstash和Beats构建数据管道
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_15_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_15">
+          <span class="md-nav__icon md-icon"></span>
+          十四、用Logstash和Beats构建数据管道
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap14/1logstash_introduce/" class="md-nav__link">
+        第一节 Logstash 入门及架构介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap14/2JDBC_logstash_ES/" class="md-nav__link">
+        第二节 利用 JDBC 插件导入数据到 Elasticsearch
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap14/3Beats/" class="md-nav__link">
+        第三节 Beats 介绍
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_16" id="__nav_16_label" tabindex="0">
+          十五、用Kibana进行数据可视化分析
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_16">
+          <span class="md-nav__icon md-icon"></span>
+          十五、用Kibana进行数据可视化分析
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap15/1chap15_index_pattern/" class="md-nav__link">
+        第一节 使用 Index Pattern 配置数据
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap15/2chap15_kibana/" class="md-nav__link">
+        第二节 Kibana 使用的技巧
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_17" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_17" id="__nav_17_label" tabindex="0">
+          十六、探索X-Pack套件
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_17_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_17">
+          <span class="md-nav__icon md-icon"></span>
+          十六、探索X-Pack套件
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/1ES_monitor_alert_xpack/" class="md-nav__link">
+        第一节 用Monitoring和Alerting监控Elasticsearch集群
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/2Xpack_APM/" class="md-nav__link">
+        第二节 用 APM 进行程序性能监控
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/3Xpack_ML/" class="md-nav__link">
+        第三节 用机器学习实现异常检测
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/4ELK_Filebeat/" class="md-nav__link">
+        第四节 用 Elastic Stack 进行日志管理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap16/5xpack_canvas/" class="md-nav__link">
+        第五节 用 Canvas 进行数据的实时展示
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_18" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_18" id="__nav_18_label" tabindex="0">
+          十七、ELK 实战 Workshop
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_18_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_18">
+          <span class="md-nav__icon md-icon"></span>
+          十七、ELK 实战 Workshop
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap17/1ES_WS_movie/" class="md-nav__link">
+        第一节 电影搜索服务
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap17/2ES_WS_stackoverflow/" class="md-nav__link">
+        第二节 Stackoverflow用户调查问卷分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap17/3EFK_jfrog/" class="md-nav__link">
+        第三节 通过EFK对Artifactory进行日志分析
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_19" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_19" id="__nav_19_label" tabindex="0">
+          十八、Elastic认证, 开发与备份
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_19_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_19">
+          <span class="md-nav__icon md-icon"></span>
+          十八、Elastic认证, 开发与备份
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/1ES_Certified_test/" class="md-nav__link">
+        第一节 Elastic 认证考试
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/2ES_backup_restore/" class="md-nav__link">
+        第二节 集群 Backup & Restore
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/3ES_Java/" class="md-nav__link">
+        第三节 基于 Java 和 Elasticsearch 开发应用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap18/4ES_migration/" class="md-nav__link">
+        第四节 3种 Elasticsearch 数据离线迁移方案
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_20" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_20" id="__nav_20_label" tabindex="0">
+          十九、Elastic 操作总结篇
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_20_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_20">
+          <span class="md-nav__icon md-icon"></span>
+          十九、Elastic 操作总结篇
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum1_search_api/" class="md-nav__link">
+        ElasticSearch URI 常用语句总结篇
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum2_search_dep/" class="md-nav__link">
+        Elasticsearch 深入搜索总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum3_cross_search/" class="md-nav__link">
+        ElasticSearch 分布式搜索
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum4_agg_search/" class="md-nav__link">
+        ElasticSearch 深入聚合分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum5_datamodel/" class="md-nav__link">
+        ElasticSearch 数据建模
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum6_Opt_Mgt/" class="md-nav__link">
+        ElasticSearch Operation and Management
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum7_test/" class="md-nav__link">
+        期末考试
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap19/sum8_int/" class="md-nav__link">
+        ElasticSearch 面试
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_21" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_21" id="__nav_21_label" tabindex="0">
+          Splunk8 Admin Mgt
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_21_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_21">
+          <span class="md-nav__icon md-icon"></span>
+          Splunk8 Admin Mgt
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1spl_role_ad/" class="md-nav__link">
+        1 Splunk Managing Users and Authentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2config_indexes/" class="md-nav__link">
+        2 Working with Configuration Files and Indexes
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3datamgt_forwarder/" class="md-nav__link">
+        3 Managing Data and Forwarders
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4config_ds/" class="md-nav__link">
+        4 Splunk Configuring Distributed Search
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          5 Splunk Monitoring and Creating Inputs
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        5 Splunk Monitoring and Creating Inputs
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-data-input-methods" class="md-nav__link">
+    1 Data Input Methods
+  </a>
+  
+    <nav class="md-nav" aria-label="1 Data Input Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#demo" class="md-nav__link">
+    Demo
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    Summary
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-monitoring-files-and-directories" class="md-nav__link">
+    2 Monitoring Files and Directories
+  </a>
+  
+    <nav class="md-nav" aria-label="2 Monitoring Files and Directories">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2-1-monitoring-files-and-directories" class="md-nav__link">
+    2-1 Monitoring Files and Directories
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-2-demo-monitoring-files-and-directories-in-splunk-web" class="md-nav__link">
+    2-2 Demo: Monitoring Files and Directories in Splunk Web
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-3-demo-monitoring-files-and-directories-using-inputsconf-file" class="md-nav__link">
+    2-3 Demo: Monitoring Files and Directories Using inputs.conf File
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-4-demo-monitoring-files-and-directories-with-special-parameters" class="md-nav__link">
+    2-4 Demo: Monitoring Files and Directories with Special Parameters
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-5-demo-blacklisting-monitored-files" class="md-nav__link">
+    2-5 Demo: Blacklisting Monitored Files
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-getting-data-from-network-sources" class="md-nav__link">
+    3 Getting Data from Network Sources
+  </a>
+  
+    <nav class="md-nav" aria-label="3 Getting Data from Network Sources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3-1-introduction-to-network-inputs-in-splunk-enterprise" class="md-nav__link">
+    3-1 Introduction to Network Inputs in Splunk Enterprise
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-2-demo-configuring-tcp-input-through-splunk-web" class="md-nav__link">
+    3-2 Demo: Configuring TCP Input through Splunk Web
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo-configuring-udp-input-using-inputsconf-file" class="md-nav__link">
+    Demo: Configuring UDP Input Using inputs.conf File
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-getting-windows-data-in" class="md-nav__link">
+    4 Getting Windows Data In
+  </a>
+  
+    <nav class="md-nav" aria-label="4 Getting Windows Data In">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#4-1-monitoring-windows-data-in-splunk-enterprise" class="md-nav__link">
+    4-1 Monitoring Windows Data in Splunk Enterprise
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-2-demo-setting-up-a-local-event-log-collection" class="md-nav__link">
+    4-2 Demo: Setting-up a Local Event Log Collection
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-3-demo-white-listing-and-black-listing-windows-events" class="md-nav__link">
+    4-3 Demo: White-listing and Black-listing Windows Events
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-4-demo-create-a-remote-windows-event-log-collection" class="md-nav__link">
+    4-4 Demo: Create a Remote Windows Event Log Collection
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-scripted-inputs" class="md-nav__link">
+    6 Scripted Inputs
+  </a>
+  
+    <nav class="md-nav" aria-label="6 Scripted Inputs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    Overview
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-1-scripted-input-use-case-scenario" class="md-nav__link">
+    6-1 Scripted Input: Use-Case Scenario
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo-creating-scripted-inputs-in-splunk-web" class="md-nav__link">
+    Demo: Creating Scripted Inputs in Splunk Web
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo-creating-scripted-inputs-using-configuration-files" class="md-nav__link">
+    Demo: Creating Scripted Inputs Using Configuration Files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo-creating-powershell-modular-input-in-splunk-web" class="md-nav__link">
+    Demo: Creating PowerShell Modular Input in Splunk Web
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo-creating-powershell-modular-input-using-configuration-files" class="md-nav__link">
+    Demo: Creating PowerShell Modular Input Using Configuration Files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo-creating-scripted-inputs-using-wrapper-script" class="md-nav__link">
+    Demo: Creating Scripted Inputs Using Wrapper Script
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-configuring-inputs" class="md-nav__link">
+    8 Configuring Inputs
+  </a>
+  
+    <nav class="md-nav" aria-label="8 Configuring Inputs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3-1-indexed-field-extractions" class="md-nav__link">
+    3-1 Indexed Field Extractions
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-the-http-event-collector-hec" class="md-nav__link">
+    4 The HTTP Event Collector (HEC)
+  </a>
+  
+    <nav class="md-nav" aria-label="4 The HTTP Event Collector (HEC)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#4-1-introduction-to-splunk-http-event-collector-hec" class="md-nav__link">
+    4-1 Introduction to Splunk HTTP Event Collector (HEC)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-2-demo-creating-hec-token-in-splunk-web" class="md-nav__link">
+    4-2 Demo: Creating HEC Token in Splunk Web
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-3-demo-sending-events-through-hec-using-a-script" class="md-nav__link">
+    4-3 Demo: Sending Events through HEC Using a Script
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo-enabling-indexer-acknowledgement-for-reliable-data-ingestion" class="md-nav__link">
+    Demo: Enabling Indexer Acknowledgement for Reliable Data Ingestion
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-configuring-inputs" class="md-nav__link">
+    5 Configuring Inputs
+  </a>
+  
+    <nav class="md-nav" aria-label="5 Configuring Inputs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#5-1-event-parsing-and-default-field-extraction-in-splunk-enterprise" class="md-nav__link">
+    5-1 Event Parsing and Default Field Extraction in Splunk Enterprise
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-2-demo-overriding-a-default-field" class="md-nav__link">
+    5-2 Demo: Overriding a Default Field
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-3-demo-assigning-custom-timestamp-to-events" class="md-nav__link">
+    5-3 Demo: Assigning Custom Timestamp to Events
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6par_man/" class="md-nav__link">
+        6 Splunk Parsing and Manipulating Data
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7splunk_search/" class="md-nav__link">
+        7 Performing Basic Splunk Searches
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../8spl_exam/" class="md-nav__link">
+        8 Splunk ADMIN Exam
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-data-input-methods" class="md-nav__link">
+    1 Data Input Methods
+  </a>
+  
+    <nav class="md-nav" aria-label="1 Data Input Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#demo" class="md-nav__link">
+    Demo
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    Summary
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-monitoring-files-and-directories" class="md-nav__link">
+    2 Monitoring Files and Directories
+  </a>
+  
+    <nav class="md-nav" aria-label="2 Monitoring Files and Directories">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2-1-monitoring-files-and-directories" class="md-nav__link">
+    2-1 Monitoring Files and Directories
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-2-demo-monitoring-files-and-directories-in-splunk-web" class="md-nav__link">
+    2-2 Demo: Monitoring Files and Directories in Splunk Web
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-3-demo-monitoring-files-and-directories-using-inputsconf-file" class="md-nav__link">
+    2-3 Demo: Monitoring Files and Directories Using inputs.conf File
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-4-demo-monitoring-files-and-directories-with-special-parameters" class="md-nav__link">
+    2-4 Demo: Monitoring Files and Directories with Special Parameters
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-5-demo-blacklisting-monitored-files" class="md-nav__link">
+    2-5 Demo: Blacklisting Monitored Files
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-getting-data-from-network-sources" class="md-nav__link">
+    3 Getting Data from Network Sources
+  </a>
+  
+    <nav class="md-nav" aria-label="3 Getting Data from Network Sources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3-1-introduction-to-network-inputs-in-splunk-enterprise" class="md-nav__link">
+    3-1 Introduction to Network Inputs in Splunk Enterprise
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-2-demo-configuring-tcp-input-through-splunk-web" class="md-nav__link">
+    3-2 Demo: Configuring TCP Input through Splunk Web
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo-configuring-udp-input-using-inputsconf-file" class="md-nav__link">
+    Demo: Configuring UDP Input Using inputs.conf File
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-getting-windows-data-in" class="md-nav__link">
+    4 Getting Windows Data In
+  </a>
+  
+    <nav class="md-nav" aria-label="4 Getting Windows Data In">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#4-1-monitoring-windows-data-in-splunk-enterprise" class="md-nav__link">
+    4-1 Monitoring Windows Data in Splunk Enterprise
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-2-demo-setting-up-a-local-event-log-collection" class="md-nav__link">
+    4-2 Demo: Setting-up a Local Event Log Collection
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-3-demo-white-listing-and-black-listing-windows-events" class="md-nav__link">
+    4-3 Demo: White-listing and Black-listing Windows Events
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-4-demo-create-a-remote-windows-event-log-collection" class="md-nav__link">
+    4-4 Demo: Create a Remote Windows Event Log Collection
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-scripted-inputs" class="md-nav__link">
+    6 Scripted Inputs
+  </a>
+  
+    <nav class="md-nav" aria-label="6 Scripted Inputs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    Overview
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-1-scripted-input-use-case-scenario" class="md-nav__link">
+    6-1 Scripted Input: Use-Case Scenario
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo-creating-scripted-inputs-in-splunk-web" class="md-nav__link">
+    Demo: Creating Scripted Inputs in Splunk Web
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo-creating-scripted-inputs-using-configuration-files" class="md-nav__link">
+    Demo: Creating Scripted Inputs Using Configuration Files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo-creating-powershell-modular-input-in-splunk-web" class="md-nav__link">
+    Demo: Creating PowerShell Modular Input in Splunk Web
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo-creating-powershell-modular-input-using-configuration-files" class="md-nav__link">
+    Demo: Creating PowerShell Modular Input Using Configuration Files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo-creating-scripted-inputs-using-wrapper-script" class="md-nav__link">
+    Demo: Creating Scripted Inputs Using Wrapper Script
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-configuring-inputs" class="md-nav__link">
+    8 Configuring Inputs
+  </a>
+  
+    <nav class="md-nav" aria-label="8 Configuring Inputs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3-1-indexed-field-extractions" class="md-nav__link">
+    3-1 Indexed Field Extractions
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-the-http-event-collector-hec" class="md-nav__link">
+    4 The HTTP Event Collector (HEC)
+  </a>
+  
+    <nav class="md-nav" aria-label="4 The HTTP Event Collector (HEC)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#4-1-introduction-to-splunk-http-event-collector-hec" class="md-nav__link">
+    4-1 Introduction to Splunk HTTP Event Collector (HEC)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-2-demo-creating-hec-token-in-splunk-web" class="md-nav__link">
+    4-2 Demo: Creating HEC Token in Splunk Web
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-3-demo-sending-events-through-hec-using-a-script" class="md-nav__link">
+    4-3 Demo: Sending Events through HEC Using a Script
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demo-enabling-indexer-acknowledgement-for-reliable-data-ingestion" class="md-nav__link">
+    Demo: Enabling Indexer Acknowledgement for Reliable Data Ingestion
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-configuring-inputs" class="md-nav__link">
+    5 Configuring Inputs
+  </a>
+  
+    <nav class="md-nav" aria-label="5 Configuring Inputs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#5-1-event-parsing-and-default-field-extraction-in-splunk-enterprise" class="md-nav__link">
+    5-1 Event Parsing and Default Field Extraction in Splunk Enterprise
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-2-demo-overriding-a-default-field" class="md-nav__link">
+    5-2 Demo: Overriding a Default Field
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-3-demo-assigning-custom-timestamp-to-events" class="md-nav__link">
+    5-3 Demo: Assigning Custom Timestamp to Events
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="5-splunk-administration-monitoring-and-creating-inputs"><strong>5 Splunk Administration: Monitoring and Creating Inputs</strong></h1>
+<p><strong>Overview</strong></p>
+<ul>
+<li>Introduction to input methods in Splunk</li>
+<li>Data pipeline in Splunk</li>
+<li>Demo: Setting up the test environment</li>
+</ul>
+<h2 id="1-data-input-methods"><strong>1 Data Input Methods</strong></h2>
+<ul>
+<li><strong>File/Dir Monitoring</strong>: Continuous monitoring or one-time upload</li>
+<li><strong>Network Inputs</strong>: Listen on TCP/UDP port</li>
+<li><strong>Windows Inputs</strong>: Monitor Windows logs locally/remotely</li>
+<li><strong>Scripted Input</strong>: Local/Remote script output sent to Splunk</li>
+<li><strong>HTTP Event Collector</strong>: Endpoints to send data to Splunk over http(s)</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_1.png" title="Body image" /></p>
+<p><strong>Data Pipeline in Splunk Enterprise</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_2.png" title="Body image" /></p>
+<h3 id="demo">Demo</h3>
+<ul>
+<li>Understand topology of test environment</li>
+<li>Setup test environment<ul>
+<li>Configure forwarding and receiving</li>
+<li>Install demo app</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_3.png" title="Body image" /></p>
+<ul>
+<li>
+<p>The Windows machine is named <code>Splunk_Server</code> with a static IP 172.17.11.17. </p>
+<ul>
+<li>Installed full Splunk instance on this host. </li>
+<li><strong>This host is also my indexer, as well as the search head</strong>. </li>
+<li>All Windows related inputs will be set up on this host. </li>
+<li>It will receive data from Ubuntu host <code>Splunk_HF</code>. </li>
+</ul>
+</li>
+<li>
+<p>Installed full Splunk instance on <code>Splunk_HF</code> as well and will configure it as a heavy forwarder. </p>
+<ul>
+<li>The static IP given to this host is 172.17.11.27.</li>
+<li>It will receive data from <code>Splunk_UF</code> and forward it to <code>Splunk_Server</code>. </li>
+</ul>
+</li>
+<li>
+<p><code>Splunk_UF</code> on 172.17.11.29 is also an Ubuntu host where I've installed Splunk universal forwarder. </p>
+<ul>
+<li>It will be configured to forward data to the heavy forwarder, <code>Splunk_HF</code>. </li>
+<li>Lightweight tasks will be performed on this host. </li>
+</ul>
+</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_4.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_5.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_6.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_7.png" title="Body image" /></p>
+<pre><code>172.17.11.27:8000/en-GB/app/launcher/home
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_8.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_9.png" title="Body image" /></p>
+<pre><code>root@splunkuf:~# cd /opt/splunkforwarder/bin/
+root@splunkuf:/opt/splunkforwarder/bin#./splunk install app /home/splunk/packages/psdemo01.spl
+App '/home/splunk/packages/psdemo01.spl
+
+You need to restart the Splunk Server (splunkd) for your changes to take effect.
+root@splunk_uf:/opt/splunkforwarder/bin#
+</code></pre>
+<pre><code>root@splunk_uf:/opt/splunkforwarder/bin# vi/opt/splunkforwarder/etc/system/local/outputs.conf
+
+[tcpout:psdemo_indexers]
+server=172.17.11.27:9997
+
+root@splunk_uf:/opt/splunkforwarder/bin# ./splunk list forward-server
+
+Active forward
+    172.17.11.27:9997
+</code></pre>
+<h3 id="summary">Summary</h3>
+<ul>
+<li>Input methods in Splunk</li>
+<li>
+<p>Demo: Setting up the test environment</p>
+<ul>
+<li>Topology</li>
+<li>Configuring forwarding and receiving</li>
+<li>Installing the demo app</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-monitoring-files-and-directories"><strong>2 Monitoring Files and Directories</strong></h2>
+<ul>
+<li>Monitoring files and directories in Splunk</li>
+<li>Uploading a file for one shot indexing</li>
+<li>Monitoring a log file through Splunk Web</li>
+<li>Monitoring files through inputs.conf</li>
+<li>Ignoring old files</li>
+<li>Using wildcards in monitoring stanza</li>
+<li>Blacklisting files</li>
+<li>Editing existing monitoring stanza</li>
+</ul>
+<p>Monitoring Files and Directories</p>
+<ul>
+<li>One-shot indexing used for uploading a file once</li>
+<li>While continuously monitoring Splunk remembers the files and follows tail </li>
+<li><strong>MonitorNoHandle</strong> is <strong>Windows</strong> only input on files that get locked open for writing</li>
+<li>
+<p>Files and directories can be monitored using Splunk Web, <code>inputs.conf</code> or CLI methods</p>
+</li>
+<li>
+<p><strong>Monitor stanza for file/directory path</strong></p>
+</li>
+</ul>
+<pre><code>[monitor://&lt;path/to/file/or/directory&gt;]
+</code></pre>
+<ul>
+<li>Use of regex and wildcards</li>
+<li><strong>Monitor mounted or shared directories</strong></li>
+<li>Can monitor compressed files<ul>
+<li><code>.tar, .gz, .bz2, .tgz, .tbz,.zip, .z</code></li>
+</ul>
+</li>
+<li>Restart Splunk after changes</li>
+</ul>
+<p>Monitoring Input Stanza</p>
+<ul>
+<li>
+<p><code>queue = parsingQueue | indexQueue</code></p>
+<ul>
+<li>Which queue to send events to</li>
+<li>parsingQueue</li>
+</ul>
+</li>
+<li>
+<p><code>host_regex = &lt;regex&gt;</code></p>
+<ul>
+<li>Regex that extracts host from file name</li>
+<li>Setting in “host=”</li>
+</ul>
+</li>
+<li>
+<p><code>host_segment = &lt;int&gt;</code></p>
+<ul>
+<li>Segment of monitored path for example a value 4 for <code>/data/logs/mail/server01.log</code> will set host to <code>server01.log</code></li>
+<li>Setting in “host=”</li>
+</ul>
+</li>
+<li>
+<p><code>crcSalt = &lt;int&gt;|&lt;SOURCE&gt;</code></p>
+<ul>
+<li>Splunk eads first few lines for CRC check to prevent indexing same files. <SOURCE> causes Splunk to add full source path to CRC. Use with caution for rotating files.</li>
+</ul>
+</li>
+<li>
+<p><code>ignoreOlderThan= &lt;time_window&gt;</code></p>
+<ul>
+<li>Doesn’t monitor file if update time is greater than number and unit d, h, m or s</li>
+<li><code>0 (disabled)</code></li>
+</ul>
+</li>
+<li>
+<p><code>followTail = 0|1</code></p>
+<ul>
+<li>Equivalent to *nix <code>tail –f</code>. Starts from tail</li>
+<li>0 (disabled)</li>
+</ul>
+</li>
+<li>
+<p><code>recursive = true|false</code></p>
+<ul>
+<li>If set to false Splunk ignore subdirectories while monitoring a directory</li>
+<li>true</li>
+</ul>
+</li>
+<li>
+<p><code>/var/log/web/.../access.log</code></p>
+<ul>
+<li><code>/var/log/web/www1/prod/access.log</code></li>
+<li><code>/var/log/web/www3/access.log</code></li>
+</ul>
+</li>
+<li>
+<p><code>/var/log/web/www1/access.*</code></p>
+<ul>
+<li><code>/var/log/web/www1/access.txt</code></li>
+<li><code>/var/log/web/www1/access.log</code></li>
+</ul>
+</li>
+<li>
+<p><code>/var/log/web(1|2).log</code></p>
+<ul>
+<li>Only web(1|2).log</li>
+</ul>
+</li>
+<li>
+<p><code>/var/log/web(1|2)*.log</code></p>
+<ul>
+<li>web1.log, web2test.log, web1server.log</li>
+</ul>
+</li>
+<li>
+<p><code>/apache/.../web[A-Z0-9]*.log</code></p>
+<ul>
+<li><code>/apache/www1/webCprod.log</code></li>
+<li><code>/apache/www1/test/web5test.log</code></li>
+<li><code>/apache/www/uat/webJ.log</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="2-1-monitoring-files-and-directories">2-1 Monitoring Files and Directories</h3>
+<p><strong>Win event logs</strong></p>
+<p>Collect locally or remotely using WMI</p>
+<p><strong>Performance monitoring</strong></p>
+<p>Performance counters in Performance Monitor</p>
+<p><strong>Remote monitoring</strong></p>
+<p>WMI queries</p>
+<p><strong>Registry monitoring</strong></p>
+<p>Changes to local Windows Registry</p>
+<p><strong>Active Directory monitoring</strong></p>
+<p>Changes to Active Directory</p>
+<h3 id="2-2-demo-monitoring-files-and-directories-in-splunk-web"><strong>2-2 Demo: Monitoring Files and Directories in Splunk Web</strong></h3>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_3.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_10.png" title="Body image" /></p>
+<p><strong>By default, Splunk accepts a date 2,000 days ago that is roughly around 5 and a half years</strong>. I</p>
+<p>n this case, our timestamp is way older than this, so we need to give a much larger number. Largest we can go is 10,951 days.</p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_11.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_12.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_13.png" title="Body image" /></p>
+<p><strong><code>props.conf</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_14.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_15.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_18.png" title="Body image" /></p>
+<p><strong><code>inputs.conf</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_19.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_17.png" title="Body image" /></p>
+<pre><code>[monitor: //C: \Program Files\Splunkletclapps\psdemo@1\data\email_logs]
+disabled = false
+sourcetype = email: logs
+</code></pre>
+<h3 id="2-3-demo-monitoring-files-and-directories-using-inputsconf-file"><strong>2-3 Demo: Monitoring Files and Directories Using inputs.conf File</strong></h3>
+<ul>
+<li>Setup file monitoring in <code>inputs.conf</code></li>
+<li>Reload monitor inputs</li>
+<li>Verify the monitor input</li>
+<li>Check results in Spunk Enterprise</li>
+<li>Demonstrate real-time ingestion</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_16.png" title="Body image" /></p>
+<pre><code>root@splunk_hf:~# cd /var/log
+root@splunk_hf:/var/log# 11 auth*
+auth.log
+auth.log.1
+auth.log.2.gz
+auth.log.3.gz
+auth.log.4.gz
+
+root@splunk_hf:/var/log# tail auth.log
+splunk_hf sshd[24784]: pam_unix(sshd:session): session opened for user splunk by (uid=0)
+punk_hf systemd-logind[939]: New session 357 of user splunk.
+...
+
+
+root@splunk_hf:/opt/splunk/etc/apps/psdemo01/local# ll
+
+app.conf
+inputs.conf
+
+root@splunk_hf:/opt/splunk/etc/apps/psdemo01/local# vi inputs.conf
+
+[default]
+host = splunk_uf
+
+[monitor:///var/log/auth.log]
+disabled = O
+index = main
+sourcetype = linux:auth
+
+root@splunk_hf:/opt/splunk/etc/apps/psdemo01/local# /opt/splunk/bin/./splunk _internal call /services/data/inputs/monitor/_reload 
+...
+
+&lt;link href-&quot;/services/data/inputs/monitor/_new&quot; rel=&quot;create&quot;/&gt;
+&lt;link href-&quot;/services/data/inputs/monitor/_reload&quot; rel=&quot;
+_reload&quot;/&gt;
+&lt;link href-&quot;/services/data/inputs/monitor/_acl&quot; rel=
+‹opensearch:totalResults&gt;0&lt;/opensearch:totalResults&gt;
+‹opensearch:itemsPerPage&gt;30&lt;/opensearch:itemsPerPage&gt;
+...
+
+root@splunk_hf:/opt/splunk/etc/apps/psdemo01/local# /opt/splunk/bin/./splunk list monitor
+...
+$SPLUNK_HOME/etc/splunk.version
+/var/log/auth.log
+</code></pre>
+<p>Search:  <strong><code>index=main sourcetype=linux:auth</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_20.png" title="Body image" /></p>
+<h3 id="2-4-demo-monitoring-files-and-directories-with-special-parameters"><strong>2-4 Demo: Monitoring Files and Directories with Special Parameters</strong></h3>
+<ul>
+<li>Monitor multiple files</li>
+<li>Ignore older files</li>
+<li>Overriding host name</li>
+<li>Editing and modifying a monitor input</li>
+</ul>
+<pre><code>root@splunk_hf:~# cd /var/log
+root@splunk_hf:/var/log# ll syslo*
+
+syslog
+syslog.1
+syslog.2.gz
+syslog.3.gz
+syslog.4.gz
+syslog.5.gz
+</code></pre>
+<pre><code>root@splunk_hf:/var/log# cat syslog
+
+root@splunk_hf:/var/log# cd /opt/splunk/etc/apps/psdemo01/local/
+
+$ ll
+$ app.conf
+$ inputs.conf
+
+$ vi inputs.conf
+
+[default]
+host = splunk uf
+
+[monitor:///var/log/auth.1og]
+disabled = 0
+index = main
+sourcetype = linux:auth
+
+[monitor:///var/log/syslog*]
+disabled = 0
+index = main
+sourcetype = linux:syslog
+ignoreOlderThan = 10d
+host_segment = 3
+</code></pre>
+<pre><code>/opt/splunk/bin/./splunk _internal call/services/data/inputs/monitor/_reload
+
+root@splunk_hf:/opt/splunk/etc/apps/psdemo01/local# /opt/splunk/bin/./splunk/list
+
+....
+/var/log/syslog*
+    /var/log/syslog
+    /var/log/syslog.1
+    /var/log/syslog.2.gz
+    /var/log/syslog.3.gz
+    /var/log/syslog.4.gz
+    /var/log/syslog.5.gz
+
+Monitored Files:
+    $SPLUNK_HOME/etc/splunk.version
+    /var/log/auth.log
+</code></pre>
+<p><strong><code>index=main sourcetype=linux:syslog</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_21.png" title="Body image" /></p>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo01/local# ll /var/log/syslo*
+
+/var/log/syslog
+/var/log/syslog.1
+/var/log/syslog.2.gz
+/var/log/syslog.3.gz
+/var/log/syslog.4.gz
+/var/log/syslog.5.gz
+</code></pre>
+<pre><code>$ vi inputs.conf
+
+[default]
+host = splunk uf
+
+[monitor:///var/log/auth.1og]
+disabled = 0
+index = main
+sourcetype = linux:auth
+
+[monitor:///var/log/syslog*]
+disabled = 0
+index = main
+sourcetype = linux:syslog
+ignoreOlderThan = 30d
+host_segment = 3
+</code></pre>
+<pre><code>/opt/splunk/bin/./splunk _internal call/services/data/inputs/monitor/_reload
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_22.png" title="Body image" /></p>
+<h3 id="2-5-demo-blacklisting-monitored-files"><strong>2-5 Demo: Blacklisting Monitored Files</strong></h3>
+<ul>
+<li>Monitor multiple directories</li>
+<li>Blacklisting files</li>
+<li>Editing a monitor input stanza</li>
+</ul>
+<pre><code>root@splunk_hf:~# cd /opt/splunk/etc/apps/psdemo01/data/
+root@splunk_hf:/opt/splunk/etc/apps/psdemo01/data# ll
+
+apacheweb/
+users.csv
+
+root@splunk_hf:/opt/splunk/etc/apps/psdemo01/data#
+root@splunk_hf:/opt/splunk/etc/apps/psdemo01/data# cd apacheweb/
+root@splunk_hf:/opt/splunk/etc/apps/psdemo01/data/apacheweb# ll
+
+www1/
+www2/
+www3/
+
+root@splunk_hf:/opt/splunk/etc/apps/psdemo01/data/apacheweb#
+
+root@splunk_hf:/opt/splunk/etc/apps/psdemo01/data/apacheweb#  find | sed 's|[^/]*/|\|-|g'
+
+. 
+|- www2
+|-|-access_prod2.log
+|-|-access_uat2.log
+|-www1
+|-|-access_prod1.log
+|-|-access_uat1.log
+| -www3
+|-|-access_prod3.1og
+|-|-access_uat3.log
+</code></pre>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo01/data/apacheweb# cd ../../local
+
+root@splunk_hf:/opt/splunk/etc/apps/psdemo01/local# ll
+
+app.conf
+inputs.conf
+
+root@splunk_hf:/opt/splunk/etc/apps/psdemo01/local# vi inputs.conf
+
+</code></pre>
+<pre><code>...
+
+[monitor:///opt/splunk/etc/apps/psdemo01/data/apacheweb/.../*.log]
+disabled = false
+sourcetype = access_combined
+blacklist = access_uat\d\.log$
+</code></pre>
+<pre><code>/opt/splunk/bin/./splunk _internal call/services/data/inputs/monitor/_reload
+
+root@splunk_hf:/opt/splunk/etc/apps/psdemo01/local#/opt/splunk/bin/./splunk list monitor
+
+opt/splunk/etc/apps/psdemo01/data/apacheweb/..
+/opt/splunk/etc/apps/psdemo01/data/apacheweb/www1
+/opt/splunk/etc/apps/psdemo01/data/apacheweb/www1/access_prod1.log
+/opt/splunk/etc/apps/psdemo01/data/apacheweb/www2
+/opt/splunk/etc/apps/psdemo01/data/apacheweb/www2/access_prod2.log
+/opt/splunk/etc/apps/psdemo01/data/apacheweb/www?
+/opt/splunk/etc/apps/psdemo01/data/apacheweb/www3/access_prod3.log
+</code></pre>
+<p><code>index=main sourcetype=access_combined</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_23.png" title="Body image" /></p>
+<pre><code>...
+
+[monitor:///opt/splunk/etc/apps/psdemo01/data/apacheweb/.../*.log]
+disabled = false
+sourcetype = access_combined
+# blacklist = access_uat\d\.log$
+</code></pre>
+<pre><code>/opt/splunk/bin/./splunk _internal call/services/data/inputs/monitor/_reload
+
+root@splunk_hf:/opt/splunk/etc/apps/psdemo01/local#/opt/splunk/bin/./splunk list monitor
+
+/opt/splunk/etc/apps/psdemo01/data/apacheweb/.../*.log
+/opt/splunk/etc/apps/psdemo01/data/apacheweb/www1/access_prod1.log
+/opt/splunk/etc/apps/psdemo01/data/apacheweb/www1/access_uat1.log
+/opt/splunk/etc/apps/psdemo01/data/apacheweb/www1/access_uat1.log
+/opt/splunk/etc/apps/psdemo01/data/apacheweb/www2
+/opt/splunk/etc/apps/psdemo01/data/apacheweb/www2/access_prod2.log
+/opt/splunk/etc/apps/psdemo01/data/apacheweb/www2/access_uat2.log
+
+/var/log/syslog*
+
+/var/log/syslog
+/var/log/syslog.1
+/var/log/syslog.2.gz
+/var/log/syslog.3.gz
+/var/log/syslog.4.gz
+/var/log/syslog.5.gz
+
+$SPLUNK_HOME/etc/splunk.version
+</code></pre>
+<pre><code>index=main sourcetype=access_combined
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_24.png" title="Body image" /></p>
+<p><strong>Summary</strong></p>
+<ul>
+<li>How Splunk monitors files and directories</li>
+<li>One time uploading in Splunk Web</li>
+<li>Monitoring a directory in Splunk Web</li>
+<li>Monitoring files using inputs.conf</li>
+<li>Excluding older files from monitoring</li>
+<li>Use of wildcards</li>
+<li>Ignoring files through blacklisting</li>
+<li>Reloading monitor inputs</li>
+</ul>
+<h2 id="3-getting-data-from-network-sources"><strong>3 Getting Data from Network Sources</strong></h2>
+<h3 id="3-1-introduction-to-network-inputs-in-splunk-enterprise"><strong>3-1 Introduction to Network Inputs in Splunk Enterprise</strong></h3>
+<p><strong>Network Inputs</strong></p>
+<ul>
+<li><strong>TCP/UDP</strong> - Accept input on any port</li>
+<li><strong>Network Services</strong> - Capture data from syslog or netcat</li>
+<li><strong>Secure</strong> - Accepted from hosts with correct SSL certs</li>
+<li><strong>Agentless</strong> - No need for UF on the source</li>
+<li><strong>Configurations</strong> - Splunk web, conf files and CLI commands</li>
+</ul>
+<p><strong>Network Inputs</strong></p>
+<ul>
+<li>
+<p>TCP</p>
+<ul>
+<li>Connection oriented</li>
+<li>Reliable</li>
+<li>Flow-control</li>
+<li>Packet ordering</li>
+<li>Slow</li>
+</ul>
+</li>
+<li>
+<p>UDP</p>
+<ul>
+<li>Connectionless</li>
+<li>Unreliable</li>
+<li>No flow-control mechanism</li>
+<li>No packet ordering ensured</li>
+</ul>
+</li>
+</ul>
+<p><strong>Network Inputs</strong></p>
+<ul>
+<li><code>[protocol://&lt;remote server&gt;:&lt;port&gt;]</code></li>
+<li><code>host=&lt;string&gt;</code></li>
+<li><code>source=&lt;string&gt;</code></li>
+<li><code>queue = parsinqQueue | indexQueue</code></li>
+<li><code>connection_host = ip | dns | none</code></li>
+<li><code>_revbuf = &lt;integer&gt; bytes</code>(UDP only)</li>
+<li><code>no_priority_stripping = true | false</code></li>
+<li><code>no_appending_timestamp = true | false</code></li>
+<li>UP packets and line merging</li>
+<li>Universal forwarder as a middle tier for better performance</li>
+</ul>
+<h3 id="3-2-demo-configuring-tcp-input-through-splunk-web"><strong>3-2 Demo: Configuring TCP Input through Splunk Web</strong></h3>
+<p>I'm going to create a TCP input using Splunk web.</p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_25.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_26.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_27.png" title="Body image" /></p>
+<blockquote>
+<p>I'll leave it blank means any host is allowed to send the data.</p>
+</blockquote>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_28.png" title="Body image" /></p>
+<ul>
+<li><code>top:test</code></li>
+<li><code>TCP Network Input</code></li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_29.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_30.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_31.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_32.png" title="Body image" /></p>
+<pre><code>root@splunkuf:~# echo &quot;TCP test message from splunkuf&quot;
+| nc -v 172.17.11.27 -t 11601 -wO
+Connection to 172.17.11.27 11601 port [tcp/*]
+succeeded!
+</code></pre>
+<p><code>index=main sourcetype=tcp:test</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_33.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_34.png" title="Body image" /></p>
+<h3 id="demo-configuring-udp-input-using-inputsconf-file">Demo: Configuring UDP Input Using inputs.conf File</h3>
+<ul>
+<li>Create a UP input using conf files</li>
+<li>Test the created input</li>
+</ul>
+<pre><code>root@splunk_uf:/# cd /opt/splunkforwarder/etc/apps/psdemo01/local/
+root@splunk_uf:/opt/splunkforwarder/etc/apps/psdemo01/local# vi inputs.conf
+
+[udp://115147
+connection_host = ip
+index = main
+sourcetype = udp:test
+
+
+root@splunk_uf:/opt/splunkforwarder/etc/apps/psdemo01/local# /opt/splunkforwarder/bin/./splunk restart
+
+$ echo &quot;Test data from Splunk UF over UDp&quot; &gt; /dev/udp/1
+27.0.0.1/11514
+</code></pre>
+<p><code>index=main sourcetype=udp:test</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_35.png" title="Body image" /></p>
+<h2 id="4-getting-windows-data-in"><strong>4 Getting Windows Data In</strong></h2>
+<ul>
+<li>Windows event log data</li>
+<li>Local and remote data collection</li>
+<li>Collecting Windows data on local system</li>
+<li>Collecting Windows data remotely</li>
+<li>Collecting host data</li>
+</ul>
+<h3 id="4-1-monitoring-windows-data-in-splunk-enterprise"><strong>4-1 Monitoring Windows Data in Splunk Enterprise</strong></h3>
+<ul>
+<li><strong>Win event logs</strong>: Collect locally or remotely using WMI</li>
+<li><strong>Performance monitoring</strong>: Performance counters in Performance Monitor</li>
+<li><strong>Remote monitoring</strong>: WMI queries</li>
+<li><strong>Registry monitoring</strong>: Changes to local Windows Registry</li>
+<li><strong>Active Directory monitoring</strong>: Changes to Active Directory</li>
+</ul>
+<p><strong>Windows Event Logs</strong></p>
+<ul>
+<li><strong>Windows Event Log service handles the logging</strong></li>
+<li><strong>Microsoft Event Viewer is used to view events</strong> </li>
+<li>Splunk can monitor local and remote log channels</li>
+<li>Splunk must run on Windows as Local System/Domain Admin</li>
+<li><strong>Splunk uses WMI to read remote logs</strong></li>
+</ul>
+<p><strong>Monitoring Windows System</strong></p>
+<ul>
+<li><strong>perfmon</strong>: <ul>
+<li>perfmon type input provides performance metrics from the host for components like CPU, memory, disk, etc.</li>
+</ul>
+</li>
+<li><strong>WinHostMon</strong><ul>
+<li>WinHostMon stanza helps gathering inventory from a host like specifications of the CPU, disks, running processes, services, etc. </li>
+</ul>
+</li>
+<li><strong>WinRegMon</strong><ul>
+<li>WinRegMon stanza is created to monitor registry changes on the host. This input is very useful to troubleshoot, as well as auditing purposes. </li>
+</ul>
+</li>
+<li><strong>admon</strong><ul>
+<li>Admon stanza provides us insight into <strong>Active Directory domain or forest‑level changes to the users, computers, and other Active Directory objects</strong>.</li>
+</ul>
+</li>
+<li><strong>WinNetMon</strong><ul>
+<li>WinNetMon stanza provides insight to network activity and help monitoring all transactions on the network like network connections and helps detect anomalies and risks like denial‑of‑service attacks by pinpointing the hosts involved.</li>
+</ul>
+</li>
+<li><strong>WinPrintMon</strong><ul>
+<li>WinPrintMon stanza gives all statistics about printers and print jobs, helps in auditing the printer subsystem, as well as troubleshooting purposes. </li>
+</ul>
+</li>
+</ul>
+<h3 id="4-2-demo-setting-up-a-local-event-log-collection"><strong>4-2 Demo: Setting-up a Local Event Log Collection</strong></h3>
+<ul>
+<li>Setup local event log collection </li>
+<li>Edit the input</li>
+<li>Verify results</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_36.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_37.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_38.png" title="Body image" /></p>
+<p><code>index=main sourcetype=WinEventLog:Security</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_39.png" title="Body image" /></p>
+<p><strong>Remote event log collections</strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_40.png" title="Body image" /></p>
+<p><code>&gt; This PC › PSDemo (C:) &gt; Program Files &gt; Splunk &gt; etc › apps › launcher &gt; local</code></p>
+<p><code>inputs.conf</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_41.png" title="Body image" /></p>
+<h3 id="4-3-demo-white-listing-and-black-listing-windows-events"><strong>4-3 Demo: White-listing and Black-listing Windows Events</strong></h3>
+<ul>
+<li>Blacklisting and whitelisting events</li>
+<li>Apply whitelist to security log</li>
+</ul>
+<p><strong>Filtering Win Event Logs</strong></p>
+<ul>
+<li>Blacklisting</li>
+<li>Whitelisting<ul>
+<li><code>whitelist, whitelist1… whitelist9</code></li>
+</ul>
+</li>
+<li>
+<p>Multiple events</p>
+<ul>
+<li>blacklist = 0-2000, 6008</li>
+<li>whitelist = 4624,4625</li>
+<li><code>whitelist1 = EventCode=%^462.$% User=%awan%</code></li>
+</ul>
+</li>
+<li>
+<p>Blacklisting means to <strong>ignore certain set of events and allow all the rest</strong>. </p>
+</li>
+<li>Whitelists work in the same way, but allow certain events while blocking everything else. </li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_42.png" title="Body image" /></p>
+<p><code>inputs.conf</code></p>
+<pre><code>[WinEventLog://Security]
+checkpointInterval = 5
+whitelist = 4624, 4625
+current only = 0
+disabled = 0
+start_from = oldest
+
+[WinEventLog://Application]
+checkpointInterval = 5
+current_only = 0
+disabled = 0
+start_from = oldest
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_43.png" title="Body image" /></p>
+<p><code>index=main sourcetype=WinEventLog:Security</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_44.png" title="Body image" /></p>
+<p>we have learned how to strip off the unnecessary event codes to reduce the noise and amount of data ingested into Splunk</p>
+<h3 id="4-4-demo-create-a-remote-windows-event-log-collection"><strong>4-4 Demo: Create a Remote Windows Event Log Collection</strong></h3>
+<ul>
+<li>Creating remote win event log collection</li>
+<li>Test the created input</li>
+</ul>
+<p><strong>Monitoring WinEventLogs Remotely</strong></p>
+<p>Splunk monitors Windows event logs on remote hosts using WMI</p>
+<ul>
+<li>Setup <code>wmi.conf</code><ul>
+<li>WMI stanza in <code>wmi.conf</code></li>
+</ul>
+</li>
+<li><strong>Member of AD Domain</strong><ul>
+<li>The source machine should be member of same AD domain</li>
+</ul>
+</li>
+<li><strong>Run as Domain Admin</strong><ul>
+<li>The account Splunk is running as should have domain admin privilege.</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_45.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_46.png" title="Body image" /></p>
+<p>Remote event logs input has been created successfully.</p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_47.png" title="Body image" /></p>
+<p><code>This PC › PSDemo (C:) &gt; Program Files &gt; Splunk &gt; etc › apps &gt; search › local</code></p>
+<p><code>wmi.conf</code></p>
+<pre><code>[WMI:WinRemoteLogs]
+disabled = 0
+event_log_file = Security
+index = default
+interval = 5
+server = WinRemote
+</code></pre>
+<p><code>index=main sourcetype="WinEventLog:Security"</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_48.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_49.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_50.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_51.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_52.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_53.png" title="Body image" /></p>
+<p><code>Program Files › Splunk › etc › apps › search › local</code></p>
+<p><code>wmi.conf</code></p>
+<pre><code>[WinHostMon://LocalHostMon]
+interval = 3600
+type = Processor; Disk
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_54.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_55.png" title="Body image" /></p>
+<p><code>index=main source=LocalHostMon</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_56.png" title="Body image" /></p>
+<ul>
+<li>Monitoring Windows data</li>
+<li>Demo: Collecting Windows data locally</li>
+<li>Demo: Filtering Windows event log data</li>
+<li>Demo: Gathering Windows data remotely</li>
+<li>Demo: Monitoring local host data</li>
+</ul>
+<h2 id="6-scripted-inputs"><strong>6 Scripted Inputs</strong></h2>
+<h3 id="overview">Overview</h3>
+<ul>
+<li><strong>Scripted inputs in Splunk</strong></li>
+<li><strong>Creating input through Splunk web</strong></li>
+<li><strong>Creating scripted inputs using inputs.conf</strong></li>
+<li>
+<p>PowerShell Modular inputs</p>
+<ul>
+<li>Using Splunk web </li>
+<li>Using inputs.conf</li>
+</ul>
+</li>
+<li>
+<p>Using wrapper scripts</p>
+</li>
+</ul>
+<p>Where to use scripted inputs?</p>
+<ul>
+<li>Data is dynamic in nature</li>
+<li>Data is on external/remote systems</li>
+<li>Need to apply transformations on data before ingesting</li>
+<li>Need to authenticate before accessing the data</li>
+<li>Scheduled or continuous monitoring of a system</li>
+</ul>
+<h3 id="6-1-scripted-input-use-case-scenario"><strong>6-1 Scripted Input: Use-Case Scenario</strong></h3>
+<p>We can use shell scripts, Python scripts, Windows batch files, PowerShell, or any other utility that can format and stream the data that we want to index into Splunk. </p>
+<p>It is so powerful that we can virtually do any data acquisition task in Splunk using this feature. </p>
+<p>Scripted inputs in Splunk are set up in <code>inputs.conf</code> files using specific stanza</p>
+<p>For all those scenarios where we are not able to use simple scripts where we need to send parameters to script or the program running the script is outside of Splunk environment, we can use wrapper scripts. </p>
+<ul>
+<li>We can schedule it using standard cron expression or just provide a number of seconds. </li>
+<li>If we provide value 0 for the interval, this means that the script will run continuously. </li>
+<li>For a value ‑1, it will only run once on startup. </li>
+</ul>
+<p>After setting up scripted input stanza in inputs.conf, <strong>we can reload scripted inputs explicitly without restarting Splunk, and we can enable or disable our scripts through the stanza attribute disabled</strong>, which is set to false or true accordingly. </p>
+<p>Scripted inputs are used when the data we are looking at is dynamic in nature, for instance, performance counters like CPU, memory, or disk usage where the data is on external or remote systems, for instance, databases that you send SQL queries through your script and then pass the output and send to Splunk or using the APIs. </p>
+<p>Another use case might be where you need to apply transformations before sending data to Splunk. For instance, you have data in CSV format, and for some reason, you need to convert it to JSON format before sending to Splunk. </p>
+<p>Also, sometimes we need to authenticate against a system before getting access to data. For instance, your files are in an AWS S3 bucket. </p>
+<p>We also use scripts where we want to schedule our inputs, for example, polling a remote logger for current sensor values after 15 minutes for continuously monitoring something for change and sending to Splunk as soon as the condition becomes true. </p>
+<h3 id="demo-creating-scripted-inputs-in-splunk-web"><strong>Demo: Creating Scripted Inputs in Splunk Web</strong></h3>
+<ul>
+<li><strong>Scripted inputs using Splunk Web</strong></li>
+<li><strong>Deploy a Python Script</strong></li>
+<li>Send data to Splunk for ingestion<ul>
+<li><strong>Read data</strong></li>
+<li><strong>Convert to JSON</strong></li>
+<li>Forward to the indexer</li>
+</ul>
+</li>
+<li>Scripted inputs deployment wizard</li>
+<li>Changes in <code>inputs.conf</code><ul>
+<li>Verify successful execution and data ingestion</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_57.png" title="Body image" /></p>
+<pre><code>root@splunk_hf:~# cd /opt/splunk/etc/apps/psdemo01/bin/
+root@splunk_hf:/opt/splunk/etc/apps/psdemo01/bin# ll
+
+getServices.ps1
+getUsersFromFile.py
+.idea/
+README
+simpleScriptedInput.py
+
+root@splunk_hf:/opt/splunk/etc/apps/psdemo01/bin#
+</code></pre>
+<p><strong><code>getUsersFromFile.py</code></strong></p>
+<pre><code>import cv, json
+
+from os.path import dirname, realpath, join
+
+filePath = join(dirname(dirname(realpath(__file__))), 'data', 'users.csv')
+
+with open (filePath) as usersFile:
+    CSvReader = cv.DictReader(usersFile)
+    for row in csvReader:
+        print(json.dumps(row))
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_58.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_59.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_60.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_61.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_62.png" title="Body image" /></p>
+<p><strong><code>index=main</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_63.png" title="Body image" /></p>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo01/local# ll
+app.conf
+inputs.conf
+
+
+vi inputs.conf
+
+[default]
+host = splunk_uf
+
+[script://SSPLUNK_HOME/etc/apps/psdemo01/bin/getUsersFromFile.py]
+disabled = false
+interval = 10 19 * * *
+sourcetype = json_no_timestamp
+</code></pre>
+<h3 id="demo-creating-scripted-inputs-using-configuration-files"><strong>Demo: Creating Scripted Inputs Using Configuration Files</strong></h3>
+<ul>
+<li>Setup a scripted input through conf files</li>
+<li>Deploy a bash script on the UF</li>
+<li>Run scripted input manually</li>
+<li>Changes to inputs.conf</li>
+<li>Reload scripted inputs without a restart</li>
+<li>Verify scripted input</li>
+<li>Troubleshooting</li>
+</ul>
+<pre><code>root@splunkuf:~# cd /opt/splunkforwarder/etc/apps/psdemo01/bin/
+root@splunk_uf:/opt/splunkforwarder/etc/apps/psdemo01/bin# ll
+
+getServices.ps1
+getUsersFromFile.py
+.idea/
+perfmon.sh*
+README
+simpleScriptedInput.py
+</code></pre>
+<p><strong><code>perfmon.sh</code></strong></p>
+<pre><code>#! /bin/bash
+
+timestamp() {
+    date +&quot;%T&quot;
+}
+
+MEMORY=$(free -m | awk 'NR==2{printf &quot;%.2f%%&quot;, $3*100/$2}')
+DISK=$(df -h | awk '$NF==&quot;/&quot;{printf &quot;%s&quot;, $5}')
+CPU=$(top -bn1 | grep load | awk '{printf &quot;%.2f%%&quot;, $(NF-2)}')
+echo &quot;$(timestamp) Memory=\&quot;$MEMORY\&quot;, Disk=\&quot;$DISK\&quot;, CPU=\&quot;$CPU\&quot;&quot;
+</code></pre>
+<pre><code>root@splunk_uf:/opt/splunkforwarder/etc/apps/psdemo01/bin# /opt/splunkforwarder/bin/./splunk cmd /opt/splunkforwarder/etc/apps/psdemo01/bin/perfmon.sh
+
+12:55:14 Memory=&quot;5.48%&quot;, Disk=&quot;6%&quot;, CPU=&quot;0.00%&quot;
+</code></pre>
+<p><strong><code>inputs.conf</code></strong></p>
+<pre><code>[script://$SPLUNK_HOME/etc/apps/psdemo01/bin/perfmon.sh]
+disabled = false
+index = main
+interval = 20
+sourcetype = server:performance
+</code></pre>
+<pre><code>root@splunk_uf:/opt/splunkforwarder/etc/apps/psdemo01/local#/opt/splunkforwarder/bin/./splunk _internal call /services/data/inputs/script/_reload
+
+QUERYING: 'https: //127.0.0.1:8089/services/data/inputs/script/_reload
+</code></pre>
+<p><strong><code>index=main sourcetype=server:performance</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_64.png" title="Body image" /></p>
+<p><strong>Error script: perfmon.sh</strong></p>
+<pre><code>...
+echo1 &quot;$(timestamp) Memory=\&quot;$MEMORY\&quot;, Disk=\&quot;$DISK\&quot;, CPU=\&quot;$CPU\&quot;&quot;
+</code></pre>
+<pre><code>root@splunk_uf:/opt/splunkforwarder/etc/apps/psdemo01/bin# /opt/splunkforwarder/bin/./splunk cmd /opt/splunkforwarder/etc/apps/psdemo01/bin/perfmon.sh
+
+/opt/splunkforwarder/etc/apps/psdemo01/bin/perfmon.sh: line 11: echo1: command not found
+</code></pre>
+<pre><code>root@splunk_uf:/opt/splunkforwarder/etc/apps/psdemo01/bin# cd /opt/splunkforwarder/var/log/splunk/
+root@splunk_uf:/opt/splunkforwarder/var/log/splunk# tail -f splunkd.log
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_65.png" title="Body image" /></p>
+<p><strong><code>index=_internal host=splunk_uf error perfmon.sh</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_66.png" title="Body image" /></p>
+<h3 id="demo-creating-powershell-modular-input-in-splunk-web"><strong>Demo: Creating PowerShell Modular Input in Splunk Web</strong></h3>
+<ul>
+<li>PowerShell scripted/modular inputs</li>
+<li>PowerShell scripted input using Splunk Web</li>
+<li>View stanza in inputs.conf</li>
+<li>Verify scripted input</li>
+</ul>
+<p><strong>PowerShell Script Inputs</strong></p>
+<ul>
+<li>Easy to interact with Windows platform</li>
+<li>Specific stanza:<ul>
+<li><code>[powershell://MyPowerShellScript]</code></li>
+</ul>
+</li>
+<li>script &amp; schedule attributes</li>
+<li>System requirements<ul>
+<li>Splunk instance on Windows</li>
+<li>Splunk must run as Local System user</li>
+<li>PowerShell v3.0 or later</li>
+<li>Microsoft <code>.NET v4.5</code> or later</li>
+</ul>
+</li>
+</ul>
+<p>The Use-case</p>
+<ul>
+<li>Get all services on Windows</li>
+<li>Convert them to key-value format</li>
+<li>Send data to Splunk</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_67.png" title="Body image" /></p>
+<p><strong><code>getServices.ps1</code></strong></p>
+<pre><code>$timeStamp = = Get-date -Format
+$services = Get-Service
+
+foreach($Service in $services){
+    Write-Output &quot;$timeStamp Name=`&quot;$($service.Name)`&quot;, Status=`&quot;$($service.Status)`&quot;, DisplayName=`&quot;$($service.DisplayName)`&quot;&quot;
+}
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_68.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_69.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_70.png" title="Body image" /></p>
+<p><strong><code>index=main sourcetype=windows:services</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_71.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_72.png" title="Body image" /></p>
+<h3 id="demo-creating-powershell-modular-input-using-configuration-files"><strong>Demo: Creating PowerShell Modular Input Using Configuration Files</strong></h3>
+<ul>
+<li>PowerShell scripted input using conf files</li>
+<li>Single command</li>
+<li>Create stanza in inputs.conf</li>
+<li>Verify scripted input</li>
+</ul>
+<p><strong><code>getProcess.ps1</code></strong></p>
+<pre><code>Get-Process | select ProcessName, id, CPU | foreach { Write-Output &quot;$((Get-Date).ToString('dd-MM-yyyy HH: mm&quot;)) ProcessName=`&quot;($_.ProcessName)`&quot;, Id=`&quot;$($_.id)`&quot;, CPU=`&quot;$($_.CPU)`&quot;&quot;}
+</code></pre>
+<p><strong><code>inputs.conf</code></strong></p>
+<pre><code>[powershell://WindowsServices]
+schedule = 1800
+script = . &quot;$SplunkHome\etc\apps\psdemo01\bin\getServices.ps1&quot;
+sourcetype = windows:services 
+
+[powershell://WindowsProcesses]
+schedule = 60
+script = Get-Process | select ProcessName, id, CPU | foreach { Write-Output &quot;$((Get-Date).ToString('dd-MM-yyyy HH:mm&quot;)) ProcessName=`&quot;($_.ProcessName)`&quot;, Id=`&quot;$($_.id)`&quot;, CPU=`&quot;$($_.CPU)`&quot;&quot;}
+</code></pre>
+<pre><code>C:\Program Files\Splunk\bin&gt; splunk _internal call /services/data/inputs/powershell/reload
+</code></pre>
+<p><strong><code>index=main sourcetype=windows:processes</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_73.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_74.png" title="Body image" /></p>
+<h3 id="demo-creating-scripted-inputs-using-wrapper-script">Demo: Creating Scripted Inputs Using Wrapper Script</h3>
+<ul>
+<li>Wrapper scripts</li>
+<li>Scripted input using wrapper script</li>
+<li>Verify scripted input</li>
+</ul>
+<p><strong>Wrapper Script Use-cases</strong></p>
+<ul>
+<li>Deploy scripted inputs on Universal Forwarders</li>
+<li>Runs scripts types that Splunk cannot run out-of-the-box</li>
+<li>Version conflicts or passing arguments</li>
+</ul>
+<p><strong>Deploying a Wrapper Script</strong></p>
+<ul>
+<li>CLI command wrapped in a file<ul>
+<li><code>.sh for linux OS</code></li>
+<li><code>.bat for Windows OS</code></li>
+</ul>
+</li>
+<li>Deployed as normal scripted input</li>
+</ul>
+<pre><code>root@splunk_uf:/opt/splunkforwarder/etc/apps/psdemo01/bin# ll
+
+...
+pythonWrapper.sh*
+...
+</code></pre>
+<pre><code>root@splunk_uf:/opt/splunkforwarder/etc/apps/psdemo01/bin# cd  ../data
+root@splunk_uf:/opt/splunkforwarder/etc/apps/psdemo01/data# ll
+users.csv
+</code></pre>
+<p><strong><code>pythonWrapper.sh</code></strong></p>
+<pre><code>python3 /opt/splunkforwarder/etc/apps/psdemo01/bin/getUsersFromFile.py
+</code></pre>
+<p><strong><code>inputs.conf</code></strong></p>
+<pre><code>[script://$SPLUNK_HOME/etc/apps/psdemo01/bin/perfmon.sh]
+disabled = false
+index = main
+interval = 20
+sourcetype = server:performance
+
+[script://$SPLUNK_HOME/etc/apps/psdemo01/bin/pythonwrapper.sh]
+disabled = false
+index = main
+interval = 60
+sourcetype = json_no_timestamp
+source = wrapper
+</code></pre>
+<pre><code>root@splunk_uf:/opt/splunkforwarder/etc/apps/psdemo01/local# cd /opt/splunkforwarder/bin/
+root@splunk_uf:/opt/splunkforwarder/bin# ./splunk _internal call /services/data/inputs/script/_reload
+</code></pre>
+<p><code>index=main source=wrapper</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_74.png" title="Body image" /></p>
+<p><strong>Summary</strong></p>
+<ul>
+<li>Scripted inputs</li>
+<li>Bash, Python and PowerShell scripts</li>
+<li>Scripted inputs on all types of Splunk instances</li>
+<li>Windows and Linux</li>
+<li>Different types of scripted inputs<ul>
+<li>Scripted inputs</li>
+<li>Powershell modular inputs</li>
+<li>Wrapper scripts</li>
+</ul>
+</li>
+</ul>
+<h2 id="8-configuring-inputs"><strong>8 Configuring Inputs</strong></h2>
+<ul>
+<li>Default fields in Splunk Enterprise</li>
+<li>Process of overriding default fields</li>
+<li>Demo: Overriding source field</li>
+<li>Demo: Timestamp extraction</li>
+</ul>
+<h3 id="3-1-indexed-field-extractions"><strong>3-1 Indexed Field Extractions</strong></h3>
+<p><strong>Parsing phase</strong></p>
+<ul>
+<li>Event boundaries</li>
+<li>Add index-time fields<ul>
+<li>Default fields</li>
+<li>Custom fields</li>
+</ul>
+</li>
+</ul>
+<p>Search time field extractions are performed after the data is indexed</p>
+<p><strong>Default field extractions</strong></p>
+<ul>
+<li>Tagged with each event Three types<ul>
+<li>Internal fields</li>
+<li>Default datetime fields</li>
+<li>Basic default fields</li>
+</ul>
+</li>
+</ul>
+<p>Most commonly used are host, source, sourcetype, index<br />
+<strong>Default-field overriding</strong></p>
+<p>Applied to a set of events Transforms applied</p>
+<ul>
+<li>props.conf</li>
+<li>transforms.conf<ul>
+<li>REGEX</li>
+<li>FORMAT</li>
+<li><code>DEST_KEY</code></li>
+</ul>
+</li>
+</ul>
+<p>Capturing group regex from the event data or static string can be provided</p>
+<h2 id="4-the-http-event-collector-hec"><strong>4 The HTTP Event Collector (HEC)</strong></h2>
+<ul>
+<li>Introducing <strong>HTTP Event Collector</strong></li>
+<li>Creating HEC token using Splunk Web</li>
+<li>Sending data to HEC through a script</li>
+<li>Turning indexer acknowledgement on</li>
+</ul>
+<h3 id="4-1-introduction-to-splunk-http-event-collector-hec">4-1 Introduction to Splunk HTTP Event Collector (HEC)</h3>
+<ul>
+<li><strong>Fast &amp; efficient</strong>： Sends data over HTTP(S)</li>
+<li><strong>Agentless monitoring</strong>: Directly sends data to Splunk</li>
+<li><strong>Application developers</strong> Baked into the code</li>
+<li><strong>Token based</strong>： No need for credentials hard-coding</li>
+<li><strong>No Configuration Overheads</strong>： Proxies allow for HTTP 
+communication</li>
+</ul>
+<p><strong>Configuring HTTP Event Collector</strong></p>
+<ul>
+<li><code>[http://TokenName]</code> stanza in inputs.conf</li>
+<li>Enable globally</li>
+<li>Unique GUID</li>
+<li>Default port 8088</li>
+<li>Indexer acknowledgement</li>
+</ul>
+<p><strong>Global Settings</strong></p>
+<ul>
+<li>[http] <strong>stanza contains global settings</strong></li>
+<li><code>disabled=true/false</code></li>
+<li><code>maxSockets=&lt;integer&gt;</code></li>
+<li><code>maxThreads=&lt;integer&gt;</code></li>
+<li><code>outputGroup=&lt;indexer_group&gt;</code></li>
+</ul>
+<p><strong>Per-token Settings</strong></p>
+<ul>
+<li><code>queueSize=&lt;integer&gt;KB|MB|GB</code></li>
+<li><code>persistentqueueSize=&lt;integer&gt;KB|MB|GB</code></li>
+<li><code>connection_host</code></li>
+<li>Index and indexes</li>
+<li>token (a94a5897-2666-485c-a62f-0dc070463ef1)</li>
+</ul>
+<pre><code>curl -k -u &quot;x:12345678-1234-1234-1234-1234567890AB&quot; https://mysplunkserver.example.com:8088/services/collector/event -d '{&quot;sourcetype&quot;: &quot;my_sourcetype&quot;,
+
+    &quot;host&quot;: &quot;my_host&quot;, 
+    &quot;index&quot;: &quot;my_preferred_index&quot;, 
+    &quot;source&quot;: &quot;my_source&quot;, 
+    &quot;event&quot;: &quot;My sample event!&quot;
+}
+</code></pre>
+<p>Sending Data to HEC (Local Server)</p>
+<p><strong>Using cURL command with basic authentication</strong></p>
+<pre><code>curl -k -H &quot;Authorization: Splunk 12345678-1234-1234-1234-1234567890AB&quot; https://mysplunkserver.example.com:8088/services/collector/event -d '{&quot;sourcetype&quot;:  &quot;my_sourcetype&quot;,
+
+&quot;host&quot;: &quot;my_host&quot;, 
+&quot;index&quot;: &quot;my_preferred_index&quot;, 
+&quot;source&quot;: &quot;my_source&quot;, 
+&quot;event&quot;: &quot;My sample event!&quot;}
+</code></pre>
+<p>Sending Data to HEC (Local Server)</p>
+<p><strong>Using cURL command with HTTP Authentication</strong></p>
+<pre><code>curl -k -H &quot;Authorization: Splunk 12345678-1234-1234-1234-1234567890AB&quot; https:// http-inputs- &lt;cust&gt;.splunkcloud.com/services/collector/event -d '{&quot;sourcetype&quot;: &quot;my_sourcetype&quot;,
+
+&quot;host&quot;: &quot;my_host&quot;, 
+&quot;index&quot;: &quot;my_preferred_index&quot;, 
+&quot;source&quot;: &quot;my_source&quot;, 
+&quot;event&quot;: “My sample event!&quot;}
+</code></pre>
+<p>Sending Data to HEC (Splunk Cloud)</p>
+<p><strong>Using cURL command</strong></p>
+<h3 id="4-2-demo-creating-hec-token-in-splunk-web"><strong>4-2 Demo: Creating HEC Token in Splunk Web</strong></h3>
+<ul>
+<li>Create a HEC Token in Splunk Web</li>
+<li>Test the token</li>
+<li>Check the input stanza</li>
+<li>Send data to HEC using a script</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_76.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_77.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_78.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_79.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_80.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_81.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_82.png" title="Body image" /></p>
+<p><strong>Status: disabled</strong></p>
+<p><strong><code>Global Settings</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_83.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_84.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_85.png" title="Body image" /></p>
+<p><code>index=main source=hec_manual_test</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_86.png" title="Body image" /></p>
+<pre><code>root@splunk_hf:~# cd /opt/splunk/etc/apps/psdemo01/local/
+root@splunk_hf:/opt/splunk/etc/apps/psdemo01/local# ll
+
+app.conf
+inputs.conf
+
+vi inputs.conf
+
+[default]
+host = splunk_uf
+
+[http://PSDemo Users Test]
+disabled = 0
+host = splunk_hf
+index = main
+indexes = history,main
+source = hec_test_users
+sourcetype = json_no_timestamp
+token = a94a5897-2666-485c-a62f-Odc070463ef1
+useACK = 0
+</code></pre>
+<h3 id="4-3-demo-sending-events-through-hec-using-a-script"><strong>4-3 Demo: Sending Events through HEC Using a Script</strong></h3>
+<ul>
+<li>Send users data to Splunk using HEC token</li>
+<li>Setup and run the Python Script</li>
+<li>Verify results</li>
+</ul>
+<p>Scripted Input: Use-Case Scenario</p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_87.png" title="Body image" /></p>
+<pre><code>cd /opt/splunkforwarder/etc/apps/psdemo01/bin/# ll
+
+...
+sendUsersUsingHEC.pV
+...
+</code></pre>
+<pre><code>import cv, json, requests, urllib3
+from os.path import dirname, realpath, join
+
+#Disable certs warning
+urllib3.disable_warnings(urllib3.exceptions. InsecureRequestwarning)
+
+FilePath = join(dirname (dirname(realpath(__file__))), 'data', 'users.csv')
+
+#Add the HEC token that you want to send the data through
+
+authToken=&quot;a94a5897-2666-485c-a62f-0dc070463ef1&quot;
+
+#IP or name of the host HEC token is set on
+splunkHost= &quot;172.17.11.27&quot;
+
+#Port set for HEC communication. Defaults to 8088
+hecPort = &quot;8080&quot;
+
+#Prepart the URL the URL
+url = &quot;https://&quot;+splunkHost+&quot;:&quot;+hecPort+&quot;/services/collector/event&quot;
+
+#Prepare the header with the HEC token
+authHeader = {'Authorization' : 'Splunk '+authToken}
+
+#Read the users from file and loop through each record
+with open (filePath) as usersfile:
+    csvReader = cv.DictReader(usersFile)
+    for row in csvReader: 
+    # Initialise and update current record to send through HEC
+        record = {}
+        record.update({'source': 'hec_test'})
+        record.update({'sourcetype': 'json_no_timestamp'})
+        record.update({event': (json.dumps(row))})
+
+    # Send the record
+        r = requests.post(url, headers=authHeader, json-record, verify=False)
+</code></pre>
+<pre><code>python3 sendUsersUsingHEC.py
+</code></pre>
+<p>New search: <strong><code>index=main source="hec_test"</code></strong></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_88.png" title="Body image" /></p>
+<h3 id="demo-enabling-indexer-acknowledgement-for-reliable-data-ingestion">Demo: Enabling Indexer Acknowledgement for Reliable Data Ingestion</h3>
+<p>Indexer acknowledgements</p>
+<ul>
+<li><code>useAck=true</code></li>
+<li><strong>Per-token basis</strong></li>
+<li><strong>X-Splunk-Request-Channel</strong></li>
+<li><strong>Package tracking</strong><ul>
+<li>services/collector/event<ul>
+<li>Acknowledgement ID</li>
+</ul>
+</li>
+<li>services/collector/ack<ul>
+<li>Status</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>curl -k -u &quot;x:a94a5897-2666-485c-a62f-0dc070463ef1&quot; https://hostname_or_ip:8088/services/collector/event -H &quot;X-Splunk-Request-Channel: FE0ECFAD-13D5-401B-847D-77833BD77131“ -d '{&quot;source&quot;: “mysource&quot;, &quot;event&quot;: “myevent&quot;}’
+</code></pre>
+<p><code>{"text":"Success","code":0,"ackId":7}</code></p>
+<p>Sending Data with Indexer Acknowledgement</p>
+<p>Using cURL command</p>
+<pre><code>curl -k -u &quot;x:a94a5897-2666-485c-a62f-0dc070463ef1&quot; &quot;https://hostname_or_ip:8088/services/collector/ack&quot; -H &quot;X-Splunk-Request-Channel: E0ECFAD-13D5-401B-847D-77833BD77131&quot; -d '{&quot;acks&quot;:[7]}'
+</code></pre>
+<p><code>{"acks":{“7":true}}</code></p>
+<pre><code>root@splunk_hf:~# cd /opt/splunk/etc/apps/psdemo01/local/
+
+vi inputs.conf
+
+[default]
+host = splunk_uf
+
+[http://PSDemo Users Test]
+disabled = 0
+host = splunk_hf
+index = main
+indexes = history,main
+source = hec_test_users
+sourcetype = json_no_timestamp
+token = a94a5897-2666-485c-a62f-Odc070463ef1
+useACK = 1
+</code></pre>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo01/local# /opt/splunk/bin/./splunk restart
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_89.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_90.png" title="Body image" /></p>
+<ul>
+<li>HTTP Event Collector</li>
+<li>Demo: HEC token using Splunk Web</li>
+<li>Demo: Sending data to HEC using script</li>
+<li>Demo: Indexer acknowledgement</li>
+</ul>
+<h2 id="5-configuring-inputs"><strong>5 Configuring Inputs</strong></h2>
+<p><strong>Overview</strong></p>
+<ul>
+<li>Default fields in Splunk Enterprise</li>
+<li>Process of overriding default fields</li>
+<li>Demo: Overriding source field</li>
+<li>Demo: Timestamp extraction</li>
+</ul>
+<h3 id="5-1-event-parsing-and-default-field-extraction-in-splunk-enterprise"><strong>5-1 Event Parsing and Default Field Extraction in Splunk Enterprise</strong></h3>
+<p><strong>Parsing phase Event</strong></p>
+<ul>
+<li>Event boundaries</li>
+<li><strong>Add index-time fields</strong><ul>
+<li>Default fields</li>
+<li>Custom fields</li>
+</ul>
+</li>
+</ul>
+<p>Search time field extractions are performed after the data is indexed</p>
+<p>For example, we want to assign a field a certain value based on other field value and make it part of the event. </p>
+<p>We can also perform search time field extractions, but the difference is that the search time field extractions don't become permanently part of the event.</p>
+<p><strong>Default field extractions</strong></p>
+<blockquote>
+<p>The default fields extracted are tagged to each event before it is indexed and written to the disk. </p>
+</blockquote>
+<p>Tagged with each event Three types</p>
+<ul>
+<li>Internal fields<ul>
+<li>The internal fields contain information that Splunk software uses for internal purposes. These fields start with an underscore. Most common ones are <code>_raw</code>, <code>_time</code>, and <code>_index</code> time, and the default datetime fields are basically different granular representation of the timestamp like <code>date_hour</code>, <code>date_minute</code>, or <code>date_month</code>, etc.</li>
+</ul>
+</li>
+<li>Default datetime fields</li>
+<li>Basic default fields</li>
+</ul>
+<p>The basic default fields provide basic information about an event such as where it originated, what type of data it contains, what index it is located in, etc.</p>
+<p>Common basic fields are host, source, sourcetype, index, line count, and timestamp.</p>
+<p><strong>Default-field overriding</strong></p>
+<p>Applied to a set of events Transforms applied</p>
+<ul>
+<li>props.conf</li>
+<li>transforms.conf<ul>
+<li>REGEX</li>
+<li>FORMAT</li>
+<li><code>DEST_KEY</code></li>
+</ul>
+</li>
+</ul>
+<p>Capturing group regex from the event data or static string can be provided</p>
+<h3 id="5-2-demo-overriding-a-default-field"><strong>5-2 Demo: Overriding a Default Field</strong></h3>
+<p>Override source value in a monitor input</p>
+<ul>
+<li>props.conf</li>
+<li>transforms.conf</li>
+</ul>
+<p>Test the results</p>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo01/local# ll
+
+app.conf
+inputs.conf
+
+# vi inputs.conf
+</code></pre>
+<pre><code>[default]
+host = splunk_hf
+
+[monitor:///opt/splunk/etc/apps/psdemo01/data/web_source_override.log]
+disabled = false
+sourcetype = web:sourceoverride
+index-main
+</code></pre>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo01/local# vi props.conf
+
+[web:sourceoverride]
+TRANSFORMS-changesource = web_src_override
+</code></pre>
+<pre><code>transforms.conf
+
+[web_src_override]
+REGEX = (\d+\.\d+\.\d+\.\d+)
+FORMAT = source::$1
+DEST_KEY = MetaData:Source
+</code></pre>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo01/local# /opt/splunk/bin/./splunk restart
+</code></pre>
+<p><code>index=main sourcetype=web:sourceoverride</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_91.png" title="Body image" /></p>
+<h3 id="5-3-demo-assigning-custom-timestamp-to-events"><strong>5-3 Demo: Assigning Custom Timestamp to Events</strong></h3>
+<ul>
+<li>Override timestamp</li>
+<li>Test the results</li>
+</ul>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo01/local# vi inputs.conf
+
+[default]
+host = splunk_hf
+[monitor:///opt/splunk/etc/apps/psdemo01/data/server_perfmon.log]
+disabled = false
+index = main
+sourcetype = server:perfmon
+</code></pre>
+<p><strong><code>vi props.conf</code></strong></p>
+<pre><code>[server:perfmon]
+TIME_PREFIX = TimeAdded\=\&quot;
+TIME_FORMAT = %Y-%m-%d %H:%M:%S
+</code></pre>
+<pre><code>root@splunk_hf:/opt/splunk/etc/apps/psdemo01/local# /opt/splunk/bin/./splunk restart
+</code></pre>
+<p><code>index=main sourcetype=server:perfmon</code></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_92.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/sp1_5_93.png" title="Body image" /></p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2020-9999 Jacob Xi
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.b4d07000.min.js"></script>
+      
+    
+  </body>
+</html>
